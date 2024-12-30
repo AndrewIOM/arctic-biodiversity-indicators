@@ -1,0 +1,15 @@
+source https://api.nuget.org/v3/index.json
+storage: none
+framework: auto-detect
+
+github AndrewIOM/biodiversity-graph-db:4815204c0496ea71b3063b3fa0f89374c8f0b82c
+
+nuget FSharp.Data
+nuget Microsoft.FSharpLu.Json
+nuget RProvider
+
+nuget Bolero.Build
+nuget Bolero.HotReload
+nuget MarkDig
+nuget Microsoft.AspNetCore.Components.WebAssembly.DevServer
+nuget Plotly.NET

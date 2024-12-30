@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="Main.fs" />
+    <Compile Include="Startup.fs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\paket-files\AndrewIOM\biodiversity-graph-db\src\BiodiversityCoder.Core\BiodiversityCoder.Core.fsproj" />
+  </ItemGroup>
+
+  <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
+    <ItemGroup>
+      <ReadModel Include="../../data-derived/**" />
+    </ItemGroup>  
+    <Copy SourceFiles="@(ReadModel)"
+    DestinationFiles="@(ReadModel->'wwwroot/content/indicators/%(RecursiveDir)%(Filename)%(Extension)')"
+    SkipUnchangedFiles="true" />
+  </Target>
+
+  <Import Project="..\.paket\Paket.Restore.targets" />
+</Project>
