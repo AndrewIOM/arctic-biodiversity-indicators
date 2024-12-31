@@ -11,8 +11,11 @@ jobs:
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: '9.0.x'
-    - name: Paket restore
+    - name: Install dotnet tools
       run: dotnet tool restore
+      working-directory: src
+    - name: Paket install
+      run: dotnet paket install
       working-directory: src
     - name: Publish with dotnet
       run: dotnet publish --configuration Release --output build src/web/GraphExplorer.Client.fsproj
