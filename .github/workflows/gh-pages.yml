@@ -27,6 +27,6 @@ jobs:
     - name: Deploy 🚀
       uses: JamesIves/github-pages-deploy-action@v4
       with:
-        folder: build
+        folder: build/wwwroot
         branch: gh-pages
         clean: true
