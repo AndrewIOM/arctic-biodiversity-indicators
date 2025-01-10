@@ -1,0 +1,81 @@
+taxon	rank	taxonomic_tree
+Unknown (not yet coded)	Kingdom	
+Life	Life	
+Plantae	Kingdom	Plantae
+Angiosperms	Phylum	Plantae > Angiosperms
+Fagales	Order	Plantae > Angiosperms > Fagales
+Betulaceae	Family	Plantae > Angiosperms > Fagales > Betulaceae
+Alnus	Genus	Plantae > Angiosperms > Fagales > Betulaceae > Alnus
+Asterales	Order	Plantae > Angiosperms > Asterales
+Asteraceae	Family	Plantae > Angiosperms > Asterales > Asteraceae
+Asteroideae	Subfamily	Plantae > Angiosperms > Asterales > Asteraceae > Asteroideae
+Anthemideae	Tribe	Plantae > Angiosperms > Asterales > Asteraceae > Asteroideae > Anthemideae
+Artemisia	Genus	Plantae > Angiosperms > Asterales > Asteraceae > Asteroideae > Anthemideae > Artemisia
+Betula	Genus	Plantae > Angiosperms > Fagales > Betulaceae > Betula
+Polypodiophyta	Phylum	Plantae > Polypodiophyta
+Polypodiopsida	Class	Plantae > Polypodiophyta > Polypodiopsida
+Ophioglossales	Order	Plantae > Polypodiophyta > Polypodiopsida > Ophioglossales
+Ophioglossaceae	Family	Plantae > Polypodiophyta > Polypodiopsida > Ophioglossales > Ophioglossaceae
+Botrychioideae	Subfamily	Plantae > Polypodiophyta > Polypodiopsida > Ophioglossales > Ophioglossaceae > Botrychioideae
+Botrychium	Genus	Plantae > Polypodiophyta > Polypodiopsida > Ophioglossales > Ophioglossaceae > Botrychioideae > Botrychium
+Campanulaceae	Family	Plantae > Angiosperms > Asterales > Campanulaceae
+Campanula	Genus	Plantae > Angiosperms > Asterales > Campanulaceae > Campanula
+Stellaria longipes Goldie	Species	
+Cerastium fontanum Baumg.	Species	
+Cerastium alpinum L.	Species	
+Rosales	Order	Plantae > Angiosperms > Rosales
+Rosaceae	Family	Plantae > Angiosperms > Rosales > Rosaceae
+Dryas	Genus	Plantae > Angiosperms > Rosales > Rosaceae > Dryas
+Polypodiales	Order	Plantae > Polypodiophyta > Polypodiopsida > Polypodiales
+Polypodiaceae	Family	Plantae > Polypodiophyta > Polypodiopsida > Polypodiales > Polypodiaceae
+Lamiales	Order	Plantae > Angiosperms > Lamiales
+Orobanchaceae	Family	Plantae > Angiosperms > Lamiales > Orobanchaceae
+Rhinanthus	Genus	Plantae > Angiosperms > Lamiales > Orobanchaceae > Rhinanthus
+Euphrasia	Genus	
+Bartsia	Genus	
+Gentianales	Order	Plantae > Angiosperms > Gentianales
+Rubiaceae	Family	Plantae > Angiosperms > Gentianales > Rubiaceae
+Galium	Genus	Plantae > Angiosperms > Gentianales > Rubiaceae > Galium
+Gymnocarpium dryopteris (L.) Newman	Species	
+Pinophyta	Phylum	Plantae > Pinophyta
+Pinopsida	Class	Plantae > Pinophyta > Pinopsida
+Cupressales	Order	Plantae > Pinophyta > Pinopsida > Cupressales
+Cupressaceae	Family	Plantae > Pinophyta > Pinopsida > Cupressales > Cupressaceae
+Juniperus	Genus	Plantae > Pinophyta > Pinopsida > Cupressales > Cupressaceae > Juniperus
+Juniperus communis L.	Species	Plantae > Pinophyta > Pinopsida > Cupressales > Cupressaceae > Juniperus > Juniperus communis L.
+Poales	Order	Plantae > Angiosperms > Poales
+Juncaceae	Family	Plantae > Angiosperms > Poales > Juncaceae
+Juncus	Genus	Plantae > Angiosperms > Poales > Juncaceae > Juncus
+Luzula	Genus	Plantae > Angiosperms > Poales > Juncaceae > Luzula
+Lycopodiophyta	Phylum	Plantae > Lycopodiophyta
+Lycopodiopsida	Class	Plantae > Lycopodiophyta > Lycopodiopsida
+Lycopodiales	Order	Plantae > Lycopodiophyta > Lycopodiopsida > Lycopodiales
+Lycopodiaceae	Family	Plantae > Lycopodiophyta > Lycopodiopsida > Lycopodiales > Lycopodiaceae
+Lycopodioideae	Subfamily	Plantae > Lycopodiophyta > Lycopodiopsida > Lycopodiales > Lycopodiaceae > Lycopodioideae
+Lycopodium	Genus	Plantae > Lycopodiophyta > Lycopodiopsida > Lycopodiales > Lycopodiaceae > Lycopodioideae > Lycopodium
+Lycopodium clavatum L.	Species	Plantae > Lycopodiophyta > Lycopodiopsida > Lycopodiales > Lycopodiaceae > Lycopodioideae > Lycopodium > Lycopodium clavatum L.
+Sibbaldia procumbens L.	Species	
+Comarum	Genus	Plantae > Angiosperms > Rosales > Rosaceae > Comarum
+Comarum palustre L.	Species	Plantae > Angiosperms > Rosales > Rosaceae > Comarum > Comarum palustre L.
+Potentilla hyparctica Malte	Species	
+Potentilla nivea L.	Species	
+Potentilla hookeriana Lehm.	Species	
+Ranunculales	Order	Plantae > Angiosperms > Ranunculales
+Ranunculaceae	Family	Plantae > Angiosperms > Ranunculales > Ranunculaceae
+Ranunculus	Genus	Plantae > Angiosperms > Ranunculales > Ranunculaceae > Ranunculus
+Caryophyllales	Order	Plantae > Angiosperms > Caryophyllales
+Polygonaceae	Family	Plantae > Angiosperms > Caryophyllales > Polygonaceae
+Rumex	Genus	Plantae > Angiosperms > Caryophyllales > Polygonaceae > Rumex
+Rumex acetosella L.	Species	Plantae > Angiosperms > Caryophyllales > Polygonaceae > Rumex > Rumex acetosella L.
+Saxifraga paniculata Mill.	Species	
+Saxifraga aizoides L.	Species	
+Saxifraga tricuspidata Rottb.	Species	
+Saxifragales	Order	Plantae > Angiosperms > Saxifragales
+Saxifragaceae	Family	Plantae > Angiosperms > Saxifragales > Saxifragaceae
+Saxifraga	Genus	Plantae > Angiosperms > Saxifragales > Saxifragaceae > Saxifraga
+Saxifraga oppositifolia L.	Species	Plantae > Angiosperms > Saxifragales > Saxifragaceae > Saxifraga > Saxifraga oppositifolia L.
+Thalictrum	Genus	Plantae > Angiosperms > Ranunculales > Ranunculaceae > Thalictrum
+Thalictrum alpinum L.	Species	Plantae > Angiosperms > Ranunculales > Ranunculaceae > Thalictrum > Thalictrum alpinum L.
+Alismatales	Order	Plantae > Angiosperms > Alismatales
+Tofieldiaceae	Family	Plantae > Angiosperms > Alismatales > Tofieldiaceae
+Tofieldia	Genus	Plantae > Angiosperms > Alismatales > Tofieldiaceae > Tofieldia

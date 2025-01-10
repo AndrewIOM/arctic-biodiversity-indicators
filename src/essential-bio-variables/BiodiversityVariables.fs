@@ -201,6 +201,50 @@ let toMorphotypeName (node: Population.BioticProxies.BioticProxyNode) =
 
 module TaxonomyLookup =
 
+    let toTaxonomyNode node =
+        match node with
+        | GraphStructure.PopulationNode p ->
+            match p with
+            | GraphStructure.TaxonomyNode t -> Some t
+            | _ -> None
+        | _ -> None
+
+    let rec crawlTaxonomy' directory taxonAtom tree =
+        let isA =
+            taxonAtom |> snd
+            |> Seq.tryPick(fun (_,sink,_,rel) ->
+                match rel with
+                | GraphStructure.Relation.Population p ->
+                    match p with
+                    | Population.PopulationRelation.IsA -> Some sink
+                    | _ -> None
+                | _ -> None
+                )
+            |> Option.map (Storage.loadAtom directory "PopulationNode")
+        match isA with
+        | Some is -> is |> Result.bind(fun is -> crawlTaxonomy' directory is ((is |> fst |> snd |> toTaxonomyNode) :: tree))
+        | None -> Ok tree
+
+    let crawlTaxonomy directory taxon =
+        crawlTaxonomy' directory taxon [ taxon |> fst |> snd |> toTaxonomyNode ]
+
+    let taxonName = function
+        | Population.Taxonomy.Life -> "Life", "Life"
+        | Population.Taxonomy.Family f -> f.Value, "Family"
+        | Population.Taxonomy.Genus g -> g.Value, "Genus"
+        | Population.Taxonomy.Species (g,s,a) -> sprintf "%s %s %s" g.Value s.Value a.Value, "Species"
+        | Population.Taxonomy.Subspecies (g,s, ss,a) -> sprintf "%s %s ssp. %s %s" g.Value s.Value ss.Value a.Value, "Subspecies"
+        | Population.Taxonomy.Variety (g,s, ss,a) -> sprintf "%s %s var. %s %s" g.Value s.Value ss.Value a.Value, "Variety"
+        | Population.Taxonomy.Clade g -> g.Value, "Clade"
+        | Population.Taxonomy.Class g -> g.Value, "Class"
+        | Population.Taxonomy.Tribe g -> g.Value, "Tribe"
+        | Population.Taxonomy.Kingdom g -> g.Value, "Kingdom"
+        | Population.Taxonomy.Order g -> g.Value, "Order"
+        | Population.Taxonomy.Phylum g -> g.Value, "Phylum"
+        | Population.Taxonomy.Subfamily g -> g.Value, "Subfamily"
+        | Population.Taxonomy.Subgenus g -> g.Value, "Subgenus"
+        | Population.Taxonomy.Subtribe g -> g.Value, "Subtribe"
+
     /// Given the text representation of the morphotypes
     /// in the dataframe, link this to the morphotypes used
     /// in the biotic proxy nodes. Then, follow to the 'real'
@@ -262,7 +306,8 @@ module TaxonomyLookup =
                                 match atom |> fst |> snd with
                                 | GraphStructure.Node.PopulationNode p ->
                                     match p with
-                                    | GraphStructure.TaxonomyNode b -> Some b
+                                    | GraphStructure.TaxonomyNode b ->
+                                        crawlTaxonomy graph.Directory atom |> Result.toOption |> Option.map(fun t -> t |> List.choose id)
                                     | _ -> None
                                 | _ -> None )
 
@@ -290,6 +335,7 @@ module Traits =
 /// TODO Check it is percent.
 let minPercent = 2.5
 
+
 let calculateBiodiversityVariables graph =
     result {
 
@@ -307,9 +353,31 @@ let calculateBiodiversityVariables graph =
 
         printfn "Matched age-depth model and data for %i series." series.Length
 
+        // Generate taxon index.
+        let taxonIndex =
+            newAges 
+            |> Seq.collect(fun (_,_,taxonLookup,_) ->
+                taxonLookup.Values
+                |> Seq.collect id
+                |> Seq.collect(fun tree ->
+                    let taxonTree = tree |> List.map TaxonomyLookup.taxonName
+                    List.scan(fun state t -> List.append state [t] )
+                        [ taxonTree.Head ] taxonTree.Tail
+                ))
+            |> Seq.distinct
+            |> Seq.filter(fun tree -> tree.IsEmpty |> not)
+            |> Seq.map(fun tree ->
+                printfn "Tree was %A" tree
+                sprintf "%s\t%s\t%s" (fst (List.last tree)) (snd (List.last tree)) (tree.Tail |> Seq.map fst |> String.concat " > ")
+                )
+            |> Seq.append [ "taxon\trank\ttaxonomic_tree" ]
+
+        System.IO.File.WriteAllLines("../../data-derived/taxon-index.tsv", taxonIndex)
+
+
         // Output dataset against calibrated ages:
         let dataWithCalibratedAges =
-            newAges |> List.collect(fun (tsId, ageDepth, _, location) ->
+            newAges |> List.collect(fun (tsId, ageDepth, taxonLookup, location) ->
 
                 let locName = location |> Option.map(fun l ->l.Name.Value.Replace(",", " ")) |> Option.defaultValue "Unknown location"
                 let coord =
@@ -323,11 +391,21 @@ let calculateBiodiversityVariables graph =
                 ageDepth
                 |> Seq.collect(fun kv ->
                     kv.Value
-                    |> Seq.map(fun x -> sprintf "%s,%s,%s,%f,%s,%f" tsId.AsString locName coord kv.Key.Date x.Key x.Value ) |> Seq.toList
+                    |> Seq.collect(fun x ->
+                        taxonLookup
+                        |> Map.tryFind x.Key
+                        |> Option.defaultValue []
+                        |> List.filter(fun tree -> not tree.IsEmpty)
+                        |> List.map(fun tree ->
+                            let taxon, rank = tree |> Seq.last |> TaxonomyLookup.taxonName
+                            let taxonTree = tree |> List.map (TaxonomyLookup.taxonName >> snd) |> String.concat " > "
+                            sprintf "%s\t%s\t%s\t%f\t%s\t%s\t%s\t%s\t%f" tsId.AsString locName coord kv.Key.Date x.Key taxon rank taxonTree x.Value
+                        )
+                    )
                 ) |> Seq.toList )
-            |> List.append [ "timeline_id,site_name,coord,age_ybp,morphotype,data-value" ]
+            |> List.append [ "timeline_id\tsite_name\tcoord\tage_ybp\tmorphotype\ttaxon\trank\ttaxon-tree\tdata-value" ]
 
-        System.IO.File.WriteAllLines("../../data-derived/ebvs/raw-data-calibrated.csv", dataWithCalibratedAges)
+        System.IO.File.WriteAllLines("../../data-derived/raw-data-calibrated.tsv", dataWithCalibratedAges)
 
 
         let presenceInBin =
@@ -354,6 +432,19 @@ let calculateBiodiversityVariables graph =
                         |> Seq.collect (snd >> Seq.toList)
                         |> Seq.distinct
                         |> Seq.toList
+                        |> List.collect(fun t ->
+                            taxonLookup
+                            |> Map.tryFind t
+                            |> Option.map(fun l ->
+                                l |> List.map(fun tree ->
+                                    let taxon, rank = tree |> Seq.last |> TaxonomyLookup.taxonName
+                                    let taxonTree = tree |> List.map (TaxonomyLookup.taxonName >> snd) |> String.concat " > "                                    
+                                    let ambiguousWith =
+                                        l |> List.except [ tree ]
+                                        |> List.map(fun t -> tree |> Seq.last |> TaxonomyLookup.taxonName)
+                                    {| Taxon = taxon; Tree = taxonTree; Rank = rank; AmbiguousWith = ambiguousWith |}
+                            ))
+                            |> Option.defaultValue ([ {| Taxon = "Unverified taxon"; Rank = "Unknown"; Tree = "Unverified taxon"; AmbiguousWith = [] |} ]))
 
                     tsId, binEarly, binLate, botanicalTaxa
 
@@ -363,11 +454,11 @@ let calculateBiodiversityVariables graph =
 
         let presenceInBinTxt =
             presenceInBin
-            |> List.collect(fun (a,b,c,t) ->
-                t |> List.map(fun taxon -> sprintf "%s,%i,%i,%s" a.AsString (int b) (int c) taxon))
-            |> List.append [ "timeline_id,bin_early,bin_late,morphotype" ]
+            |> List.collect(fun (a,b,c,taxa) ->
+                taxa |> List.map(fun taxon-> sprintf "%s\t%i\t%i\t%s\t%s\t%s\t%s" a.AsString (int b) (int c) taxon.Taxon taxon.Rank taxon.Tree (taxon.AmbiguousWith |> Seq.map snd |> String.concat "; ")))
+            |> List.append [ "timeline_id\tbin_early\tbin_late\ttaxon\trank\ttaxonomic_tree\ttaxon_ambiguous_with" ]
 
-        System.IO.File.WriteAllLines("../../data-derived/ebvs/taxon-presence.csv", presenceInBinTxt)
+        System.IO.File.WriteAllLines("../../data-derived/populations/taxon-presence.tsv", presenceInBinTxt)
 
         printfn "3"
 
