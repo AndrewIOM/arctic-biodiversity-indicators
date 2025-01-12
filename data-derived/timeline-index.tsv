@@ -1,0 +1,7 @@
+timeline_id	site_name	latitude_dd (float)	longitude_dd (float)	geometry_type	extent_earliest_ybp	extent_latest_ybp
+individualtimelinenode_40f5222c-4060-4b23-8623-81944b44844f	Lake Boksekhandsken	70.73833333333333	-24.055	point	28137	7960
+individualtimelinenode_40f5222c-4060-4b23-8623-81944b44844f	Lake Boksekhandsken	70.73833333333333	-24.055	point	28137	7960
+individualtimelinenode_48d66bcb-89ff-4d3f-8713-057de0eb592b	Sardlup qaqa	64.4	-51.68333333333333	point	10428	47
+individualtimelinenode_317065f9-d59a-4a58-9592-ba20dcf81572	Terte  Lake A	64.46666666666667	-51.583333333333336	point	10281	0
+individualtimelinenode_38a71e4f-a3fa-4afe-b3ab-7166c907c87e	Karra	64.76666666666667	-50.583333333333336	point	10788	0
+individualtimelinenode_c2805b46-f963-491a-b825-766208e247a0	Johannes Iversen Sø	64.4	-50.2	point	10253	87

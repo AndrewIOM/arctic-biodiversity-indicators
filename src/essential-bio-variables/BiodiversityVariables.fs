@@ -330,10 +330,32 @@ module Traits =
 
     type PlantTraits = CsvProvider<"../../data-third-party/arctic_traits.csv">
 
+module DataFiles =
 
-/// The minimum percentage required to be 'present'.
-/// TODO Check it is percent.
-let minPercent = 2.5
+    open FSharp.Data
+
+    type BiodiversityVariableFile = CsvProvider<"samples/biodiversity-variable.tsv">
+    type TaxonIndex = CsvProvider<"samples/taxon-index.tsv">
+    type TimelineIndex = CsvProvider<"samples/timeline-index.tsv">
+
+module Conversions =
+
+    let dmsToDecimalDegrees (degrees: float) (minutes: float) (seconds: float) : float =
+        degrees + (minutes / 60.0) + (seconds / 3600.0)
+
+    let locationToDecimalDegrees (context:Population.Context.ContextNode option) =
+        context |> Option.map(fun l ->
+            match l.SamplingLocation with
+            | Geography.SamplingLocation.Site (lat,lon) -> lat.Value, lon.Value, "point"
+            | Geography.SamplingLocation.SiteDMS coord ->
+
+                let regex = """([0-9]{2})°([0-9]{2})'([0-9]{2})"N,([0-9]{2})°([0-9]{2})'([0-9]{2})"([EW]{1})"""
+                let m = System.Text.RegularExpressions.Regex.Match(coord.Value, regex)
+                let latDD = dmsToDecimalDegrees (int m.Groups.[1].Value) (int m.Groups.[2].Value) (int m.Groups.[3].Value) * 1.<Geography.DD>
+                let lonDD = dmsToDecimalDegrees (int m.Groups.[4].Value) (int m.Groups.[5].Value) (int m.Groups.[6].Value) * 1.<Geography.DD>
+                if m.Groups.[7].Value = "W" then latDD, -lonDD, "point" else latDD, lonDD, "point"
+            | _ -> nan * 1.<Geography.DD>, nan * 1.<Geography.DD>, "other-unprocessed"
+        ) |> Option.defaultValue (nan * 1.<Geography.DD>, nan * 1.<Geography.DD>, "not-specified")
 
 
 let calculateBiodiversityVariables graph =
@@ -353,40 +375,55 @@ let calculateBiodiversityVariables graph =
 
         printfn "Matched age-depth model and data for %i series." series.Length
 
+        /// Get all the taxonomic trees including for
+        /// each higher taxon (i.e. the Kingom, Plylum, Class etc.)
+        /// for a species are listed as seperate trees.
+        let taxonomicTreesAllLevels (taxonLookup:Map<string,Population.Taxonomy.TaxonNode list list>) =
+            taxonLookup.Values
+            |> Seq.collect id
+            |> Seq.collect(fun tree ->
+                let taxonTree = tree |> List.map TaxonomyLookup.taxonName
+                List.scan(fun state t -> List.append state [t] )
+                    [ taxonTree.Head ] taxonTree.Tail
+            ) |> Seq.distinct
+
         // Generate taxon index.
         let taxonIndex =
             newAges 
-            |> Seq.collect(fun (_,_,taxonLookup,_) ->
-                taxonLookup.Values
-                |> Seq.collect id
-                |> Seq.collect(fun tree ->
-                    let taxonTree = tree |> List.map TaxonomyLookup.taxonName
-                    List.scan(fun state t -> List.append state [t] )
-                        [ taxonTree.Head ] taxonTree.Tail
-                ))
-            |> Seq.distinct
+            |> Seq.collect(fun (_,_,lookup,_) -> taxonomicTreesAllLevels lookup)
             |> Seq.filter(fun tree -> tree.IsEmpty |> not)
             |> Seq.map(fun tree ->
-                printfn "Tree was %A" tree
-                sprintf "%s\t%s\t%s" (fst (List.last tree)) (snd (List.last tree)) (tree.Tail |> Seq.map fst |> String.concat " > ")
+                DataFiles.TaxonIndex.Row(fst (List.last tree), snd (List.last tree), tree.Tail |> Seq.map fst |> String.concat " > ")
                 )
-            |> Seq.append [ "taxon\trank\ttaxonomic_tree" ]
+            |> fun d -> new DataFiles.TaxonIndex(d)
 
-        System.IO.File.WriteAllLines("../../data-derived/taxon-index.tsv", taxonIndex)
+        taxonIndex.Save("../../data-derived/taxon-index.tsv")
+
+        // Generate location index
+        let locationIndex =
+            newAges |> List.map(fun (tsId, ageDepth, taxonLookup, location) ->
+                let earliestDate = ageDepth.Keys |> Seq.map(fun k -> k.Date) |> Seq.max
+                let latestDate = ageDepth.Keys |> Seq.map(fun k -> k.Date) |> Seq.min
+                let locName = location |> Option.map(fun l ->l.Name.Value.Replace(",", " ")) |> Option.defaultValue "Unknown location"
+                let latDd, lonDd, geomType = Conversions.locationToDecimalDegrees location
+                DataFiles.TimelineIndex.Row(
+                    timelineId = tsId.AsString,
+                    siteName = locName,
+                    latitudeDd = float latDd,
+                    longitudeDd = float lonDd,
+                    geometryType = geomType,
+                    extentEarliestYbp = int earliestDate,
+                    extentLatestYbp = int latestDate
+                )
+            )
+            |> fun d -> new DataFiles.TimelineIndex(d)
+
+        locationIndex.Save("../../data-derived/timeline-index.tsv")
 
 
         // Output dataset against calibrated ages:
         let dataWithCalibratedAges =
             newAges |> List.collect(fun (tsId, ageDepth, taxonLookup, location) ->
-
-                let locName = location |> Option.map(fun l ->l.Name.Value.Replace(",", " ")) |> Option.defaultValue "Unknown location"
-                let coord =
-                    location |> Option.map(fun l ->
-                        match l.SamplingLocation with
-                        | Geography.SamplingLocation.Site (lat,lon) -> sprintf "%f, %f" lat.Value lon.Value
-                        | Geography.SamplingLocation.SiteDMS coord -> coord.Value.Replace(",", " ")
-                        | _ -> ""
-                    ) |> Option.defaultValue ""
  
                 ageDepth
                 |> Seq.collect(fun kv ->
@@ -398,69 +435,161 @@ let calculateBiodiversityVariables graph =
                         |> List.filter(fun tree -> not tree.IsEmpty)
                         |> List.map(fun tree ->
                             let taxon, rank = tree |> Seq.last |> TaxonomyLookup.taxonName
-                            let taxonTree = tree |> List.map (TaxonomyLookup.taxonName >> snd) |> String.concat " > "
-                            sprintf "%s\t%s\t%s\t%f\t%s\t%s\t%s\t%s\t%f" tsId.AsString locName coord kv.Key.Date x.Key taxon rank taxonTree x.Value
+                            let taxonTree = tree |> List.map (TaxonomyLookup.taxonName >> fst) |> String.concat " > "
+                            let othersInMorphotype =
+                                taxonLookup |> Map.tryFind x.Key |> Option.defaultValue []
+                                |> List.map(fun t -> t |> Seq.last |> TaxonomyLookup.taxonName |> fst)
+                            DataFiles.BiodiversityVariableFile.Row(
+                                timelineId = tsId.AsString,
+                                binEarly = (kv.Key.Date |> int),
+                                binLate = (kv.Key.Date |> int),
+                                morphotype = x.Key,
+                                taxon = taxon,
+                                rank = rank,
+                                taxonomicTree = taxonTree,
+                                taxonAmbiguousWith = (othersInMorphotype |> String.concat ";"),
+                                variable = "pollen",
+                                variableUnit = "percentage",
+                                variableValue = x.Value,
+                                variableCi = None,
+                                variableConfidenceQualitative = None )
                         )
                     )
                 ) |> Seq.toList )
-            |> List.append [ "timeline_id\tsite_name\tcoord\tage_ybp\tmorphotype\ttaxon\trank\ttaxon-tree\tdata-value" ]
+            |> fun d -> new DataFiles.BiodiversityVariableFile(d)
 
-        System.IO.File.WriteAllLines("../../data-derived/raw-data-calibrated.tsv", dataWithCalibratedAges)
+        dataWithCalibratedAges.Save("../../data-derived/raw-data-calibrated.tsv")
 
+        // Presence-absence:
+
+        let overlapsBin binEarly binLate (k:Exposure.Reanalysis.AgeDepthModelDepth) =
+            match k.StandardDeviation with
+            | None -> k.Date <= binEarly && k.Date > binLate
+            | Some sd ->
+                k.Date <= binEarly + sd && k.Date > binLate - sd
+
+        let presenceClass percentageValue =
+            match percentageValue with
+            | p when p > 2.50 -> "present"
+            | p when p > 0.00 -> "borderline present"
+            | _ -> "absent"
+
+        let presenceToValue = function
+            | "present" -> 1.0
+            | "absent" -> 0.0
+            | "borderline present" -> 0.5
+            | _ -> nan
+
+        /// Taxonomic trees for all taxa in the datasets
+        let masterTaxonList =
+            newAges 
+            |> Seq.collect(fun (_,_,lookup,_) -> taxonomicTreesAllLevels lookup)
+            |> Seq.filter(fun tree -> tree.IsEmpty |> not)
+            |> Seq.toList
 
         let presenceInBin =
             newAges |> List.collect(fun (tsId, ageDepth, taxonLookup, _) ->
                 
                 timeBins
-                |> List.map(fun (binLate, binEarly) ->
+                |> List.collect(fun (binLate, binEarly) ->
 
                     let binEarly = float binEarly * 1.<OldDate.calYearBP>
                     let binLate = float binLate * 1.<OldDate.calYearBP>
                     
-                    let botanicalTaxa =
+                    let taxaOrDefault t =
+                        taxonLookup
+                        |> Map.tryFind t
+                        |> Option.map(fun l ->
+                            l |> List.map(fun tree ->
+                                tree |> List.map TaxonomyLookup.taxonName
+                        ))
+                        |> Option.defaultValue ([["Unverified taxon", "Unknown"]])
+
+                    // Find the presence category for each morphotype
+                    // present within the time window.
+                    let binTaxaByPresenceCategory =
                         ageDepth
-                        |> Map.filter(fun k v ->
-                            match k.StandardDeviation with
-                            | None -> k.Date <= binEarly && k.Date > binLate
-                            | Some sd ->
-                                k.Date <= binEarly + sd && k.Date > binLate - sd )
-                        |> Map.map(fun k v ->
-                            v 
-                            |> Map.filter(fun k v -> v >= minPercent)
-                            |> Map.keys )
+                        |> Map.filter (fun k _ -> overlapsBin binEarly binLate k)
                         |> Map.toList
                         |> Seq.collect (snd >> Seq.toList)
-                        |> Seq.distinct
+                        |> Seq.groupBy(fun t -> t.Key)
+                        |> Seq.map(fun (_,g) ->
+                            let maxValue = g |> Seq.maxBy(fun kv -> kv.Value)
+                            taxaOrDefault maxValue.Key, presenceClass maxValue.Value )
                         |> Seq.toList
-                        |> List.collect(fun t ->
-                            taxonLookup
-                            |> Map.tryFind t
-                            |> Option.map(fun l ->
-                                l |> List.map(fun tree ->
-                                    let taxon, rank = tree |> Seq.last |> TaxonomyLookup.taxonName
-                                    let taxonTree = tree |> List.map (TaxonomyLookup.taxonName >> snd) |> String.concat " > "                                    
-                                    let ambiguousWith =
-                                        l |> List.except [ tree ]
-                                        |> List.map(fun t -> tree |> Seq.last |> TaxonomyLookup.taxonName)
-                                    {| Taxon = taxon; Tree = taxonTree; Rank = rank; AmbiguousWith = ambiguousWith |}
-                            ))
-                            |> Option.defaultValue ([ {| Taxon = "Unverified taxon"; Rank = "Unknown"; Tree = "Unverified taxon"; AmbiguousWith = [] |} ]))
 
-                    tsId, binEarly, binLate, botanicalTaxa
+                    let forBotanicalTaxa =
+                        masterTaxonList
+                        |> List.map(fun thisTree ->
 
+                            let thisTaxon = thisTree |> Seq.last
+
+                            // Exact matches
+                            let exactMorphotypeMatches =
+                                binTaxaByPresenceCategory
+                                |> List.filter(fun (taxa,c) ->
+                                    taxa |> List.exists(fun t -> t |> Seq.last = thisTaxon))
+
+                            // Matches to lower-rank morphotype links (e.g. matched Pinaceae to Pinus sp. pollen)
+                            let lowerRankMatches =
+                                binTaxaByPresenceCategory
+                                |> List.filter(fun (taxa,c) ->
+                                    taxa |> List.exists(fun t -> t |> Seq.contains thisTaxon))
+
+                            // Matches at lower levels (e.g if this is J. communis and there is a pollen type for Juniper).
+                            // NB could state uncertainty as distance between ranks, or ... ?
+                            let upperRankMatches =
+                                binTaxaByPresenceCategory
+                                |> List.filter(fun (b,c) ->
+                                    b |> List.exists(fun t ->
+                                        not (Set.intersect (Set.ofList t) (Set.ofList thisTree)).IsEmpty))
+
+                            thisTaxon,
+                            match exactMorphotypeMatches.Length, lowerRankMatches.Length, upperRankMatches.Length with
+                            | 1, _, _ -> snd exactMorphotypeMatches.Head, "high-confidence"
+                            | i, _, _ when i > 1 ->
+                                match exactMorphotypeMatches |> Seq.map snd |> Seq.distinct |> Seq.length with
+                                | 1 -> snd exactMorphotypeMatches.Head, "high-confidence"
+                                | _ ->
+                                    if exactMorphotypeMatches |> Seq.map snd |> Seq.contains "present"
+                                    then "present", "medium-confidence"
+                                    else "borderline present", "medium-confidence"
+                            | 0, 0, 0 -> "unknown", "unknown"
+                            | 0, 1, _ -> snd lowerRankMatches.Head, "high-confidence"
+                            | _, _, 1 -> snd upperRankMatches.Head, "low-confidence"
+                            | _, _, 0 ->
+                                // No matches exactly, but matches at lower ranks.
+                                match lowerRankMatches |> Seq.distinct |> Seq.length with
+                                | 1 -> snd exactMorphotypeMatches.Head, "high-confidence"
+                                | _ -> "unknown", "unknown"
+                            | _, _, _ ->
+                                // No matches exactly, but matches at upper ranks.
+                                match lowerRankMatches |> Seq.distinct |> Seq.length with
+                                | 1 -> snd exactMorphotypeMatches.Head, "low-confidence"
+                                | _ -> "unknown", "unknown"
+                        )
+
+                    forBotanicalTaxa |> List.map(fun b ->
+                        DataFiles.BiodiversityVariableFile.Row(
+                            timelineId = tsId.AsString,
+                            binEarly = int binEarly,
+                            binLate = int binLate + 1,
+                            morphotype = "unknown",
+                            taxon = fst (fst b),
+                            rank = snd (fst b),
+                            taxonomicTree = "unknown",
+                            taxonAmbiguousWith = "unknown",
+                            variable = "presence",
+                            variableUnit = "present-absent",
+                            variableValue = (b |> snd |> fst |> presenceToValue),
+                            variableCi = None,
+                            variableConfidenceQualitative = Some(b |> snd |> snd) )
+                    )
                 )
-            
             )
 
-        let presenceInBinTxt =
-            presenceInBin
-            |> List.collect(fun (a,b,c,taxa) ->
-                taxa |> List.map(fun taxon-> sprintf "%s\t%i\t%i\t%s\t%s\t%s\t%s" a.AsString (int b) (int c) taxon.Taxon taxon.Rank taxon.Tree (taxon.AmbiguousWith |> Seq.map snd |> String.concat "; ")))
-            |> List.append [ "timeline_id\tbin_early\tbin_late\ttaxon\trank\ttaxonomic_tree\ttaxon_ambiguous_with" ]
-
-        System.IO.File.WriteAllLines("../../data-derived/populations/taxon-presence.tsv", presenceInBinTxt)
-
-        printfn "3"
+        let presenceFile = new DataFiles.BiodiversityVariableFile(presenceInBin)
+        presenceFile.Save("../../data-derived/populations/taxon-presence.tsv")
 
         // Trait spaces
         // let traitData = Traits.PlantTraits.Load "../../data-third-party/arctic_traits.csv"

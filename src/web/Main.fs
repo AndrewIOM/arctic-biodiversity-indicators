@@ -7,8 +7,6 @@ open Elmish
 open Bolero
 open Bolero.Html
 
-// What do we need most urgently? A website for the AHBDB itself (not the map!)
-
 // Structure of data sources - node visualisation + explore.
 // - For Greenland, how are datasets connected secondary -> primary?
 // - "Used in further analyses by..." (backwards link)
@@ -81,6 +79,7 @@ module ModelParts =
         | Movement
         | TaxonomicAndPhylogeneticDiversity
         | TraitDiversity
+        | RawAbundanceData
 
     with
         member this.Name =
@@ -90,6 +89,7 @@ module ModelParts =
             | Movement -> "Movement"
             | TaxonomicAndPhylogeneticDiversity -> "Taxonomic and phylogenetic diversity"
             | TraitDiversity -> "Trait diversity"
+            | RawAbundanceData -> "Raw datasets"
 
         member this.Slug =
             match this with
@@ -98,29 +98,36 @@ module ModelParts =
             | Movement -> "movement"
             | TaxonomicAndPhylogeneticDiversity -> "taxonomic-diversity"
             | TraitDiversity -> "trait-diversity"
+            | RawAbundanceData -> "raw-abundance-data"
 
+        static member FromSlug slug =
+            match slug with
+            | "distribution" -> Some TaxonDistribution
+            | _ -> None
 
     type EBVCategory = {
         Label: string
         EBVs: EssentialBiodiversityVariable list
     }
 
-type Dataset = string list // TODO
+type Dataset = Map<string, float * float>
 
 module DataAccess =
 
     open BiodiversityCoder.Core
     open FSharp.Data
 
-    /// File-based service definition.
-    type DataAccess =
-        {
-            LoadSourceNode: Graph.UniqueKey -> Sources.SourceNode option
+    // RawDataFor: string -> string list -> (decimal * decimal) seq
 
-            RawDataFor: string -> string list -> (decimal * decimal) seq
+    // GetProcessedEbvData: ModelParts.EssentialBiodiversityVariable -> ModelParts.DimensionView -> Async<Dataset[]>
 
-            GetProcessedEbvData: ModelParts.EssentialBiodiversityVariable -> ModelParts.DimensionView -> Async<Dataset[]>
-        }
+    type Dataset = 
+
+    let loadEbvData ebv =
+        match ebv with
+        | ModelParts.EssentialBiodiversityVariable.TaxonDistribution ->
+            
+
 
     module Graph =
 
@@ -452,6 +459,22 @@ module Plots =
             |> GenericChart.toChartHTML
             |> rawHtml
 
+    // Assumes that 1 = present, 0.5 = maybe present, 0 = absent, NA = unknown
+    let presenceHeatmap (siteData: (string * float list) list) =
+        let annotation =
+            siteData |> List.map snd |> List.map(fun p ->
+                p |> List.map(fun p2 ->
+                    match p2 with
+                    | 1. -> "P" | 0.5 -> "M" | 0. -> "A" | f when Double.IsNaN f -> "Unk." | _ -> ""))
+        Chart.AnnotatedHeatmap(
+            zData = (siteData |> List.map snd),
+            annotationText = annotation,
+            X = (siteData |> List.map fst),
+            Y = [ 0 .. 500 .. 12000],
+            ReverseYAxis = true
+        )
+
+
     let traitRadial =
         let radial = [ 1; 2; 3; 2; 5; 11 ]
         let theta = [ "Leaf area"; "Leaf nitrogen"; "Leaf mass"; "Plant height"; "Diaspore mass"; "Stem density" ]
@@ -542,18 +565,24 @@ let selectTimelineMulti dimension (timelineList: ModelParts.TimelineWithLocation
             }
         }
 
-
 let homePage (model: Model) dispatch =
     div {
         h1 { text "Slice raw data by taxon and place" }
-        selectTaxaMulti model dispatch
-        selectTimelineMulti model.dimension model.timelineList dispatch
-        Plots.slicedRawData model.dataSlice
 
         h1 { text "Plant traits test plot" }
         Plots.traitRadial
     }
 
+let ebvPage (ebv:EssentialBiodiversityVariable) model dispatch =
+    concat {
+        textf "Some page for %s" ebv.Name
+        selectTaxaMulti model dispatch
+        selectTimelineMulti model.dimension model.timelineList dispatch
+        cond ebv <| function
+        | TaxonDistribution -> Plots.presenceHeatmap model.dataSlice
+            // Show a heatmap of the EBV data?
+        | RawAbundanceData -> Plots.slicedRawData model.dataSlice
+    }
 
 let view model dispatch =
     View.main
@@ -562,6 +591,10 @@ let view model dispatch =
             cond model.page <| function
             | Home -> homePage model dispatch
             | MarkdownPage _ -> View.markdownPage model dispatch
+            | EssentialBioVariable ebv ->
+                match EssentialBiodiversityVariable.FromSlug ebv with
+                | Some ebv -> ebvPage ebv model dispatch
+                | None -> text "Not found"
         )
         (
             cond model.error <| function
