@@ -332,7 +332,10 @@ let update httpClient message model =
         model, Cmd.OfTask.either (fun _ -> DataAccess.TaxonIndex.load httpClient) () LoadedTaxonIndex Error
     | LoadedTaxonIndex taxa ->
         let map =
-            taxa |> List.groupBy(fun i -> i.Rank) |> Map.ofList
+            taxa 
+            |> List.groupBy(fun i -> i.Rank)
+            |> List.map(fun (g,l) -> g, l |> List.sortBy(fun t -> t.LatinName))
+            |> Map.ofList
         { model with taxonList = map }, Cmd.none
 
     | LoadTimelineIndex ->
@@ -345,6 +348,7 @@ let update httpClient message model =
                 LongitudeDD = t.Longitude_dd
                 TimelineId = t.Timeline_id
                 LocationName = t.Site_name })
+            |> List.sortBy(fun t -> t.LocationName)
         { model with timelineList = timelines }, Cmd.none
 
     | Error exn ->
@@ -471,6 +475,9 @@ module Plots =
 
     open Plotly.NET
 
+    Defaults.DefaultTemplate <- ChartTemplates.lightMirrored
+    Defaults.DefaultHeight <- 300
+
     let slicedRawData (model:Map<TimelineWithLocation,seq<int * float * option<string>>>) =
         cond model.IsEmpty <| function
         | true -> text "No data to display"
@@ -532,22 +539,15 @@ module Plots =
         pointPolar |> GenericChart.toChartHTML |> rawHtml
 
 let selectTaxaMulti model dispatch =
-    div {
-        attr.``class`` "box"
-        ul {
-            forEach model.filterByTaxa <| fun t ->
-                li {
-                    textf "%s (%s)" t.LatinName t.Rank
-                }
-        }
+    div {        
         div {
-            attr.``class`` "field"
+            attr.``class`` "field is-grouped"
             label {
                 attr.``class`` "label"
-                text "Taxonomic rank"
+                text "Add another taxon to view"
             }
             div {
-                attr.``class`` "select"
+                attr.``class`` "select control"
                 select {
                     attr.``class`` "select"
                     bind.change.string model.selectedRankFilter (fun s -> ChangeFilterRank s |> dispatch)
@@ -559,26 +559,27 @@ let selectTaxaMulti model dispatch =
                         }
                 }
             }
-        }
-        div {
-            attr.``class`` "field"
-            label {
-                attr.``class`` "label"
-                text "Select a taxon"
-            }
             div {
-                attr.``class`` "select"
+                attr.``class`` "select control"
                 select {
                     bind.change.string "" (fun s -> AddTaxonToFilter s |> dispatch)
                     cond (model.taxonList |> Map.tryFind model.selectedRankFilter) <| function
                     | None -> empty()
                     | Some ls ->
-                        forEach ls <| fun t ->
+                        concat {
                             option {
-                                attr.name t.LatinName
-                                attr.value t.LatinName
-                                text t.LatinName
+                                attr.disabled "disabled"
+                                attr.selected "selected"
+                                attr.value ""
+                                text "-- Select a taxon --"
                             }
+                            forEach ls <| fun t ->
+                                option {
+                                    attr.name t.LatinName
+                                    attr.value t.LatinName
+                                    text t.LatinName
+                                }
+                        }
                 }
             }
         }
@@ -587,52 +588,150 @@ let selectTaxaMulti model dispatch =
 let selectTimelineMulti dimension (timelineList: ModelParts.TimelineWithLocation list) dispatch =
     cond dimension <| function
     | Temporal timelines ->
-        div {
-            attr.``class`` "box"
-            ul {
-                forEach timelines <| fun t ->
-                    li {
-                        text (timelineList |> List.find(fun t2 -> t2.TimelineId = t)).LocationName
-                        textf "%f, %f"
-                            (timelineList |> List.find(fun t2 -> t2.TimelineId = t)).LatitudeDD
-                            (timelineList |> List.find(fun t2 -> t2.TimelineId = t)).LongitudeDD
-                    }
-            }
-            select {
-                bind.change.string "" (fun s -> AddTimelineToFilter s |> dispatch)
-                concat {
-                    option {
-                        attr.disabled "disabled"
-                        attr.selected "selected"
-                        attr.value ""
-                        text "-- Select a location --"
-                    }
-                    forEach timelineList <| fun t ->
-                        option {
-                            attr.name t.TimelineId
-                            attr.value t.TimelineId
-                            text t.LocationName
+        concat {
+            div {
+                attr.``class`` "field"
+                label {
+                    attr.``class`` "label"
+                    text "Add data from another location"
+                }
+                div {
+                    attr.``class`` "select control"
+                    select {
+                        attr.``class`` "select"
+                        bind.change.string "" (fun s -> AddTimelineToFilter s |> dispatch)
+                        concat {
+                            option {
+                                attr.disabled "disabled"
+                                attr.selected "selected"
+                                attr.value ""
+                                text "-- Select a location --"
+                            }
+                            forEach timelineList <| fun t ->
+                                option {
+                                    attr.name t.TimelineId
+                                    attr.value t.TimelineId
+                                    text t.LocationName
+                                }
                         }
+                    }
+                }
+            }
+            label {
+                attr.``class`` "label"
+                text "Plot locations by:"
+            }
+            div {
+                attr.``class`` "buttons has-addons"
+                button {
+                    attr.``class`` "button is-selected"
+                    text "None"
+                }
+                button {
+                    attr.``class`` "button"
+                    attr.disabled "disabled"
+                    text "Northwards"
                 }
             }
         }
 
+let activeLocations model =
+    cond model.dimension <| function
+    | Temporal timelines ->
+        div {
+            attr.``class`` "tags"
+            forEach timelines <| fun t ->
+                cond (model.timelineList |> List.tryFind(fun t2 -> t2.TimelineId = t)) <| function
+                | Some tl ->
+                    span {
+                        attr.``class`` "tag is-dark"
+                        textf "%s (%fN, %fE)" tl.LocationName tl.LatitudeDD tl.LongitudeDD
+                    }
+                | None -> empty ()
+        }
+    | Spatial _ -> empty ()
+
 let ebvPage (ebv:EssentialBiodiversityVariable) model dispatch =
     concat {
-        textf "Some page for %s" ebv.Name
-        selectTaxaMulti model dispatch
-        selectTimelineMulti model.dimension model.timelineList dispatch
-        cond ebv <| function
-        | TaxonDistribution -> Plots.presenceHeatmap model.dataSlice
-        | RawAbundanceData -> Plots.slicedRawData model.dataSlice        
-        | Morphology ->
-            concat {
-                h1 { text "Plant traits test plot" }
-                Plots.traitRadial
+        div {
+            attr.``class`` "content"
+            h2 { text ebv.Name }
+        }
+
+        div {
+            attr.``class`` "columns"
+            div {
+                attr.``class`` "column"
+                section {
+                    attr.id "ebv-details"
+                    attr.``class`` "content"
+                    cond ebv <| function
+                    | TaxonDistribution ->
+                        div {
+                            attr.``class`` "content"
+                            h2 { text "Taxon Presence-Absence" }
+                            p { text "The presence or absence of a taxon within each 500-year time window." }
+                            Plots.presenceHeatmap model.dataSlice
+                            p { text "The indicator is 1 if the taxon/taxa was present in the window, or 0 if there was a reconstructed absence. Where the underlying proxy data was tending towards absence, the indicator is set as 'borderline' at 0.5. For example, for pollen percentage data the borderline level is set as below 2.5%." }
+                            p { text "The confidence of the indicator is qualitative. Taxonomic uncertainty may exist where identified fossil remains may be from more than one taxon, yielding lower confidence." }
+                        }
+                    | RawAbundanceData -> Plots.slicedRawData model.dataSlice        
+                    | Morphology ->
+                        concat {
+                            h1 { text "Plant traits test plot" }
+                            Plots.traitRadial
+                        }
+                    | Movement -> failwith "Not Implemented"
+                    | TaxonomicAndPhylogeneticDiversity -> failwith "Not Implemented"
+                    | TraitDiversity -> failwith "Not Implemented"
+                }
             }
-        | Movement -> failwith "Not Implemented"
-        | TaxonomicAndPhylogeneticDiversity -> failwith "Not Implemented"
-        | TraitDiversity -> failwith "Not Implemented"
+            div {
+                attr.``class`` "column"
+                div {
+                    attr.``class`` "card"
+                    header {
+                        attr.``class`` "card-header"
+                        p {
+                            attr.``class`` "card-header-title has-background-white-ter"
+                            text "Filter and Slice"
+                        }
+                    }
+                    div {
+                        attr.``class`` "card-content"
+                        div {
+                            attr.``class`` "buttons has-addons"
+                            button {
+                                attr.``class`` "button is-selected"
+                                text "Temporal indicator"
+                            }
+                            button {
+                                attr.``class`` "button"
+                                attr.disabled "disabled"
+                                text "Geo-temporal indicator"
+                            }
+                        }
+                        label {
+                            attr.``class`` "label"
+                            text "Showing indicators for..."
+                        }
+                        div {
+                            attr.``class`` "tags"
+                            forEach model.filterByTaxa <| fun t ->
+                                span {
+                                    attr.``class`` "tag is-light"
+                                    textf "%s (%s)" t.LatinName t.Rank
+                                }
+                        }
+                        activeLocations model
+                        br {}
+                        selectTaxaMulti model dispatch
+                        br {}
+                        selectTimelineMulti model.dimension model.timelineList dispatch
+                    }
+                }
+            }
+        }
     }
 
 let view model dispatch =
