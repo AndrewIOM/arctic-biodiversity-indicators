@@ -35,7 +35,7 @@ type IndexItem = { Tag: string; Name: string }
 module Markdown =
 
     let read (client:HttpClient) tag =
-        client.GetStringAsync("/content/" + tag + ".md")
+        client.GetStringAsync("content/" + tag + ".md")
 
     let asHtml (document:string) = 
         let html = Markdig.Markdown.ToHtml(document)
@@ -134,7 +134,7 @@ module DataAccess =
 
         let load (httpClient:HttpClient) =
             task {
-                let! csv = httpClient.GetStringAsync "/content/indicators/taxon-index.tsv"
+                let! csv = httpClient.GetStringAsync "content/indicators/taxon-index.tsv"
                 let data = TaxonIndex.Parse csv
                 let formatted =
                     data.Rows
@@ -160,7 +160,7 @@ module DataAccess =
 
         let load (httpClient:HttpClient) =
             task {
-                let! csv = httpClient.GetStringAsync "/content/indicators/timeline-index.tsv"
+                let! csv = httpClient.GetStringAsync "content/indicators/timeline-index.tsv"
                 return (TimelineIndex.Parse csv).Rows |> Seq.toList
             }
 
@@ -168,7 +168,7 @@ module DataAccess =
 
     let loadRawData (httpClient:HttpClient) =
         task {
-            let! csv = httpClient.GetStringAsync "/content/indicators/raw-data-calibrated.tsv"
+            let! csv = httpClient.GetStringAsync "content/indicators/raw-data-calibrated.tsv"
             return (DatasetEBV.Parse csv).Rows |> Seq.toList
         }
 
@@ -176,8 +176,8 @@ module DataAccess =
         task {
             let url =
                 match ebv with
-                | ModelParts.EssentialBiodiversityVariable.TaxonDistribution -> "/content/indicators/populations/taxon-presence.tsv"
-                | ModelParts.EssentialBiodiversityVariable.TraitDiversity -> "/content/indicators/traits/plant-morphology.tsv"
+                | ModelParts.EssentialBiodiversityVariable.TaxonDistribution -> "content/indicators/populations/taxon-presence.tsv"
+                | ModelParts.EssentialBiodiversityVariable.TraitDiversity -> "content/indicators/traits/plant-morphology.tsv"
             let! csv = httpClient.GetStringAsync url
             return (DatasetEBV.Parse csv).Rows |> Seq.toList
         }
