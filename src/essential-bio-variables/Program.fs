@@ -45,7 +45,7 @@ match args |> Array.tryItem 1 |> Option.defaultValue "" with
     R.quickSetupOxcal() |> ignore
 
     printfn "Querying graph database for dated timelines..."
-    let graph = Storage.loadOrInitGraph "../../data/" |> Result.forceOk
+    let graph = Storage.loadOrInitGraph "/Users/andrewmartin/Documents/GitHub Projects/holocene-arctic-biodiversity-map/data" |> Result.forceOk
 
     match DateHarmonisation.readAllTimelineAtoms graph with
     | Error _ ->
@@ -61,7 +61,7 @@ match args |> Array.tryItem 1 |> Option.defaultValue "" with
     printfn "Calculating biodiversity variables and outputting a seperate tsv file."
 
     printfn "Loading graph database..."
-    let graph = Storage.loadOrInitGraph "../../data/" |> Result.forceOk
+    let graph = Storage.loadOrInitGraph "/Users/andrewmartin/Documents/GitHub Projects/holocene-arctic-biodiversity-map/data" |> Result.forceOk
     
     let x = BiodiversityVariables.calculateBiodiversityVariables graph |> Result.forceOk
 

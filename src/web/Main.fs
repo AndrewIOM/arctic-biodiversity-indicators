@@ -65,7 +65,8 @@ module ModelParts =
 
     type TimelineWithLocation = {
         TimelineId: string
-        Coordinate: string
+        LatitudeDD: float
+        LongitudeDD: float
         LocationName: string
     }
 
@@ -103,6 +104,11 @@ module ModelParts =
         static member FromSlug slug =
             match slug with
             | "distribution" -> Some TaxonDistribution
+            | "morphology" -> Some Morphology
+            | "movement" -> Some Movement
+            | "taxonomic-diversity" -> Some TaxonomicAndPhylogeneticDiversity
+            | "trait-diversity" -> Some TraitDiversity
+            | "raw-abundance-data" -> Some RawAbundanceData
             | _ -> None
 
     type EBVCategory = {
@@ -110,44 +116,9 @@ module ModelParts =
         EBVs: EssentialBiodiversityVariable list
     }
 
-type Dataset = Map<string, float * float>
-
 module DataAccess =
 
-    open BiodiversityCoder.Core
     open FSharp.Data
-
-    // RawDataFor: string -> string list -> (decimal * decimal) seq
-
-    // GetProcessedEbvData: ModelParts.EssentialBiodiversityVariable -> ModelParts.DimensionView -> Async<Dataset[]>
-
-    type Dataset = 
-
-    let loadEbvData ebv =
-        match ebv with
-        | ModelParts.EssentialBiodiversityVariable.TaxonDistribution ->
-            
-
-
-    module Graph =
-
-        open Microsoft.FSharpLu.Json
-        open System.Threading.Tasks
-
-        let atomUrl atomId = sprintf "https://raw.githubusercontent.com/AndrewIOM/holocene-arctic-biodiversity-map/refs/heads/main/data/atom-%s.json" atomId
-
-        let inline loadAtomFromGitHub< ^T> (httpClient:HttpClient) atomKey : Task<Result< ^T,string>> =
-            task {
-                let url = atomUrl atomKey
-                let! json = httpClient.GetAsync(url)
-                if json.IsSuccessStatusCode
-                then
-                    return
-                        json.Content.ReadAsStream Threading.CancellationToken.None
-                        |> Compact.deserializeStream
-                        |> Ok
-                else return Error <| sprintf "Could not read node from github repository: %s (%s)" (json.StatusCode.ToString()) url
-            }
 
     module TaxonIndex =
 
@@ -183,23 +154,65 @@ module DataAccess =
                 return formatted
             }
 
-    module RawCalibrated =
+    module TimelineIndex =
 
-        type RawCalibratedData = CsvProvider<"../../data-derived/raw-data-calibrated.tsv">
+        type TimelineIndex = CsvProvider<"../../data-derived/timeline-index.tsv">
 
         let load (httpClient:HttpClient) =
             task {
-                let! csv = httpClient.GetStringAsync "/content/indicators/raw-data-calibrated.tsv"
-                return RawCalibratedData.Parse csv
+                let! csv = httpClient.GetStringAsync "/content/indicators/timeline-index.tsv"
+                return (TimelineIndex.Parse csv).Rows |> Seq.toList
             }
 
-        let dataForTimeline (taxa: TaxonIndex.TaxonIndexItem list) timeline (data:RawCalibratedData) : (decimal * decimal) seq =
-            data.Rows
-            |> Seq.filter(fun r -> r.Timeline_id = timeline)
-            |> Seq.filter(fun r ->
-                taxa |> Seq.exists (fun t ->
-                    t.LatinName :: t.IncludedLatinNames |> List.contains r.Taxon))
-            |> Seq.map(fun r -> r.Age_ybp, r.``Data-value``)
+    type DatasetEBV = CsvProvider<"../essential-bio-variables/samples/biodiversity-variable.tsv">
+
+    let loadRawData (httpClient:HttpClient) =
+        task {
+            let! csv = httpClient.GetStringAsync "/content/indicators/raw-data-calibrated.tsv"
+            return (DatasetEBV.Parse csv).Rows |> Seq.toList
+        }
+
+    let loadEbvData ebv (httpClient:HttpClient) =
+        task {
+            let url =
+                match ebv with
+                | ModelParts.EssentialBiodiversityVariable.TaxonDistribution -> "/content/indicators/populations/taxon-presence.tsv"
+                | ModelParts.EssentialBiodiversityVariable.TraitDiversity -> "/content/indicators/traits/plant-morphology.tsv"
+            let! csv = httpClient.GetStringAsync url
+            return (DatasetEBV.Parse csv).Rows |> Seq.toList
+        }
+
+    // RawDataFor: string -> string list -> (decimal * decimal) seq
+    // GetProcessedEbvData: ModelParts.EssentialBiodiversityVariable -> ModelParts.DimensionView -> Async<Dataset[]>
+    let dataForTimeline (taxa: TaxonIndex.TaxonIndexItem list) timeline (data:list<DatasetEBV.Row>) =
+        data
+        |> Seq.filter(fun r -> r.Timeline_id = timeline)
+        |> Seq.filter(fun r ->
+            taxa |> Seq.exists (fun t ->
+                t.LatinName :: t.IncludedLatinNames |> List.contains r.Taxon))
+        |> Seq.map(fun r -> r.Bin_early, r.Variable_value, r.Variable_confidence_qualitative)
+
+    /// Direct read-only access to the holocene map graph database from github.
+    module Graph =
+
+        open Microsoft.FSharpLu.Json
+        open System.Threading.Tasks
+
+        let atomUrl atomId = sprintf "https://raw.githubusercontent.com/AndrewIOM/holocene-arctic-biodiversity-map/refs/heads/main/data/atom-%s.json" atomId
+
+        let inline loadAtomFromGitHub< ^T> (httpClient:HttpClient) atomKey : Task<Result< ^T,string>> =
+            task {
+                let url = atomUrl atomKey
+                let! json = httpClient.GetAsync(url)
+                if json.IsSuccessStatusCode
+                then
+                    return
+                        json.Content.ReadAsStream Threading.CancellationToken.None
+                        |> Compact.deserializeStream
+                        |> Ok
+                else return Error <| sprintf "Could not read node from github repository: %s (%s)" (json.StatusCode.ToString()) url
+            }
+
 
 
 /// Routing endpoints definition.
@@ -207,9 +220,8 @@ type Page =
     | [<EndPoint "/">] Home
     | [<EndPoint "/ebv/{name}">] EssentialBioVariable of name:string
     | [<EndPoint "/ebv/spatial/{name}">] EssentialBioVariableSpatial of name:string
-    | [<EndPoint "/sources/{sourceId}">] Sources of sourceId:string option
+    // | [<EndPoint "/sources/{sourceId}">] Sources of sourceId:string option
     | [<EndPoint "/{*tags}">] MarkdownPage of tags: list<string>
-
 
 /// The Elmish application's model.
 type Model =
@@ -217,15 +229,16 @@ type Model =
         page: Page
         markdown: string option
         inpagelinks: IndexItem list
-        
         error: string option
-        data: DataAccess.RawCalibrated.RawCalibratedData option
-        dataSlice: Map<ModelParts.TimelineWithLocation, (decimal * decimal) seq>
+        
+        taxonList: Map<string, DataAccess.TaxonIndex.TaxonIndexItem list>
+        timelineList: ModelParts.TimelineWithLocation list
+
+        data: DataAccess.DatasetEBV.Row list option
+        dataSlice: Map<ModelParts.TimelineWithLocation, (int * float * option<string>) seq>
         filterByTaxa: DataAccess.TaxonIndex.TaxonIndexItem list
         selectedRankFilter: string
         dimension: ModelParts.DimensionView
-        taxonList: Map<string, DataAccess.TaxonIndex.TaxonIndexItem list>
-        timelineList: ModelParts.TimelineWithLocation list
     }
 
 let initModel =
@@ -256,12 +269,16 @@ let ebvIndex = [
     { Label = "Species traits"
       EBVs = [
         Morphology
-        Movement
+        // Movement
       ] }
-    { Label = "Community composition"
+    // { Label = "Community composition"
+    //   EBVs = [
+    //     TaxonomicAndPhylogeneticDiversity
+    //     TraitDiversity
+    //   ] }
+    { Label = "Underlying data"
       EBVs = [
-        TaxonomicAndPhylogeneticDiversity
-        TraitDiversity
+        RawAbundanceData
       ] }
 ]
 
@@ -273,20 +290,19 @@ type Message =
 
     | LoadTaxonIndex
     | LoadedTaxonIndex of DataAccess.TaxonIndex.TaxonIndexItem list
+    | LoadTimelineIndex
+    | LoadedTimelineIndex of DataAccess.TimelineIndex.TimelineIndex.Row list
 
-    | LoadIndicatorData of ModelParts.EssentialBiodiversityVariable
-    | LoadedIndicatorData of Dataset[]
     | Error of exn
     | ClearError
 
-    | LoadRawData
-    | LoadedRawData of DataAccess.RawCalibrated.RawCalibratedData
-    | SliceRawData
+    | LoadIndicatorData of ModelParts.EssentialBiodiversityVariable
+    | LoadedIndicatorData of DataAccess.DatasetEBV.Row list
+    | SliceIndicatorData
 
     | ChangeFilterRank of string
     | AddTaxonToFilter of string
     | AddTimelineToFilter of string
-
 
 let update httpClient message model =
     match message with
@@ -295,7 +311,12 @@ let update httpClient message model =
         | MarkdownPage tags ->
             { model with page = page }, Cmd.ofMsg(LoadMarkdownPage tags)
         | Home -> { model with page = page }, Cmd.ofMsg(LoadMarkdownPage ["index"])
-        | _ -> { model with page = page}, Cmd.none
+        | EssentialBioVariable ebv ->
+            match ebv |> EssentialBiodiversityVariable.FromSlug with
+            | Some ebv -> { model with page = page; data = None }, Cmd.ofMsg(LoadIndicatorData ebv)
+            | None -> { model with page = Home; error = Some (sprintf "EBV not found: %s" ebv); data = None }, Cmd.none
+        | EssentialBioVariableSpatial ebv ->
+            { model with page = Home; error = Some "Spatial EBVs not yet implemented" }, Cmd.none
     | LoadMarkdownPage(name) ->
         let pageToLoad =
             if name.IsEmpty then "index"
@@ -314,24 +335,34 @@ let update httpClient message model =
             taxa |> List.groupBy(fun i -> i.Rank) |> Map.ofList
         { model with taxonList = map }, Cmd.none
 
+    | LoadTimelineIndex ->
+        model, Cmd.OfTask.either (fun _ -> DataAccess.TimelineIndex.load httpClient) () LoadedTimelineIndex Error
+    | LoadedTimelineIndex timelines ->
+        let timelines =
+            timelines
+            |> List.map(fun t -> {
+                LatitudeDD = t.Latitude_dd
+                LongitudeDD = t.Longitude_dd
+                TimelineId = t.Timeline_id
+                LocationName = t.Site_name })
+        { model with timelineList = timelines }, Cmd.none
+
     | Error exn ->
         printfn "Error! Was %A" exn
         { model with error = Some exn.Message }, Cmd.none
     | ClearError ->
         { model with error = None }, Cmd.none
     
-    | LoadRawData ->
-        printfn "Loading..."
-        model, Cmd.OfTask.either (fun _ -> DataAccess.RawCalibrated.load httpClient) () LoadedRawData Error
-    | LoadedRawData raw ->
-        let timelines =
-            raw.Rows 
-            |> Seq.map(fun r -> { TimelineId = r.Timeline_id; LocationName = r.Site_name; Coordinate = r.Coord })
-            |> Seq.distinct
-            |> Seq.toList
-        { model with data = Some raw; timelineList = timelines }, Cmd.none
+    | LoadIndicatorData ebv ->
+        let task =
+            match ebv with
+            | RawAbundanceData -> DataAccess.loadRawData
+            | _ -> DataAccess.loadEbvData ebv
+        model, Cmd.OfTask.either (fun _ -> task httpClient) () LoadedIndicatorData Error
+    | LoadedIndicatorData raw ->
+        { model with data = Some raw }, Cmd.none
 
-    | SliceRawData ->
+    | SliceIndicatorData ->
         match model.data with
         | None -> { model with error = Some "Raw datasets not yet loaded"}, Cmd.none
         | Some dataset ->
@@ -341,7 +372,7 @@ let update httpClient message model =
                     timelines
                     |> List.map (fun t -> 
                         model.timelineList |> Seq.find (fun ts -> ts.TimelineId = t), 
-                        DataAccess.RawCalibrated.dataForTimeline model.filterByTaxa t dataset)
+                        DataAccess.dataForTimeline model.filterByTaxa t dataset)
                     |> Map.ofList
                 { model with dataSlice = sliced }, Cmd.none
             | Spatial _ -> model, Cmd.none
@@ -349,11 +380,11 @@ let update httpClient message model =
     | ChangeFilterRank r -> { model with selectedRankFilter = r}, Cmd.none
     | AddTaxonToFilter taxon ->
         let toAdd = model.taxonList |> Map.find model.selectedRankFilter |> Seq.find(fun t -> t.LatinName = taxon)
-        { model with filterByTaxa = toAdd :: model.filterByTaxa }, Cmd.ofMsg SliceRawData
+        { model with filterByTaxa = toAdd :: model.filterByTaxa }, Cmd.ofMsg SliceIndicatorData
     | AddTimelineToFilter timeline ->
         match model.dimension with
-        | Temporal t -> { model with dimension = Temporal (timeline :: t) }, Cmd.ofMsg SliceRawData
-        | Spatial (t,s) -> { model with dimension = Spatial ((timeline :: t),s) }, Cmd.ofMsg SliceRawData
+        | Temporal t -> { model with dimension = Temporal (timeline :: t) }, Cmd.ofMsg SliceIndicatorData
+        | Spatial (t,s) -> { model with dimension = Spatial ((timeline :: t),s) }, Cmd.ofMsg SliceIndicatorData
 
 /// Connects the routing system to the Elmish application.
 let router = Router.infer SetPage (fun model -> model.page)
@@ -440,13 +471,13 @@ module Plots =
 
     open Plotly.NET
 
-    let slicedRawData (model:Map<TimelineWithLocation,seq<decimal * decimal>>) =
+    let slicedRawData (model:Map<TimelineWithLocation,seq<int * float * option<string>>>) =
         cond model.IsEmpty <| function
         | true -> text "No data to display"
         | false ->
             model
             |> Seq.map(fun kv ->
-                Chart.Line(kv.Value |> Seq.map snd, kv.Value |> Seq.map fst, Name = kv.Key.LocationName, ShowMarkers = true, Orientation = StyleParam.Orientation.Vertical)
+                Chart.Line(kv.Value |> Seq.map(fun (_,i,_) -> i), kv.Value |> Seq.map(fun (i,_,_) -> i), Name = kv.Key.LocationName, ShowMarkers = true, Orientation = StyleParam.Orientation.Vertical)
                 |> Chart.withYAxisStyle(MinMax = (12000, 0))
                 |> Chart.withXAxisStyle(MinMax = (0, 50))
             )
@@ -460,19 +491,38 @@ module Plots =
             |> rawHtml
 
     // Assumes that 1 = present, 0.5 = maybe present, 0 = absent, NA = unknown
-    let presenceHeatmap (siteData: (string * float list) list) =
-        let annotation =
-            siteData |> List.map snd |> List.map(fun p ->
-                p |> List.map(fun p2 ->
-                    match p2 with
-                    | 1. -> "P" | 0.5 -> "M" | 0. -> "A" | f when Double.IsNaN f -> "Unk." | _ -> ""))
-        Chart.AnnotatedHeatmap(
-            zData = (siteData |> List.map snd),
-            annotationText = annotation,
-            X = (siteData |> List.map fst),
-            Y = [ 0 .. 500 .. 12000],
-            ReverseYAxis = true
-        )
+    let presenceHeatmap (siteData: Map<TimelineWithLocation,seq<int * float * option<string>>>) = // (siteData: (string * float list) list) =
+        if siteData.Count = 0 then text "No timelines selected"
+        else
+            let annotation =
+                siteData |> Map.values |> Seq.map(fun p ->
+                    p |> Seq.map(fun (_,p2,confidence) ->
+                        match p2 with
+                        | 1. -> "P" | 0.5 -> "M" | 0. -> "A" | f when Double.IsNaN f -> "Unk." | _ -> ""))
+            let timeBinStarts = siteData |> Map.values |> Seq.head |> Seq.map (fun (i,_,_) -> i)
+            let zData =
+                siteData |> Map.values |> Seq.map(fun d -> d |> Seq.map (fun (_,i,_) -> i))
+
+            printfn "z data was %A" zData
+
+            let scale = 
+                StyleParam.Colorscale.Custom [
+                    
+                ]
+
+            Chart.AnnotatedHeatmap(
+                zData = zData,
+                annotationText = annotation,
+                Y = (siteData.Keys |> Seq.map(fun k -> k.LocationName)),
+                X = timeBinStarts,
+                ShowScale = false,
+                ColorScale = StyleParam.Colorscale.Viridis,
+                ReverseYAxis = true
+            )
+            |> Chart.withXAxisStyle (TitleText = "1,000 Calendar years before present (cal yr BP)")
+            |> Chart.withYAxisStyle (TitleText = "Location name")
+            |> GenericChart.toChartHTML
+            |> rawHtml
 
 
     let traitRadial =
@@ -543,7 +593,9 @@ let selectTimelineMulti dimension (timelineList: ModelParts.TimelineWithLocation
                 forEach timelines <| fun t ->
                     li {
                         text (timelineList |> List.find(fun t2 -> t2.TimelineId = t)).LocationName
-                        text (timelineList |> List.find(fun t2 -> t2.TimelineId = t)).Coordinate
+                        textf "%f, %f"
+                            (timelineList |> List.find(fun t2 -> t2.TimelineId = t)).LatitudeDD
+                            (timelineList |> List.find(fun t2 -> t2.TimelineId = t)).LongitudeDD
                     }
             }
             select {
@@ -565,14 +617,6 @@ let selectTimelineMulti dimension (timelineList: ModelParts.TimelineWithLocation
             }
         }
 
-let homePage (model: Model) dispatch =
-    div {
-        h1 { text "Slice raw data by taxon and place" }
-
-        h1 { text "Plant traits test plot" }
-        Plots.traitRadial
-    }
-
 let ebvPage (ebv:EssentialBiodiversityVariable) model dispatch =
     concat {
         textf "Some page for %s" ebv.Name
@@ -580,8 +624,15 @@ let ebvPage (ebv:EssentialBiodiversityVariable) model dispatch =
         selectTimelineMulti model.dimension model.timelineList dispatch
         cond ebv <| function
         | TaxonDistribution -> Plots.presenceHeatmap model.dataSlice
-            // Show a heatmap of the EBV data?
-        | RawAbundanceData -> Plots.slicedRawData model.dataSlice
+        | RawAbundanceData -> Plots.slicedRawData model.dataSlice        
+        | Morphology ->
+            concat {
+                h1 { text "Plant traits test plot" }
+                Plots.traitRadial
+            }
+        | Movement -> failwith "Not Implemented"
+        | TaxonomicAndPhylogeneticDiversity -> failwith "Not Implemented"
+        | TraitDiversity -> failwith "Not Implemented"
     }
 
 let view model dispatch =
@@ -589,7 +640,7 @@ let view model dispatch =
         (View.menu model)
         (
             cond model.page <| function
-            | Home -> homePage model dispatch
+            | Home -> View.markdownPage model dispatch
             | MarkdownPage _ -> View.markdownPage model dispatch
             | EssentialBioVariable ebv ->
                 match EssentialBiodiversityVariable.FromSlug ebv with
@@ -611,5 +662,5 @@ type MyApp() =
 
     override this.Program =
         let update = update this.HttpClient
-        Program.mkProgram (fun _ -> initModel, Cmd.batch [ Cmd.ofMsg LoadRawData; Cmd.ofMsg LoadTaxonIndex]) update view
+        Program.mkProgram (fun _ -> initModel, Cmd.batch [ Cmd.ofMsg LoadTaxonIndex; Cmd.ofMsg LoadTimelineIndex ]) update view
         |> Program.withRouter router
