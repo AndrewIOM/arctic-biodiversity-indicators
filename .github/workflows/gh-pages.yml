@@ -24,6 +24,8 @@ jobs:
       working-directory: src
     - name: Publish with dotnet
       run: dotnet publish --configuration Release --output build src/web/GraphExplorer.Client.fsproj
+    - name: Disable Jekyll
+      run: touch build/wwwroot/.nojekyll
     - name: Deploy 🚀
       uses: JamesIves/github-pages-deploy-action@v4
       with:
