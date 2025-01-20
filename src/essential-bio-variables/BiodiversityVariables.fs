@@ -328,7 +328,30 @@ module Traits =
 
     open FSharp.Data
 
-    type PlantTraits = CsvProvider<"../../data-third-party/arctic_traits.csv">
+    type PlantTraits = CsvProvider<"../../data-third-party/traits/arctic_traits.tsv">
+
+    let weightedMedian (values: (float * float) list) =
+        let sortedValues = List.sortBy fst values
+        let totalWeight = List.sumBy snd sortedValues
+        let cumulativeWeight = 
+            sortedValues 
+            |> List.scan (fun acc (value, weight) -> acc + weight) 0.0
+            |> List.tail
+        let medianIndex = cumulativeWeight |> List.findIndex (fun w -> w >= totalWeight / 2.0)
+        fst sortedValues.[medianIndex]
+
+    let weightedMean valuesWeights =
+        let values, weights = List.unzip valuesWeights
+        let totalWeight = List.sum weights
+        let weightedSum = List.sum (List.map2 (*) values weights)
+        weightedSum / float totalWeight
+
+    let pooledStandardDeviation (datasetInfo: (float * float * int * float) list) =
+        let overallVariance = 
+            (datasetInfo |> List.sumBy (fun (mean, stdDev, n, weight) -> (float(n) - 1.0) * (stdDev ** 2.0) * weight))
+                / (datasetInfo |> List.sumBy (fun (_, _, n, weight) -> weight * float(n - 1)))
+        sqrt overallVariance
+
 
 module DataFiles =
 
@@ -546,34 +569,35 @@ let calculateBiodiversityVariables graph =
 
                             thisTaxon,
                             match exactMorphotypeMatches.Length, lowerRankMatches.Length, upperRankMatches.Length with
-                            | 1, _, _ -> snd exactMorphotypeMatches.Head, "high-confidence"
+                            | 1, _, _ -> true, snd exactMorphotypeMatches.Head, "high-confidence"
                             | i, _, _ when i > 1 ->
                                 match exactMorphotypeMatches |> Seq.map snd |> Seq.distinct |> Seq.length with
-                                | 1 -> snd exactMorphotypeMatches.Head, "high-confidence"
+                                | 1 -> true, snd exactMorphotypeMatches.Head, "high-confidence"
                                 | _ ->
                                     if exactMorphotypeMatches |> Seq.map snd |> Seq.contains "present"
-                                    then "present", "medium-confidence"
-                                    else "borderline present", "medium-confidence"
-                            | 0, 0, 0 -> "unknown", "unknown"
-                            | 0, 1, _ -> snd lowerRankMatches.Head, "high-confidence"
-                            | _, _, 1 -> snd upperRankMatches.Head, "low-confidence"
+                                    then true, "present", "medium-confidence"
+                                    else true, "borderline present", "medium-confidence"
+                            | 0, 0, 0 -> false, "unknown", "unknown"
+                            | 0, 1, _ -> false, snd lowerRankMatches.Head, "high-confidence"
+                            | _, _, 1 -> false, snd upperRankMatches.Head, "low-confidence"
                             | _, _, 0 ->
                                 // No matches exactly, but matches at lower ranks.
                                 match lowerRankMatches |> Seq.distinct |> Seq.length with
-                                | 1 -> snd exactMorphotypeMatches.Head, "high-confidence"
-                                | _ -> "unknown", "unknown"
+                                | 1 -> false, snd exactMorphotypeMatches.Head, "high-confidence"
+                                | _ -> false, "unknown", "unknown"
                             | _, _, _ ->
                                 // No matches exactly, but matches at upper ranks.
                                 match lowerRankMatches |> Seq.distinct |> Seq.length with
-                                | 1 -> snd exactMorphotypeMatches.Head, "low-confidence"
-                                | _ -> "unknown", "unknown"
+                                | 1 -> false, snd exactMorphotypeMatches.Head, "low-confidence"
+                                | _ -> false, "unknown", "unknown"
                         )
 
                     forBotanicalTaxa |> List.map(fun b ->
+                        (b |> snd |> (fun (isExactMatch,_,_) -> isExactMatch)),
                         DataFiles.BiodiversityVariableFile.Row(
                             timelineId = tsId.AsString,
-                            binEarly = int binEarly,
-                            binLate = int binLate + 1,
+                            binEarly = int binEarly - 1,
+                            binLate = int binLate,
                             morphotype = "unknown",
                             taxon = fst (fst b),
                             rank = snd (fst b),
@@ -581,27 +605,108 @@ let calculateBiodiversityVariables graph =
                             taxonAmbiguousWith = "unknown",
                             variable = "presence",
                             variableUnit = "present-absent",
-                            variableValue = (b |> snd |> fst |> presenceToValue),
+                            variableValue = (b |> snd |> (fun (_,b,_) -> b) |> presenceToValue),
                             variableCi = None,
-                            variableConfidenceQualitative = Some(b |> snd |> snd) )
+                            variableConfidenceQualitative = Some(b |> snd |> (fun (_,_,c) -> c)) )
                     )
                 )
             )
 
-        let presenceFile = new DataFiles.BiodiversityVariableFile(presenceInBin)
+        let presenceFile = new DataFiles.BiodiversityVariableFile(presenceInBin |> List.map snd)
         presenceFile.Save("../../data-derived/populations/taxon-presence.tsv")
 
         // Trait spaces
-        // let traitData = Traits.PlantTraits.Load "../../data-third-party/arctic_traits.csv"
+        let traitData =
+            Traits.PlantTraits.Load "/Users/andrewmartin/Documents/GitHub Projects/arctic-biodiversity-indicators/data-third-party/traits/arctic_traits.tsv"
+            |> fun t -> t.Rows |> Seq.toList
 
-        // For each time-bin, we know the taxa that were present.
-        // - Mean + SD for one - many taxa
+        let sixTraits = [
+            "Leaf area (in case of compound leaves: leaf, petiole included)"
+            "Leaf nitrogen (N) content per leaf dry mass"
+            "Leaf area per leaf dry mass (specific leaf area, SLA or 1/LMA): petiole included"
+            "Plant height vegetative"
+            "Seed dry mass"
+            "Stem specific density (SSD) or wood density (stem dry mass per stem fresh volume)"
+        ]
 
-        // Show a six-sided radial plot, with a line
-        // depicting movement through time in the mean.
+        let withTraits =
+            presenceInBin
+            |> List.filter(fun (isExactMatch, _) -> isExactMatch)
+            |> List.map snd
+            |> List.filter(fun x -> x.Variable_value <> 0.) // remove absent taxa
+            |> List.groupBy(fun r -> r.Bin_early, r.Bin_late, r.Timeline_id)
+            |> List.collect(fun ((binEarly, binLate, timeline),records) ->
 
-        // traitData.Rows |> Seq.map(fun r -> r.Origin)
+                // Within each timeline, and for each bin...
+                // - Connect taxa to traits dataset
+                let taxaValues = 
+                    records
+                    |> List.map(fun x -> x.Taxon, x.Taxon_ambiguous_with)
+                    |> List.distinct
+                    |> List.collect(fun (taxon, ambiguousWith) ->
+
+                        // Weight taxon values by taxonomic ambiguity
+                        let taxonWeight = 1. / float (ambiguousWith.Split(";").Length)
+                        
+                        sixTraits
+                        |> List.map(fun t ->
+                            t,
+                            traitData 
+                            |> Seq.tryFind(fun i ->
+                                i.Taxon = taxon && i.Trait_name = t && i.Origin = "arctic mean" && i.N > 1)
+                            |> Option.orElseWith (fun () ->
+                                traitData 
+                                |> Seq.tryFind(fun i -> i.Taxon = taxon && i.Trait_name = t && i.Origin = "global mean"))
+                            |> Option.map(fun r -> {| Taxon = taxon; Mean = r.Mean_value; Sd = r.Sd; Weight = taxonWeight; Unit = r.Unit; N = r.N |})
+                        )
+                    )
+
+                // Summarise across taxa
+                
+                taxaValues
+                |> List.groupBy fst
+                |> List.map(fun (t,g) ->
+                    
+                    let median = 
+                        g |> List.map snd |> List.choose id
+                        // Filter out mean of NaN i.e. sample size of 0
+                        |> List.filter(fun x -> System.Double.IsNaN x.Mean |> not)
+                        |> List.map(fun x -> x.Mean, x.Weight)
+                        |> fun l ->
+                            if l.IsEmpty
+                            then
+                                printfn "Warning: no trait data for [%s] [%A/%A]" t binEarly binLate
+                                nan
+                            else Traits.weightedMean l
+
+                    let units = g |> List.tryHead |> Option.bind snd |> Option.map(fun v -> v.Unit) |> Option.defaultValue "unknown unit"
+
+                    let sd =
+                        g |> List.map snd |> List.choose id
+                        // Filter out SD of NaN i.e. sample size of 0 or 1
+                        |> List.filter(fun x -> System.Double.IsNaN x.Sd |> not)
+                        |> List.map(fun x -> x.Mean, x.Sd, x.N, x.Weight)
+                        |> Traits.pooledStandardDeviation
+
+                    DataFiles.BiodiversityVariableFile.Row(
+                        timelineId = timeline,
+                        binEarly = binEarly,
+                        binLate = binLate,
+                        morphotype = "NA",
+                        taxon = "community",
+                        rank = "NA",
+                        taxonomicTree = "NA",
+                        taxonAmbiguousWith = "NA",
+                        variable = t,
+                        variableUnit = units,
+                        variableValue = median,
+                        variableCi = Some sd,
+                        variableConfidenceQualitative = None )
+                    )
+            )
+
+        let traitFile = new DataFiles.BiodiversityVariableFile(withTraits)
+        traitFile.Save("../../data-derived/traits/plant-morphology.tsv")
 
         return newAges
-
     }
