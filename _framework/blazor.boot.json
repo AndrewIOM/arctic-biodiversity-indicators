@@ -1,9 +1,9 @@
 {
   "mainAssemblyName": "GraphExplorer.Client",
   "resources": {
-    "hash": "sha256-EPO5AWJk8a52U5HGpAdF+O6vc3ogq5zIyHXpCSF1fq8=",
+    "hash": "sha256-Q2PYEw0mQhThAGipakN98Xf5a08WdGQrirtM3FuQhJA=",
     "fingerprinting": {
-      "BiodiversityCoder.Core.8x9yitomms.wasm": "BiodiversityCoder.Core.wasm",
+      "BiodiversityCoder.Core.w1uuds475c.wasm": "BiodiversityCoder.Core.wasm",
       "Bolero.Html.wm1pinuf5v.wasm": "Bolero.Html.wasm",
       "Bolero.Templating.5ppc28ax9o.wasm": "Bolero.Templating.wasm",
       "Bolero.13c2zys2rj.wasm": "Bolero.wasm",
@@ -21,7 +21,7 @@
       "FSharp.Data.Xml.Core.qfbjkrouvc.wasm": "FSharp.Data.Xml.Core.wasm",
       "FSharp.SystemTextJson.tdw06olnip.wasm": "FSharp.SystemTextJson.wasm",
       "Giraffe.ViewEngine.StrongName.0hruojk6ms.wasm": "Giraffe.ViewEngine.StrongName.wasm",
-      "GraphExplorer.Client.tc5oj58e2r.wasm": "GraphExplorer.Client.wasm",
+      "GraphExplorer.Client.wzcjifrqpg.wasm": "GraphExplorer.Client.wasm",
       "HtmlAgilityPack.sp3ymqxbys.wasm": "HtmlAgilityPack.wasm",
       "Markdig.tosia6zai6.wasm": "Markdig.wasm",
       "Microsoft.AspNetCore.Components.02v8eelr35.wasm": "Microsoft.AspNetCore.Components.wasm",
@@ -154,7 +154,7 @@
       "System.Runtime.InteropServices.JavaScript.zi1g5j45xx.wasm": "sha256-RcMB+sFL5o71an8I06Q2G9IVbsil5312TbSwj0++OyY="
     },
     "assembly": {
-      "BiodiversityCoder.Core.8x9yitomms.wasm": "sha256-vExDv48UEUxeO/cLFRRyiSK4NQDmT8rYss9t19PPnq0=",
+      "BiodiversityCoder.Core.w1uuds475c.wasm": "sha256-pBByTtNIwmge71dNfOymFdwyJ6jRQppKoSDdS6D3tZ4=",
       "Bolero.Html.wm1pinuf5v.wasm": "sha256-eH1BmZmQoTiKPUq9VSfvY4hQHq073M8YVsPgcLTg9fw=",
       "Bolero.Templating.5ppc28ax9o.wasm": "sha256-57CYjhGOlFX6oW7ZBPt2oq7zhRJAATtNHZNATUr7LzA=",
       "Bolero.13c2zys2rj.wasm": "sha256-U0taajarfyvxCUeYvdWmEUHIsJ44WAa/Z0e5pU6YMx0=",
@@ -172,7 +172,7 @@
       "FSharp.Data.Xml.Core.qfbjkrouvc.wasm": "sha256-Wl8ujKL/13KIakZzxhJlj1uU8X53c7g0DedKv4vguh4=",
       "FSharp.SystemTextJson.tdw06olnip.wasm": "sha256-8dnTT5eRfqR4f7HZNInk1JRwqnay5mYgWpiMlTuked4=",
       "Giraffe.ViewEngine.StrongName.0hruojk6ms.wasm": "sha256-bBUQr/NMIYGIT3A9os0j05EujOpxKjKbX6pj4XTxlnc=",
-      "GraphExplorer.Client.tc5oj58e2r.wasm": "sha256-46dU1cMvWOjSn1DlSArQEFwPI4GTJ4na3fSZ54sxrpo=",
+      "GraphExplorer.Client.wzcjifrqpg.wasm": "sha256-dBmTRyw1kOyxAxRgMNTbsYkpoLnd6oTrfpay1wUcMZU=",
       "HtmlAgilityPack.sp3ymqxbys.wasm": "sha256-sGq/grWIdvCK23IrF5ozup2WucIPJDitcr+FCDzpz+U=",
       "Markdig.tosia6zai6.wasm": "sha256-Q8xKR/WvOpfiNK6in6cZ9XtquIArOEv7Bi93hrMhvAQ=",
       "Microsoft.AspNetCore.Components.02v8eelr35.wasm": "sha256-yNqJmPqJVvOK2JQCF7HRTR5Bnt03QYsW4yBqOW/Pu6o=",
