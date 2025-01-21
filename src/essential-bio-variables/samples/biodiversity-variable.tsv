@@ -1,2 +1,2 @@
-timeline_id	bin_early	bin_late	morphotype	taxon	rank	taxonomic_tree	taxon_ambiguous_with	variable	variable_unit	variable_value (float)	variable_ci (float option)	variable_confidence_qualitative (string option)
+location_id	bin_early	bin_late	morphotype	taxon	rank	taxonomic_tree	taxon_ambiguous_with	variable	variable_unit	variable_value (float)	variable_ci (float option)	variable_confidence_qualitative (string option)
 individualtimelinenode_c2805b46-f963-491a-b825-766208e247a0	9500	9000	pollen t.	Polypodiaceae	Family	Life > Kingdom > Phylum > Class > Order > Family	None	presence	presence_category	0.5		fairly-reliable

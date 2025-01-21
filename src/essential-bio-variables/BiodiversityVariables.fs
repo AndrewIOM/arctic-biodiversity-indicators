@@ -501,7 +501,7 @@ let calculateBiodiversityVariables graph =
                                 taxonLookup |> Map.tryFind x.Key |> Option.defaultValue []
                                 |> List.map(fun t -> t |> Seq.last |> TaxonomyLookup.taxonName |> fst)
                             DataFiles.BiodiversityVariableFile.Row(
-                                timelineId = tsId.AsString,
+                                locationId = tsId.AsString,
                                 binEarly = (kv.Key.Date |> int),
                                 binLate = (kv.Key.Date |> int),
                                 morphotype = x.Key,
@@ -633,7 +633,7 @@ let calculateBiodiversityVariables graph =
                     forBotanicalTaxa |> List.map(fun b ->
                         (b |> snd |> (fun (isExactMatch,_,_) -> isExactMatch)),
                         DataFiles.BiodiversityVariableFile.Row(
-                            timelineId = tsId.AsString,
+                            locationId = tsId.AsString,
                             binEarly = int binEarly - 1,
                             binLate = int binLate,
                             morphotype = "unknown",
@@ -672,7 +672,7 @@ let calculateBiodiversityVariables graph =
             |> List.filter(fun (isExactMatch, _) -> isExactMatch)
             |> List.map snd
             |> List.filter(fun x -> x.Variable_value <> 0.) // remove absent taxa
-            |> List.groupBy(fun r -> r.Bin_early, r.Bin_late, r.Timeline_id)
+            |> List.groupBy(fun r -> r.Bin_early, r.Bin_late, r.Location_id)
             |> List.collect(fun ((binEarly, binLate, timeline),records) ->
 
                 // Within each timeline, and for each bin...
@@ -727,7 +727,7 @@ let calculateBiodiversityVariables graph =
                         |> Traits.pooledStandardDeviation
 
                     DataFiles.BiodiversityVariableFile.Row(
-                        timelineId = timeline,
+                        locationId = timeline,
                         binEarly = binEarly,
                         binLate = binLate,
                         morphotype = "NA",
@@ -746,12 +746,86 @@ let calculateBiodiversityVariables graph =
         let traitFile = new DataFiles.BiodiversityVariableFile(withTraits)
         traitFile.Save("../../data-derived/traits/plant-morphology.tsv")
 
-
         // SPATIAL INTERSECTIONS
         // Now to do intersections spatially
+        let traitsSpatial =
+            withTraits
+            |> List.choose(fun r ->
+                let loc = locationIndex.Rows |> Seq.find(fun l -> l.Timeline_id = r.Location_id)
+                loc.Phyto_subzone_region_id |> Option.map(fun x -> x, r))
+            |> List.groupBy fst
+            |> List.collect(fun (regionId,records) ->
+                
+                // Use mean of mean and sd for region for each trait
+                let traits =
+                    records
+                    |> List.map snd
+                    |> List.groupBy(fun r -> r.Variable, r.Bin_early, r.Bin_late)
+                    |> List.map(fun (_, rows) ->
+                        
+                        let newMean = rows |> Seq.map(fun r -> r.Variable_value) |> Seq.average
+                        let newSd = rows |> Seq.choose(fun r -> r.Variable_ci) |> Seq.average
+
+                        DataFiles.BiodiversityVariableFile.Row(
+                            locationId = regionId,
+                            binEarly = rows.Head.Bin_early,
+                            binLate = rows.Head.Bin_late,
+                            morphotype = rows.Head.Morphotype,
+                            taxon = rows.Head.Taxon,
+                            rank = rows.Head.Rank,
+                            taxonomicTree = rows.Head.Taxonomic_tree,
+                            taxonAmbiguousWith = rows.Head.Taxon_ambiguous_with,
+                            variable = rows.Head.Variable,
+                            variableUnit = rows.Head.Variable_unit,
+                            variableValue = newMean,
+                            variableCi = Some newSd,
+                            variableConfidenceQualitative = None )
+                        )
+
+                traits
+            )
+
+        let traitSpatialFile = new DataFiles.BiodiversityVariableFile(traitsSpatial)
+        traitSpatialFile.Save("../../data-derived/traits/plant-morphology_spatial.tsv")
 
 
+        let presenceSpatial =
+            presenceInBin
+            |> List.choose(fun (isExact,r) ->
+                let loc = locationIndex.Rows |> Seq.find(fun l -> l.Timeline_id = r.Location_id)
+                loc.Phyto_subzone_region_id |> Option.map(fun x -> x, r))
+            |> List.groupBy fst
+            |> List.collect(fun (regionId,records) ->
+                    records
+                    |> List.map snd
+                    |> List.groupBy(fun r -> r.Bin_early, r.Bin_late, r.Taxon)
+                    |> List.map(fun (_, rows) ->
+                        let newPresence = rows |> List.map(fun r -> r.Variable_value) |> Seq.max
+                        let confidences = rows |> List.choose(fun r -> r.Variable_confidence_qualitative)
+                        let newConfidence =
+                            if confidences |> List.contains "high-confidence" then "high-confidence"
+                            else if confidences |> List.contains "medium-confidence" then "medium-confidence"
+                            else if confidences |> List.contains "low-confidence" then "medium-confidence"
+                            else "unknown"
+                        DataFiles.BiodiversityVariableFile.Row(
+                            locationId = regionId,
+                            binEarly = rows.Head.Bin_early,
+                            binLate = rows.Head.Bin_late,
+                            morphotype = rows.Head.Morphotype,
+                            taxon = rows.Head.Taxon,
+                            rank = rows.Head.Rank,
+                            taxonomicTree = rows.Head.Taxonomic_tree,
+                            taxonAmbiguousWith = rows.Head.Taxon_ambiguous_with,
+                            variable = rows.Head.Variable,
+                            variableUnit = rows.Head.Variable_unit,
+                            variableValue = newPresence,
+                            variableCi = None,
+                            variableConfidenceQualitative = Some newConfidence )
+                        )
+            )
 
+        let presenceSpatialFile = new DataFiles.BiodiversityVariableFile(presenceSpatial)
+        presenceSpatialFile.Save("../../data-derived/populations/taxon-presence_spatial.tsv")
 
         return newAges
     }
