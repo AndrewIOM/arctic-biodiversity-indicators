@@ -64,6 +64,8 @@ NUGET
       FSharp.Core (>= 6.0.7)
     HtmlAgilityPack (1.11.71)
     MarkDig (0.39)
+    MaxRev.Gdal.Core (3.10.0.306)
+    MaxRev.Gdal.MacosRuntime.Minimal.arm64 (3.10.0.306)
     Microsoft.AspNetCore.Authorization (9.0)
       Microsoft.AspNetCore.Metadata (>= 9.0)
       Microsoft.Extensions.Logging.Abstractions (>= 9.0)

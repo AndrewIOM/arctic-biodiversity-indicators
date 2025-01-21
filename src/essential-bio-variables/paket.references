@@ -1,2 +1,4 @@
 Microsoft.FSharpLu.Json
 FSharp.Data
+MaxRev.Gdal.Core
+MaxRev.Gdal.MacosRuntime.Minimal.arm64

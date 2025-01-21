@@ -7,6 +7,8 @@ github AndrewIOM/biodiversity-graph-db:6b23d54ab66e833b76fde3dcbbdf1ede264fdefa
 nuget FSharp.Data
 nuget Microsoft.FSharpLu.Json
 nuget RProvider
+nuget MaxRev.Gdal.Core
+nuget MaxRev.Gdal.MacosRuntime.Minimal.arm64
 
 nuget Bolero.Build
 nuget Bolero.HotReload

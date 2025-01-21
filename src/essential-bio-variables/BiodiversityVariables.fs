@@ -381,6 +381,38 @@ module Conversions =
         ) |> Option.defaultValue (nan * 1.<Geography.DD>, nan * 1.<Geography.DD>, "not-specified")
 
 
+module Spatial =
+
+    open MaxRev.Gdal.Core
+    open OSGeo.OGR
+
+    /// Test if a point intersects a phytogeographic realm x subzone union,
+    /// and return the ID if there is an intersect.
+    let intersectsRegionFn () =
+        
+        GdalBase.ConfigureAll()
+        Ogr.RegisterAll()
+
+        let file = Ogr.Open("/Users/andrewmartin/Documents/GitHub Projects/arctic-biodiversity-indicators/data-third-party/cavm/phyto-subzones.geojson", 0)
+        let layer = file.GetLayerByIndex(0)
+        let crs = layer.GetSpatialRef()
+
+        let rec tryFindIntersectId (layer:Layer) (point:Geometry) =
+            let next = layer.GetNextFeature()
+            if isNull next then None
+            else
+                let nextGeo = next.GetGeometryRef()
+                if point.Intersects(next.GetGeometryRef())
+                then Some (next.GetFieldAsString("id"))
+                else tryFindIntersectId layer point
+        
+        fun lat lon ->
+            let coord = sprintf "POINT (%f %f)" lon lat
+            let testPoint = Ogr.CreateGeometryFromWkt(ref coord, crs)
+            layer.ResetReading()
+            tryFindIntersectId layer testPoint
+
+
 let calculateBiodiversityVariables graph =
     result {
 
@@ -410,7 +442,7 @@ let calculateBiodiversityVariables graph =
                     [ taxonTree.Head ] taxonTree.Tail
             ) |> Seq.distinct
 
-        // Generate taxon index.
+        printfn "Generating taxonomic index"
         let taxonIndex =
             newAges 
             |> Seq.collect(fun (_,_,lookup,_) -> taxonomicTreesAllLevels lookup)
@@ -422,13 +454,18 @@ let calculateBiodiversityVariables graph =
 
         taxonIndex.Save("../../data-derived/taxon-index.tsv")
 
-        // Generate location index
+        let intersects = Spatial.intersectsRegionFn ()
+
+        printfn "Generating location index"
         let locationIndex =
             newAges |> List.map(fun (tsId, ageDepth, taxonLookup, location) ->
                 let earliestDate = ageDepth.Keys |> Seq.map(fun k -> k.Date) |> Seq.max
                 let latestDate = ageDepth.Keys |> Seq.map(fun k -> k.Date) |> Seq.min
                 let locName = location |> Option.map(fun l ->l.Name.Value.Replace(",", " ")) |> Option.defaultValue "Unknown location"
                 let latDd, lonDd, geomType = Conversions.locationToDecimalDegrees location
+                let isIntersect = intersects latDd lonDd
+                printfn "Intersects? %A" isIntersect
+
                 DataFiles.TimelineIndex.Row(
                     timelineId = tsId.AsString,
                     siteName = locName,
@@ -436,7 +473,8 @@ let calculateBiodiversityVariables graph =
                     longitudeDd = float lonDd,
                     geometryType = geomType,
                     extentEarliestYbp = int earliestDate,
-                    extentLatestYbp = int latestDate
+                    extentLatestYbp = int latestDate,
+                    phytoSubzoneRegionId = isIntersect
                 )
             )
             |> fun d -> new DataFiles.TimelineIndex(d)
@@ -707,6 +745,13 @@ let calculateBiodiversityVariables graph =
 
         let traitFile = new DataFiles.BiodiversityVariableFile(withTraits)
         traitFile.Save("../../data-derived/traits/plant-morphology.tsv")
+
+
+        // SPATIAL INTERSECTIONS
+        // Now to do intersections spatially
+
+
+
 
         return newAges
     }
