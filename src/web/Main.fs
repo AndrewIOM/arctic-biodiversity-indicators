@@ -299,6 +299,7 @@ type Model =
         dataSlice: DataIndexed
         filterByTaxa: DataAccess.TaxonIndex.TaxonIndexItem list
         selectedRankFilter: string
+        selectedVariable: DataVariable option
         dimension: ModelParts.DimensionView
     }
 
@@ -311,6 +312,7 @@ let initModel =
         geojson = Map.empty
         filterByTaxa = []
         selectedRankFilter = "Genus"
+        selectedVariable = None
         dimension = ModelParts.Temporal ([], TaxonomicView.TaxonLevel)
         taxonList = Map.empty
         timelineList = []
@@ -366,6 +368,7 @@ type Message =
     | AddTaxonToFilter of string
     | AddTimelineToFilter of string
     | SetDimension of DimensionView
+    | SetVariable of string option
 
 let update httpClient message model =
     match message with
@@ -376,7 +379,7 @@ let update httpClient message model =
         | Home -> { model with page = page }, Cmd.ofMsg(LoadMarkdownPage ["index"])
         | EssentialBioVariable ebv ->
             match ebv |> EssentialBiodiversityVariable.FromSlug with
-            | Some ebv -> { model with page = page; data = None }, Cmd.ofMsg(LoadIndicatorData ebv)
+            | Some ebv -> { model with page = page; data = None }, Cmd.batch [ Cmd.ofMsg(LoadIndicatorData ebv); Cmd.ofMsg (SetVariable None) ]
             | None -> { model with page = Home; error = Some (sprintf "EBV not found: %s" ebv); data = None }, Cmd.none
     | LoadMarkdownPage(name) ->
         let pageToLoad =
@@ -458,6 +461,20 @@ let update httpClient message model =
         | Temporal (t,t2) -> { model with dimension = Temporal (timeline :: t, t2) }, Cmd.ofMsg SliceIndicatorData
         | SpatialStatic _ -> model, Cmd.none
         // | SpatialDynamic (t,s) -> { model with dimension = SpatialDynamic ((timeline :: t),s) }, Cmd.ofMsg SliceIndicatorData
+    | SetVariable someVar ->
+        match someVar with
+        | None -> { model with selectedVariable = None }, Cmd.none
+        | Some someVar ->
+            let v =
+                match model.dataSlice with
+                | IndexedByPolygonId m ->
+                    m |> Seq.collect(fun kv -> kv.Value.Keys)
+                    |> Seq.tryFind (fun v2 -> v2.VariableName = someVar)
+                | IndexedByTimeline m ->
+                    m |> Seq.collect(fun kv -> kv.Value.Keys)
+                    |> Seq.tryFind (fun v2 -> v2.VariableName = someVar)
+                | _ -> None
+            { model with selectedVariable = v }, Cmd.none
 
     | LoadGeoJson name ->
         model, Cmd.OfTask.either (fun _ -> DataAccess.GeoJSON.load name httpClient) () (fun x -> LoadedGeoJson (name,x)) Error
@@ -972,7 +989,10 @@ let ebvPage (ebv:EssentialBiodiversityVariable) model dispatch =
                                 | DataIndexed.NoData -> text "Data not loaded."
                                 | DataIndexed.IndexedByPolygonId data ->
                                     cond (model.geojson |> Map.tryFind "phyto-subzones-simplified") <| function
-                                    | Some geojson -> Plots.chloropleth timeMode geojson (DataAccess.indexVariableByLocation {VariableName = "presence"; VariableUnit = "present-absent"} data)
+                                    | Some geojson ->
+                                        cond model.selectedVariable <| function
+                                        | Some v -> Plots.chloropleth timeMode geojson (DataAccess.indexVariableByLocation v data)
+                                        | None -> text "Select a dimension to show first."
                                     | None -> text "Cannot load cloropleth: geojson base layer not loaded."
                                 | _ -> textf "Error. data not formatted correctly. %A" model.dataSlice
                         }
@@ -1025,7 +1045,38 @@ let ebvPage (ebv:EssentialBiodiversityVariable) model dispatch =
                         br {}
                         cond model.dimension <| function
                         | Temporal _ -> selectTimelineMulti model.timelineList dispatch
-                        | SpatialStatic (x,y) -> selectSpatialTime x dispatch
+                        | SpatialStatic (timeMode,y) ->
+                            concat {
+                                selectSpatialTime timeMode dispatch
+                                cond model.dataSlice <| function
+                                | DataIndexed.IndexedByPolygonId m ->
+                                    concat {
+                                        label {
+                                            attr.``class`` "label"
+                                            text "Select a dimension to show"
+                                        }
+                                        div {
+                                            attr.``class`` "select control"
+                                            select {
+                                                attr.``class`` "select"
+                                                bind.change.string (if model.selectedVariable.IsSome then model.selectedVariable.Value.VariableName else "") (fun s -> (if s = "" then None else Some s) |> SetVariable |> dispatch)
+                                                option {
+                                                    attr.disabled "disabled"
+                                                    attr.selected "selected"
+                                                    attr.value ""
+                                                    text "-- Select a variable --"
+                                                }
+                                                forEach (m |> Seq.collect(fun kv -> kv.Value.Keys)) <| fun v ->
+                                                    option {
+                                                        attr.name v.VariableName
+                                                        attr.value v.VariableName
+                                                        text v.VariableName
+                                                    }
+                                            }
+                                        }
+                                    }
+                                | _ -> empty ()
+                            }
                     }
                 }
             }
