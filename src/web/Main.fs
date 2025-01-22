@@ -80,7 +80,11 @@ module ModelParts =
 
     type DimensionView =
         | Temporal of timelines: string list * TaxonomicView
-        | SpatialStatic of TaxonomicView
+        | SpatialStatic of TimeMode * TaxonomicView
+
+    and TimeMode =
+        | IndividualTimesteps
+        | ChangeOverTime of earlierAge: int * laterAge: int
 
     and TaxonomicView =
         | CommunityLevel
@@ -625,75 +629,104 @@ module Plots =
 
     let responsiveConfig = Config.init (Responsive = true, DisplayModeBar = false)
 
+    let chloropleth' locations z geoJson =
+        Chart.ChoroplethMap(
+            locations = locations, z = z,
+            LocationMode = StyleParam.LocationFormat.GeoJson_Id,
+            GeoJson = geoJson,
+            FeatureIdKey = "properties.id"
+        )
+        |> Chart.withSize(600, 600)
+        |> Chart.withConfig responsiveConfig
+        |> Chart.withLayout(Layout.init(
+            Margin = Margin.init(0,0,0,0)
+        ))
+        |> Chart.withGeoStyle (
+            FitBounds = StyleParam.GeoFitBounds.GeoJson,
+            Projection = GeoProjection.init (projectionType = StyleParam.GeoProjectionType.AzimuthalEquidistant)
+        )
+        |> Chart.withYAxisStyle(ShowGrid = true)
+        |> Chart.withXAxisStyle(ShowGrid = true)
+
+
     /// Given a geojson with feature IDs 'id',
     /// plot the data as it corresponds to the 'id' field
     /// of the geojson.
-    let chloropleth geoJson (data:Map<string,seq<int * float * Option<string>>>) =
+    let chloropleth timeMode geoJson (data:Map<string,seq<int * float * Option<string>>>) =
         printfn "Starting chloropleth"
-        let steps = [ 0 .. 500 .. 12000 ]
-        let sliderSteps =
-            steps
-            |> List.indexed
-            |> List.map (fun (i, step) ->
-                let visible = (fun index -> index = i) |> Array.init steps.Length |> box
-                let title = sprintf "Presence-absence at %i cal yr BP" step |> box
-                SliderStep.init (
-                    Args = [ "visible", visible; "title", title ],
-                    Method = StyleParam.Method.Update,
-                    Label = "v = " + string (step)
-                ))
-        let slider =
-            Slider.init (
-                CurrentValue = SliderCurrentValue.init (Suffix = "cal yr BP"),
-                Steps = sliderSteps
-            )
         
-        let map =
-            steps
-            |> List.map (fun stepYear ->
-                printfn "A"
-                let locations, z =
-                    data
-                    |> Seq.choose(fun kv ->
-                        kv.Value |> Seq.tryPick(fun (i,v,_) -> if i = stepYear then Some v else None)
-                        |> Option.map(fun v -> kv.Key, v)
-                        )
-                    |> Seq.toList
-                    |> List.unzip
+        cond timeMode <| function
+        | TimeMode.ChangeOverTime (earlier, later) ->
 
-                let text =
-                    z |> List.map(fun v ->
-                        match v with
-                        | 1. -> "present"
-                        | 0.5 -> "present (borderline)"
-                        | 0. -> "absent"
-                        | _ -> "unknown whether present or absent" )
-                
-                printfn "B"
-                Chart.ChoroplethMap(
-                    locations = locations, z = z,
-                    LocationMode = StyleParam.LocationFormat.GeoJson_Id,
-                    GeoJson = geoJson,
-                    FeatureIdKey = "properties.id",
-                    MultiText = text
+            // Change over time = absolute difference between each time point, summed.
+            let locations, z =
+                data
+                |> Seq.map(fun kv ->
+                    kv.Key,
+                    kv.Value 
+                    |> Seq.filter(fun (i,v,_) -> i >= later && i <= earlier)
+                    |> Seq.sortBy(fun (i,_,_) -> -i) // Sort from oldest to newest
+                    |> Seq.fold (fun (state, lastVal) (i,v,_) ->
+                        if lastVal = Double.MaxValue then state, v
+                        else state + abs(v-lastVal), v) (0.,Double.MaxValue)
+                    |> fst
                 )
-                |> Chart.withSize(600, 600)
-                |> Chart.withConfig responsiveConfig
-                |> Chart.withLayout(Layout.init(
-                    Margin = Margin.init(0,0,0,0)
-                ))
-                |> Chart.withGeoStyle (
-                    FitBounds = StyleParam.GeoFitBounds.GeoJson,
-                    Projection = GeoProjection.init (projectionType = StyleParam.GeoProjectionType.AzimuthalEquidistant)
+                |> Seq.toList
+                |> List.unzip
+
+            chloropleth' locations z geoJson
+            |> GenericChart.toChartHTML
+            |> rawHtml
+
+        | TimeMode.IndividualTimesteps ->
+
+            let steps = [ 0 .. 500 .. 12000 ]
+            let sliderSteps =
+                steps
+                |> List.indexed
+                |> List.map (fun (i, step) ->
+                    let visible = (fun index -> index = i) |> Array.init steps.Length |> box
+                    let title = sprintf "Presence-absence at %i cal yr BP" step |> box
+                    SliderStep.init (
+                        Args = [ "visible", visible; "title", title ],
+                        Method = StyleParam.Method.Update,
+                        Label = "v = " + string (step)
+                    ))
+            let slider =
+                Slider.init (
+                    CurrentValue = SliderCurrentValue.init (Suffix = "cal yr BP"),
+                    Steps = sliderSteps
                 )
-                |> Chart.withYAxisStyle(ShowGrid = true)
-                |> Chart.withXAxisStyle(ShowGrid = true)
-            ) |> Chart.combine
-        printfn "C"
-        map
-        |> Chart.withSlider slider
-        |> GenericChart.toChartHTML
-        |> rawHtml
+            
+            let map =
+                steps
+                |> List.map (fun stepYear ->
+                    printfn "A"
+                    let locations, z =
+                        data
+                        |> Seq.choose(fun kv ->
+                            kv.Value |> Seq.tryPick(fun (i,v,_) -> if i = stepYear then Some v else None)
+                            |> Option.map(fun v -> kv.Key, v)
+                            )
+                        |> Seq.toList
+                        |> List.unzip
+
+                    let text =
+                        z |> List.map(fun v ->
+                            match v with
+                            | 1. -> "present"
+                            | 0.5 -> "present (borderline)"
+                            | 0. -> "absent"
+                            | _ -> "unknown whether present or absent" )
+                    
+                    printfn "B"
+                    chloropleth' locations z geoJson
+                ) |> Chart.combine
+            printfn "C"
+            map
+            |> Chart.withSlider slider
+            |> GenericChart.toChartHTML
+            |> rawHtml
 
 
     let simpleGeo caffGeoJson =
@@ -770,56 +803,100 @@ let selectTaxaMulti model dispatch =
         }
     }
 
-let selectTimelineMulti dimension (timelineList: ModelParts.TimelineWithLocation list) dispatch =
-    cond dimension <| function
-    | SpatialStatic _ -> text "Displaying all locations"
-    | Temporal _ ->
-        concat {
+let selectTimelineMulti (timelineList: ModelParts.TimelineWithLocation list) dispatch =
+    concat {
+        div {
+            attr.``class`` "field"
+            label {
+                attr.``class`` "label"
+                text "Add data from another location"
+            }
             div {
-                attr.``class`` "field"
-                label {
-                    attr.``class`` "label"
-                    text "Add data from another location"
-                }
-                div {
-                    attr.``class`` "select control"
-                    select {
-                        attr.``class`` "select"
-                        bind.change.string "" (fun s -> AddTimelineToFilter s |> dispatch)
-                        concat {
-                            option {
-                                attr.disabled "disabled"
-                                attr.selected "selected"
-                                attr.value ""
-                                text "-- Select a location --"
-                            }
-                            forEach timelineList <| fun t ->
-                                option {
-                                    attr.name t.TimelineId
-                                    attr.value t.TimelineId
-                                    text t.LocationName
-                                }
+                attr.``class`` "select control"
+                select {
+                    attr.``class`` "select"
+                    bind.change.string "" (fun s -> AddTimelineToFilter s |> dispatch)
+                    concat {
+                        option {
+                            attr.disabled "disabled"
+                            attr.selected "selected"
+                            attr.value ""
+                            text "-- Select a location --"
                         }
+                        forEach timelineList <| fun t ->
+                            option {
+                                attr.name t.TimelineId
+                                attr.value t.TimelineId
+                                text t.LocationName
+                            }
                     }
                 }
             }
-            label {
-                attr.``class`` "label"
-                text "Plot locations by:"
+        }
+        label {
+            attr.``class`` "label"
+            text "Plot locations by:"
+        }
+        div {
+            attr.``class`` "buttons has-addons"
+            button {
+                attr.``class`` "button is-primary is-selected"
+                text "None"
             }
-            div {
-                attr.``class`` "buttons has-addons"
-                button {
-                    attr.``class`` "button is-selected"
-                    text "None"
-                }
-                button {
-                    attr.``class`` "button"
-                    attr.disabled "disabled"
-                    text "Northwards"
-                }
+            button {
+                attr.``class`` "button"
+                attr.disabled "disabled"
+                text "Northwards"
             }
         }
+    }
+
+let selectSpatialTime (timeMode:TimeMode) dispatch =
+    concat {
+        label {
+            attr.``class`` "label"
+            text "Representation of time"
+        }
+        div {
+            attr.``class`` "buttons has-addons"
+            button {
+                on.click (fun _ -> SetDimension (SpatialStatic(IndividualTimesteps,TaxonLevel)) |> dispatch)
+                attr.``class`` (if timeMode.IsIndividualTimesteps then "button is-primary is-selected" else "button")
+                text "Show timeline"
+            }
+            button {
+                on.click (fun _ -> SetDimension (SpatialStatic(ChangeOverTime(12000, 0), TaxonLevel)) |> dispatch)
+                attr.``class`` (if timeMode.IsChangeOverTime then "button is-primary is-selected" else "button")
+                text "Show summed variability through time"
+            }
+        }
+        cond timeMode <| function
+        | IndividualTimesteps -> empty ()
+        | ChangeOverTime (earlier, later) ->
+            div {
+                attr.``class`` "field is-grouped is-grouped-multiline"
+                div {
+                    attr.``class`` "select"
+                    select {
+                        bind.change.int later (fun i -> SetDimension (SpatialStatic(ChangeOverTime(earlier, i), TaxonLevel)) |> dispatch)
+                        forEach [0 .. 500 .. earlier] <| fun i ->
+                            option {
+                                attr.value i
+                                textf "%i cal yr BP" i }
+                    }
+                }
+                div {
+                    attr.``class`` "select"
+                    select {
+                        bind.change.int earlier (fun i -> SetDimension (SpatialStatic(ChangeOverTime(i, later), TaxonLevel)) |> dispatch)
+                        forEach [later .. 500 .. 12000] <| fun i ->
+                            option {
+                                attr.value i
+                                textf "%i cal yr BP" i }
+                    }
+                }
+            }
+    }
 
 let activeLocations model =
     cond model.dimension <| function
@@ -835,7 +912,7 @@ let activeLocations model =
                     }
                 | None -> empty ()
         }
-    | SpatialStatic _ -> text "All locations (summarised)"
+    | SpatialStatic _ -> empty ()
 
 let ebvPage (ebv:EssentialBiodiversityVariable) model dispatch =
     concat {
@@ -863,12 +940,12 @@ let ebvPage (ebv:EssentialBiodiversityVariable) model dispatch =
                                 | DataIndexed.NoData -> text "Data not loaded."
                                 | DataIndexed.IndexedByTimeline data -> Plots.presenceHeatmap data
                                 | _ -> text "Error. data not formatted correctly."
-                            | DimensionView.SpatialStatic _ ->
+                            | DimensionView.SpatialStatic (timeMode,_) ->
                                 cond model.dataSlice <| function
                                 | DataIndexed.NoData -> text "Data not loaded."
                                 | DataIndexed.IndexedByPolygonId data ->
                                     cond (model.geojson |> Map.tryFind "phyto-subzones-simplified") <| function
-                                    | Some geojson -> Plots.chloropleth geojson (DataAccess.indexVariableByLocation {VariableName = "presence"; VariableUnit = "present-absent"} data)
+                                    | Some geojson -> Plots.chloropleth timeMode geojson (DataAccess.indexVariableByLocation {VariableName = "presence"; VariableUnit = "present-absent"} data)
                                     | None -> text "Cannot load cloropleth: geojson base layer not loaded."
                                 | _ -> textf "Error. data not formatted correctly. %A" model.dataSlice
                             p { text "The indicator is 1 if the taxon/taxa was present in the window, or 0 if there was a reconstructed absence. Where the underlying proxy data was tending towards absence, the indicator is set as 'borderline' at 0.5. For example, for pollen percentage data the borderline level is set as below 2.5%." }
@@ -890,12 +967,12 @@ let ebvPage (ebv:EssentialBiodiversityVariable) model dispatch =
                                 | DataIndexed.NoData -> text "Data not loaded."
                                 | DataIndexed.IndexedByTimeline data -> Plots.traitRadial data
                                 | _ -> text "Error. data not formatted correctly."
-                            | DimensionView.SpatialStatic _ ->
+                            | DimensionView.SpatialStatic (timeMode, _) ->
                                 cond model.dataSlice <| function
                                 | DataIndexed.NoData -> text "Data not loaded."
                                 | DataIndexed.IndexedByPolygonId data ->
                                     cond (model.geojson |> Map.tryFind "phyto-subzones-simplified") <| function
-                                    | Some geojson -> Plots.chloropleth geojson (DataAccess.indexVariableByLocation {VariableName = "presence"; VariableUnit = "present-absent"} data)
+                                    | Some geojson -> Plots.chloropleth timeMode geojson (DataAccess.indexVariableByLocation {VariableName = "presence"; VariableUnit = "present-absent"} data)
                                     | None -> text "Cannot load cloropleth: geojson base layer not loaded."
                                 | _ -> textf "Error. data not formatted correctly. %A" model.dataSlice
                         }
@@ -921,12 +998,12 @@ let ebvPage (ebv:EssentialBiodiversityVariable) model dispatch =
                             attr.``class`` "buttons has-addons"
                             button {
                                 on.click (fun _ -> SetDimension (Temporal([],TaxonLevel)) |> dispatch)
-                                attr.``class`` (if model.dimension.IsTemporal then "button is-selected" else "button")
+                                attr.``class`` (if model.dimension.IsTemporal then "button is-primary is-selected" else "button")
                                 text "Temporal indicator"
                             }
                             button {
-                                on.click (fun _ -> SetDimension (SpatialStatic(TaxonLevel)) |> dispatch)
-                                attr.``class`` (if model.dimension.IsSpatialStatic then "button is-selected" else "button")
+                                on.click (fun _ -> SetDimension (SpatialStatic(ChangeOverTime(12000, 0), TaxonLevel)) |> dispatch)
+                                attr.``class`` (if model.dimension.IsSpatialStatic then "button is-primary is-selected" else "button")
                                 text "Geo-temporal indicator"
                             }
                         }
@@ -946,7 +1023,9 @@ let ebvPage (ebv:EssentialBiodiversityVariable) model dispatch =
                         br {}
                         selectTaxaMulti model dispatch
                         br {}
-                        selectTimelineMulti model.dimension model.timelineList dispatch
+                        cond model.dimension <| function
+                        | Temporal _ -> selectTimelineMulti model.timelineList dispatch
+                        | SpatialStatic (x,y) -> selectSpatialTime x dispatch
                     }
                 }
             }
