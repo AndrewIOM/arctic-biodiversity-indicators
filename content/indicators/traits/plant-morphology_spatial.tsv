@@ -1,0 +1,133 @@
+location_id	bin_early	bin_late	morphotype	taxon	rank	taxonomic_tree	taxon_ambiguous_with	variable	variable_unit	variable_value (float)	variable_ci (float option)	variable_confidence_qualitative (string option)
+z5-p83	499	0	NA	community	NA	NA	NA	Leaf area (in case of compound leaves: leaf, petiole included)	mm^2	1407.712630925	806.4065830788833	
+z5-p83	499	0	NA	community	NA	NA	NA	Leaf nitrogen (N) content per leaf dry mass	mg/g	21.172060119571427	8.649953976175626	
+z5-p83	499	0	NA	community	NA	NA	NA	Leaf area per leaf dry mass (specific leaf area, SLA or 1/LMA): petiole included	mm^2/mg	17.25756847285714	7.972598097501138	
+z5-p83	499	0	NA	community	NA	NA	NA	Plant height vegetative	m	3.180847713857143	8.252425364546609	
+z5-p83	499	0	NA	community	NA	NA	NA	Seed dry mass	mg	3.627990971333334	5.346565058576624	
+z5-p83	499	0	NA	community	NA	NA	NA	Stem specific density (SSD) or wood density (stem dry mass per stem fresh volume)	g/cm^3	0.40931472350000003	0.17312397339975297	
+z5-p83	999	500	NA	community	NA	NA	NA	Leaf area (in case of compound leaves: leaf, petiole included)	mm^2	1256.71484269375	882.8821571806997	
+z5-p83	999	500	NA	community	NA	NA	NA	Leaf nitrogen (N) content per leaf dry mass	mg/g	20.384715152699997	7.503274930577202	
+z5-p83	999	500	NA	community	NA	NA	NA	Leaf area per leaf dry mass (specific leaf area, SLA or 1/LMA): petiole included	mm^2/mg	16.330156589090908	7.277345631086234	
+z5-p83	999	500	NA	community	NA	NA	NA	Plant height vegetative	m	2.028072059	7.445880917137813	
+z5-p83	999	500	NA	community	NA	NA	NA	Seed dry mass	mg	3.3306706574545455	4.472418744054482	
+z5-p83	999	500	NA	community	NA	NA	NA	Stem specific density (SSD) or wood density (stem dry mass per stem fresh volume)	g/cm^3	0.33712507150000004	0.17152855923867472	
+z5-p83	1499	1000	NA	community	NA	NA	NA	Leaf area (in case of compound leaves: leaf, petiole included)	mm^2	998.238017875	934.2876238094149	
+z5-p83	1499	1000	NA	community	NA	NA	NA	Leaf nitrogen (N) content per leaf dry mass	mg/g	19.092509131142858	6.976546682700113	
+z5-p83	1499	1000	NA	community	NA	NA	NA	Leaf area per leaf dry mass (specific leaf area, SLA or 1/LMA): petiole included	mm^2/mg	16.34133249875	5.769315641432017	
+z5-p83	1499	1000	NA	community	NA	NA	NA	Plant height vegetative	m	2.635911960333333	9.246568148350118	
+z5-p83	1499	1000	NA	community	NA	NA	NA	Seed dry mass	mg	4.228608492125001	4.9690302049987345	
+z5-p83	1499	1000	NA	community	NA	NA	NA	Stem specific density (SSD) or wood density (stem dry mass per stem fresh volume)	g/cm^3	0.33540100580000004	0.1680151973446724	
+z5-p83	1999	1500	NA	community	NA	NA	NA	Leaf area (in case of compound leaves: leaf, petiole included)	mm^2	918.07909231	462.9618797310987	
+z5-p83	1999	1500	NA	community	NA	NA	NA	Leaf nitrogen (N) content per leaf dry mass	mg/g	20.608344084	7.4338662623889995	
+z5-p83	1999	1500	NA	community	NA	NA	NA	Leaf area per leaf dry mass (specific leaf area, SLA or 1/LMA): petiole included	mm^2/mg	16.01224438	8.053715169217847	
+z5-p83	1999	1500	NA	community	NA	NA	NA	Plant height vegetative	m	2.470775588111111	9.00491048989025	
+z5-p83	1999	1500	NA	community	NA	NA	NA	Seed dry mass	mg	2.62035097925	5.632486200354129	
+z5-p83	1999	1500	NA	community	NA	NA	NA	Stem specific density (SSD) or wood density (stem dry mass per stem fresh volume)	g/cm^3	0.34385369800000004	0.16869043356357302	
+z5-p83	2499	2000	NA	community	NA	NA	NA	Leaf area (in case of compound leaves: leaf, petiole included)	mm^2	901.19438233	394.54773958680283	
+z5-p83	2499	2000	NA	community	NA	NA	NA	Leaf nitrogen (N) content per leaf dry mass	mg/g	19.738958163000003	6.9800884998991535	
+z5-p83	2499	2000	NA	community	NA	NA	NA	Leaf area per leaf dry mass (specific leaf area, SLA or 1/LMA): petiole included	mm^2/mg	18.31100043	24.114059042150707	
+z5-p83	2499	2000	NA	community	NA	NA	NA	Plant height vegetative	m	3.7282732661666667	6.341062883154096	
+z5-p83	2499	2000	NA	community	NA	NA	NA	Seed dry mass	mg	4.0645103496	5.984626224726401	
+z5-p83	2499	2000	NA	community	NA	NA	NA	Stem specific density (SSD) or wood density (stem dry mass per stem fresh volume)	g/cm^3	0.39911570720000006	0.17045052540992237	
+z5-p83	2999	2500	NA	community	NA	NA	NA	Leaf area (in case of compound leaves: leaf, petiole included)	mm^2	832.1208931357143	498.8088198612877	
+z5-p83	2999	2500	NA	community	NA	NA	NA	Leaf nitrogen (N) content per leaf dry mass	mg/g	21.33605571225	7.220692025504248	
+z5-p83	2999	2500	NA	community	NA	NA	NA	Leaf area per leaf dry mass (specific leaf area, SLA or 1/LMA): petiole included	mm^2/mg	17.93853508875	20.0913167353144	
+z5-p83	2999	2500	NA	community	NA	NA	NA	Plant height vegetative	m	2.9733966840000003	5.763623040280463	
+z5-p83	2999	2500	NA	community	NA	NA	NA	Seed dry mass	mg	5.594674948166666	5.821172215994035	
+z5-p83	2999	2500	NA	community	NA	NA	NA	Stem specific density (SSD) or wood density (stem dry mass per stem fresh volume)	g/cm^3	0.4009751122000001	0.17390663816182367	
+z5-p83	3499	3000	NA	community	NA	NA	NA	Leaf area (in case of compound leaves: leaf, petiole included)	mm^2	626.2303384071428	454.57703951690615	
+z5-p83	3499	3000	NA	community	NA	NA	NA	Leaf nitrogen (N) content per leaf dry mass	mg/g	22.489130601	8.150254843699352	
+z5-p83	3499	3000	NA	community	NA	NA	NA	Leaf area per leaf dry mass (specific leaf area, SLA or 1/LMA): petiole included	mm^2/mg	17.763823745	8.144220877260699	
+z5-p83	3499	3000	NA	community	NA	NA	NA	Plant height vegetative	m	2.739057645125	8.760652639554694	
+z5-p83	3499	3000	NA	community	NA	NA	NA	Seed dry mass	mg	3.3017024480000003	4.901467308444405	
+z5-p83	3499	3000	NA	community	NA	NA	NA	Stem specific density (SSD) or wood density (stem dry mass per stem fresh volume)	g/cm^3	0.3372604108	0.17152855923867472	
+z5-p83	3999	3500	NA	community	NA	NA	NA	Leaf area (in case of compound leaves: leaf, petiole included)	mm^2	1077.28826485625	783.3730769682093	
+z5-p83	3999	3500	NA	community	NA	NA	NA	Leaf nitrogen (N) content per leaf dry mass	mg/g	21.04752232522222	8.195262955338617	
+z5-p83	3999	3500	NA	community	NA	NA	NA	Leaf area per leaf dry mass (specific leaf area, SLA or 1/LMA): petiole included	mm^2/mg	17.65498334666667	8.126183387657974	
+z5-p83	3999	3500	NA	community	NA	NA	NA	Plant height vegetative	m	2.4912835633333335	8.617846638050606	
+z5-p83	3999	3500	NA	community	NA	NA	NA	Seed dry mass	mg	2.8902007377142858	4.8103826129301686	
+z5-p83	3999	3500	NA	community	NA	NA	NA	Stem specific density (SSD) or wood density (stem dry mass per stem fresh volume)	g/cm^3	0.3372604108	0.17152855923867472	
+z5-p83	4499	4000	NA	community	NA	NA	NA	Leaf area (in case of compound leaves: leaf, petiole included)	mm^2	1396.1114901785716	1232.6871639176675	
+z5-p83	4499	4000	NA	community	NA	NA	NA	Leaf nitrogen (N) content per leaf dry mass	mg/g	18.985251660875	7.397072242510603	
+z5-p83	4499	4000	NA	community	NA	NA	NA	Leaf area per leaf dry mass (specific leaf area, SLA or 1/LMA): petiole included	mm^2/mg	16.93405112	6.0603122973895145	
+z5-p83	4499	4000	NA	community	NA	NA	NA	Plant height vegetative	m	2.9647287217500002	8.730486380737412	
+z5-p83	4499	4000	NA	community	NA	NA	NA	Seed dry mass	mg	5.4481512038333335	4.993211372342088	
+z5-p83	4499	4000	NA	community	NA	NA	NA	Stem specific density (SSD) or wood density (stem dry mass per stem fresh volume)	g/cm^3	0.39689752750000007	0.17238506350078775	
+z5-p83	4999	4500	NA	community	NA	NA	NA	Leaf area (in case of compound leaves: leaf, petiole included)	mm^2	927.8290419916666	498.8088198612877	
+z5-p83	4999	4500	NA	community	NA	NA	NA	Leaf nitrogen (N) content per leaf dry mass	mg/g	19.700640822571426	7.220692025504248	
+z5-p83	4999	4500	NA	community	NA	NA	NA	Leaf area per leaf dry mass (specific leaf area, SLA or 1/LMA): petiole included	mm^2/mg	17.758897244285716	20.0913167353144	
+z5-p83	4999	4500	NA	community	NA	NA	NA	Plant height vegetative	m	3.375194556142857	5.919815498060431	
+z5-p83	4999	4500	NA	community	NA	NA	NA	Seed dry mass	mg	5.594674948166666	5.821172215994035	
+z5-p83	4999	4500	NA	community	NA	NA	NA	Stem specific density (SSD) or wood density (stem dry mass per stem fresh volume)	g/cm^3	0.4009751122000001	0.17390663816182367	
+z5-p83	5499	5000	NA	community	NA	NA	NA	Leaf area (in case of compound leaves: leaf, petiole included)	mm^2	769.4057814937499	493.41419284116876	
+z5-p83	5499	5000	NA	community	NA	NA	NA	Leaf nitrogen (N) content per leaf dry mass	mg/g	22.908462127555552	7.204483977392761	
+z5-p83	5499	5000	NA	community	NA	NA	NA	Leaf area per leaf dry mass (specific leaf area, SLA or 1/LMA): petiole included	mm^2/mg	18.06120298888889	19.461197840004754	
+z5-p83	5499	5000	NA	community	NA	NA	NA	Plant height vegetative	m	2.6772074420000003	5.47823653354755	
+z5-p83	5499	5000	NA	community	NA	NA	NA	Seed dry mass	mg	5.157358497428571	5.505011457184564	
+z5-p83	5499	5000	NA	community	NA	NA	NA	Stem specific density (SSD) or wood density (stem dry mass per stem fresh volume)	g/cm^3	0.4009751122000001	0.17390663816182367	
+z5-p83	5999	5500	NA	community	NA	NA	NA	Leaf area (in case of compound leaves: leaf, petiole included)	mm^2	771.0437500944444	646.7846749839119	
+z5-p83	5999	5500	NA	community	NA	NA	NA	Leaf nitrogen (N) content per leaf dry mass	mg/g	22.3345803628	7.224991754010782	
+z5-p83	5999	5500	NA	community	NA	NA	NA	Leaf area per leaf dry mass (specific leaf area, SLA or 1/LMA): petiole included	mm^2/mg	16.578341892727273	7.048404722448355	
+z5-p83	5999	5500	NA	community	NA	NA	NA	Plant height vegetative	m	2.019994585333333	7.282262260135194	
+z5-p83	5999	5500	NA	community	NA	NA	NA	Seed dry mass	mg	3.7744906542	5.351057702233767	
+z5-p83	5999	5500	NA	community	NA	NA	NA	Stem specific density (SSD) or wood density (stem dry mass per stem fresh volume)	g/cm^3	0.3453347626	0.16869043356357302	
+z5-p83	6499	6000	NA	community	NA	NA	NA	Leaf area (in case of compound leaves: leaf, petiole included)	mm^2	1088.9325000850001	849.1027567679761	
+z5-p83	6499	6000	NA	community	NA	NA	NA	Leaf nitrogen (N) content per leaf dry mass	mg/g	20.14581396808333	7.1098424617563705	
+z5-p83	6499	6000	NA	community	NA	NA	NA	Leaf area per leaf dry mass (specific leaf area, SLA or 1/LMA): petiole included	mm^2/mg	16.559378852307695	7.214985747370017	
+z5-p83	6499	6000	NA	community	NA	NA	NA	Plant height vegetative	m	1.7701273415	7.7082859883293695	
+z5-p83	6499	6000	NA	community	NA	NA	NA	Seed dry mass	mg	3.03007645325	4.690098815586944	
+z5-p83	6499	6000	NA	community	NA	NA	NA	Stem specific density (SSD) or wood density (stem dry mass per stem fresh volume)	g/cm^3	0.3017379068571429	0.16725257832030233	
+z5-p83	6999	6500	NA	community	NA	NA	NA	Leaf area (in case of compound leaves: leaf, petiole included)	mm^2	1181.27255565	849.1027567679761	
+z5-p83	6999	6500	NA	community	NA	NA	NA	Leaf nitrogen (N) content per leaf dry mass	mg/g	18.996891607	7.1098424617563705	
+z5-p83	6999	6500	NA	community	NA	NA	NA	Leaf area per leaf dry mass (specific leaf area, SLA or 1/LMA): petiole included	mm^2/mg	16.339660423333335	7.214985747370017	
+z5-p83	6999	6500	NA	community	NA	NA	NA	Plant height vegetative	m	1.8939208616923078	8.102024820183493	
+z5-p83	6999	6500	NA	community	NA	NA	NA	Seed dry mass	mg	3.03007645325	4.690098815586944	
+z5-p83	6999	6500	NA	community	NA	NA	NA	Stem specific density (SSD) or wood density (stem dry mass per stem fresh volume)	g/cm^3	0.3017379068571429	0.16725257832030233	
+z5-p83	7499	7000	NA	community	NA	NA	NA	Leaf area (in case of compound leaves: leaf, petiole included)	mm^2	895.2426001357143	550.8706645677242	
+z5-p83	7499	7000	NA	community	NA	NA	NA	Leaf nitrogen (N) content per leaf dry mass	mg/g	17.8333851888	6.628397183196406	
+z5-p83	7499	7000	NA	community	NA	NA	NA	Leaf area per leaf dry mass (specific leaf area, SLA or 1/LMA): petiole included	mm^2/mg	16.148800359090913	21.461538725256062	
+z5-p83	7499	7000	NA	community	NA	NA	NA	Plant height vegetative	m	2.032073506083333	5.859269150993205	
+z5-p83	7499	7000	NA	community	NA	NA	NA	Seed dry mass	mg	3.267938720727273	5.7281515154486895	
+z5-p83	7499	7000	NA	community	NA	NA	NA	Stem specific density (SSD) or wood density (stem dry mass per stem fresh volume)	g/cm^3	0.38867115183333345	0.17045052540992237	
+z5-p83	7999	7500	NA	community	NA	NA	NA	Leaf area (in case of compound leaves: leaf, petiole included)	mm^2	1407.9920718249998	1164.2069361128583	
+z5-p83	7999	7500	NA	community	NA	NA	NA	Leaf nitrogen (N) content per leaf dry mass	mg/g	20.2163333556	6.690573548704222	
+z5-p83	7999	7500	NA	community	NA	NA	NA	Leaf area per leaf dry mass (specific leaf area, SLA or 1/LMA): petiole included	mm^2/mg	16.195681755	5.499995767305806	
+z5-p83	7999	7500	NA	community	NA	NA	NA	Plant height vegetative	m	2.1481092147142857	8.301489059780971	
+z5-p83	7999	7500	NA	community	NA	NA	NA	Seed dry mass	mg	3.2524329111666663	4.213396869178835	
+z5-p83	7999	7500	NA	community	NA	NA	NA	Stem specific density (SSD) or wood density (stem dry mass per stem fresh volume)	g/cm^3	0.424159108	0.10121284	
+z5-p83	8499	8000	NA	community	NA	NA	NA	Leaf area (in case of compound leaves: leaf, petiole included)	mm^2	1973.33240746	1352.6182997791561	
+z5-p83	8499	8000	NA	community	NA	NA	NA	Leaf nitrogen (N) content per leaf dry mass	mg/g	17.956617556714285	6.436345251702929	
+z5-p83	8499	8000	NA	community	NA	NA	NA	Leaf area per leaf dry mass (specific leaf area, SLA or 1/LMA): petiole included	mm^2/mg	16.441543836250002	5.442946862611095	
+z5-p83	8499	8000	NA	community	NA	NA	NA	Plant height vegetative	m	1.7381630196666666	7.9900502387607615	
+z5-p83	8499	8000	NA	community	NA	NA	NA	Seed dry mass	mg	2.4967562309999995	3.9194572223218036	
+z5-p83	8499	8000	NA	community	NA	NA	NA	Stem specific density (SSD) or wood density (stem dry mass per stem fresh volume)	g/cm^3	0.424159108	0.10121284	
+z5-p83	8999	8500	NA	community	NA	NA	NA	Leaf area (in case of compound leaves: leaf, petiole included)	mm^2	1184.8479285800001	1076.727873512321	
+z5-p83	8999	8500	NA	community	NA	NA	NA	Leaf nitrogen (N) content per leaf dry mass	mg/g	18.645701088699997	6.654663205856258	
+z5-p83	8999	8500	NA	community	NA	NA	NA	Leaf area per leaf dry mass (specific leaf area, SLA or 1/LMA): petiole included	mm^2/mg	16.352768367272727	5.647765393360262	
+z5-p83	8999	8500	NA	community	NA	NA	NA	Plant height vegetative	m	2.0437108711666663	4.660498619738178	
+z5-p83	8999	8500	NA	community	NA	NA	NA	Seed dry mass	mg	3.7241034261	5.142126173330667	
+z5-p83	8999	8500	NA	community	NA	NA	NA	Stem specific density (SSD) or wood density (stem dry mass per stem fresh volume)	g/cm^3	0.37040322440000006	0.1672845588686418	
+z5-p83	9499	9000	NA	community	NA	NA	NA	Leaf area (in case of compound leaves: leaf, petiole included)	mm^2	1308.0888154900001	1118.4574525458033	
+z5-p83	9499	9000	NA	community	NA	NA	NA	Leaf nitrogen (N) content per leaf dry mass	mg/g	18.879423108555553	6.702575665548199	
+z5-p83	9499	9000	NA	community	NA	NA	NA	Leaf area per leaf dry mass (specific leaf area, SLA or 1/LMA): petiole included	mm^2/mg	16.522721444	5.786407619353955	
+z5-p83	9499	9000	NA	community	NA	NA	NA	Plant height vegetative	m	2.222720950363636	4.6824498257122205	
+z5-p83	9499	9000	NA	community	NA	NA	NA	Seed dry mass	mg	4.042670473444445	5.142126173330667	
+z5-p83	9499	9000	NA	community	NA	NA	NA	Stem specific density (SSD) or wood density (stem dry mass per stem fresh volume)	g/cm^3	0.37040322440000006	0.1672845588686418	
+z5-p83	9999	9500	NA	community	NA	NA	NA	Leaf area (in case of compound leaves: leaf, petiole included)	mm^2	1656.2287261750002	1204.7511169363277	
+z5-p83	9999	9500	NA	community	NA	NA	NA	Leaf nitrogen (N) content per leaf dry mass	mg/g	16.75969735475	6.733069241838337	
+z5-p83	9999	9500	NA	community	NA	NA	NA	Leaf area per leaf dry mass (specific leaf area, SLA or 1/LMA): petiole included	mm^2/mg	15.7817258125	4.056142399021197	
+z5-p83	9999	9500	NA	community	NA	NA	NA	Plant height vegetative	m	1.3621905845	2.161469833819107	
+z5-p83	9999	9500	NA	community	NA	NA	NA	Seed dry mass	mg	4.09288671	1.2355066046984216	
+z5-p83	9999	9500	NA	community	NA	NA	NA	Stem specific density (SSD) or wood density (stem dry mass per stem fresh volume)	g/cm^3	0.338330917	0.18841258767086824	
+z5-p83	10499	10000	NA	community	NA	NA	NA	Leaf area (in case of compound leaves: leaf, petiole included)	mm^2	1656.2287261750002	1204.7511169363277	
+z5-p83	10499	10000	NA	community	NA	NA	NA	Leaf nitrogen (N) content per leaf dry mass	mg/g	16.75969735475	6.733069241838337	
+z5-p83	10499	10000	NA	community	NA	NA	NA	Leaf area per leaf dry mass (specific leaf area, SLA or 1/LMA): petiole included	mm^2/mg	15.7817258125	4.056142399021197	
+z5-p83	10499	10000	NA	community	NA	NA	NA	Plant height vegetative	m	1.3621905845	2.161469833819107	
+z5-p83	10499	10000	NA	community	NA	NA	NA	Seed dry mass	mg	4.09288671	1.2355066046984216	
+z5-p83	10499	10000	NA	community	NA	NA	NA	Stem specific density (SSD) or wood density (stem dry mass per stem fresh volume)	g/cm^3	0.338330917	0.18841258767086824	
+z5-p83	10999	10500	NA	community	NA	NA	NA	Leaf area (in case of compound leaves: leaf, petiole included)	mm^2	840.5038643500001	1048.7384196744626	
+z5-p83	10999	10500	NA	community	NA	NA	NA	Leaf nitrogen (N) content per leaf dry mass	mg/g	16.729983304999998	7.022989427391657	
+z5-p83	10999	10500	NA	community	NA	NA	NA	Leaf area per leaf dry mass (specific leaf area, SLA or 1/LMA): petiole included	mm^2/mg	12.75456595	4.33388974265108	
+z5-p83	10999	10500	NA	community	NA	NA	NA	Plant height vegetative	m	2.2112357145	2.3635653628860838	
+z5-p83	10999	10500	NA	community	NA	NA	NA	Seed dry mass	mg	7.275178182	1.3038381855637606	
+z5-p83	10999	10500	NA	community	NA	NA	NA	Stem specific density (SSD) or wood density (stem dry mass per stem fresh volume)	g/cm^3	0.587246915	0.196793257	

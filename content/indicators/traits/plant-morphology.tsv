@@ -1,4 +1,4 @@
-timeline_id	bin_early	bin_late	morphotype	taxon	rank	taxonomic_tree	taxon_ambiguous_with	variable	variable_unit	variable_value (float)	variable_ci (float option)	variable_confidence_qualitative (string option)
+location_id	bin_early	bin_late	morphotype	taxon	rank	taxonomic_tree	taxon_ambiguous_with	variable	variable_unit	variable_value (float)	variable_ci (float option)	variable_confidence_qualitative (string option)
 individualtimelinenode_c2805b46-f963-491a-b825-766208e247a0	499	0	NA	community	NA	NA	NA	Leaf area (in case of compound leaves: leaf, petiole included)	mm^2	1407.712630925	806.4065830788833	
 individualtimelinenode_c2805b46-f963-491a-b825-766208e247a0	499	0	NA	community	NA	NA	NA	Leaf nitrogen (N) content per leaf dry mass	mg/g	21.172060119571427	8.649953976175626	
 individualtimelinenode_c2805b46-f963-491a-b825-766208e247a0	499	0	NA	community	NA	NA	NA	Leaf area per leaf dry mass (specific leaf area, SLA or 1/LMA): petiole included	mm^2/mg	17.25756847285714	7.972598097501138	
