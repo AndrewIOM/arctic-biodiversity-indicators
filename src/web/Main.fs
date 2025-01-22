@@ -58,11 +58,6 @@ module Markdown =
 
 module ModelParts =
 
-    type SpatialUnit = {
-        Label: string
-        GeoJSON: string
-    }
-
     type TimelineWithLocation = {
         TimelineId: string
         LatitudeDD: float
@@ -70,9 +65,26 @@ module ModelParts =
         LocationName: string
     }
 
+    /// Data indexed by variable name, then
+    /// sliced by a dimension e.g. timeline
+    type DataIndexed =
+        | NoData
+        | Unindexed of Map<DataVariable,(int * float * option<string>) seq>
+        | IndexedByTimeline of Map<TimelineWithLocation, Map<DataVariable,(int * float * option<string>) seq>>
+        | IndexedByPolygonId of Map<string, Map<DataVariable,(int * float * option<string>) seq>>
+
+    and DataVariable = {
+        VariableName: string
+        VariableUnit: string
+    }
+
     type DimensionView =
-        | Temporal of timelines: string list
-        | Spatial of timelines: string list * intersect:SpatialUnit
+        | Temporal of timelines: string list * TaxonomicView
+        | SpatialStatic of TaxonomicView
+
+    and TaxonomicView =
+        | CommunityLevel
+        | TaxonLevel
 
     type EssentialBiodiversityVariable =
         | TaxonDistribution
@@ -119,6 +131,17 @@ module ModelParts =
 module DataAccess =
 
     open FSharp.Data
+    open Newtonsoft.Json
+    open ModelParts
+
+    module GeoJSON =
+
+        let load geojsonName (httpClient:HttpClient) =
+            task {
+                let! json = httpClient.GetStringAsync (sprintf "content/geo/%s.json" geojsonName)
+                return JsonConvert.DeserializeObject json
+            }
+
 
     module TaxonIndex =
 
@@ -172,25 +195,59 @@ module DataAccess =
             return (DatasetEBV.Parse csv).Rows |> Seq.toList
         }
 
-    let loadEbvData ebv (httpClient:HttpClient) =
+    let loadEbvData isSpatial ebv (httpClient:HttpClient) =
         task {
             let url =
                 match ebv with
                 | ModelParts.EssentialBiodiversityVariable.TaxonDistribution -> "content/indicators/populations/taxon-presence.tsv"
-                | ModelParts.EssentialBiodiversityVariable.TraitDiversity -> "content/indicators/traits/plant-morphology.tsv"
+                | ModelParts.EssentialBiodiversityVariable.Morphology -> "content/indicators/traits/plant-morphology.tsv"
+                |> fun u ->
+                    match isSpatial with
+                    | true -> u.Replace(".tsv", "_spatial.tsv")
+                    | false -> u
             let! csv = httpClient.GetStringAsync url
             return (DatasetEBV.Parse csv).Rows |> Seq.toList
         }
 
-    // RawDataFor: string -> string list -> (decimal * decimal) seq
-    // GetProcessedEbvData: ModelParts.EssentialBiodiversityVariable -> ModelParts.DimensionView -> Async<Dataset[]>
+    let filterByTaxa (taxa: TaxonIndex.TaxonIndexItem list) (data:seq<DatasetEBV.Row>) =
+        data
+        |> Seq.filter(fun r ->
+            if r.Taxon = "community" then true // Always include 'community-level' data
+            else
+                taxa |> Seq.exists (fun t ->
+                    t.LatinName :: t.IncludedLatinNames |> List.contains r.Taxon))
+
     let dataForTimeline (taxa: TaxonIndex.TaxonIndexItem list) timeline (data:list<DatasetEBV.Row>) =
         data
-        |> Seq.filter(fun r -> r.Timeline_id = timeline)
-        |> Seq.filter(fun r ->
-            taxa |> Seq.exists (fun t ->
-                t.LatinName :: t.IncludedLatinNames |> List.contains r.Taxon))
-        |> Seq.map(fun r -> r.Bin_early, r.Variable_value, r.Variable_confidence_qualitative)
+        |> Seq.filter(fun r -> r.Location_id = timeline)
+        |> filterByTaxa taxa
+        |> Seq.groupBy(fun r -> r.Variable, r.Variable_unit)
+        |> Seq.map(fun ((v,vu), rows) ->
+            { VariableName = v; VariableUnit = vu },
+            rows |> Seq.map(fun r -> r.Bin_late, r.Variable_value, r.Variable_confidence_qualitative)
+        ) |> Map.ofSeq
+
+    let indexByLocationFor (taxa: TaxonIndex.TaxonIndexItem list) (data:list<DatasetEBV.Row>) =
+        data
+        |> filterByTaxa taxa
+        |> Seq.groupBy(fun r -> r.Location_id)
+        |> Seq.map(fun (loc, rows) ->
+            loc,
+            rows
+            |> Seq.groupBy(fun r -> r.Variable, r.Variable_unit)
+            |> Seq.map(fun ((v,vu),rows) ->
+                { VariableName = v; VariableUnit = vu },
+                rows |> Seq.map(fun r -> r.Bin_late, r.Variable_value, r.Variable_confidence_qualitative))
+                |> Map.ofSeq
+        ) |> Map.ofSeq
+
+    let indexVariableByLocation variable (data:Map<string,Map<DataVariable,seq<int * float * Option<string>>>>) =
+        data |> Map.map(fun k v ->
+            v |> Map.tryFind variable
+            )
+        |> Map.filter(fun k v -> v.IsSome)
+        |> Map.map(fun k v -> v.Value)
+
 
     /// Direct read-only access to the holocene map graph database from github.
     module Graph =
@@ -213,14 +270,12 @@ module DataAccess =
                 else return Error <| sprintf "Could not read node from github repository: %s (%s)" (json.StatusCode.ToString()) url
             }
 
-
+open ModelParts
 
 /// Routing endpoints definition.
 type Page =
     | [<EndPoint "/">] Home
     | [<EndPoint "/ebv/{name}">] EssentialBioVariable of name:string
-    | [<EndPoint "/ebv/spatial/{name}">] EssentialBioVariableSpatial of name:string
-    // | [<EndPoint "/sources/{sourceId}">] Sources of sourceId:string option
     | [<EndPoint "/{*tags}">] MarkdownPage of tags: list<string>
 
 /// The Elmish application's model.
@@ -234,8 +289,10 @@ type Model =
         taxonList: Map<string, DataAccess.TaxonIndex.TaxonIndexItem list>
         timelineList: ModelParts.TimelineWithLocation list
 
+        geojson: Map<string, obj>
+
         data: DataAccess.DatasetEBV.Row list option
-        dataSlice: Map<ModelParts.TimelineWithLocation, (int * float * option<string>) seq>
+        dataSlice: DataIndexed
         filterByTaxa: DataAccess.TaxonIndex.TaxonIndexItem list
         selectedRankFilter: string
         dimension: ModelParts.DimensionView
@@ -246,10 +303,11 @@ let initModel =
         page = Home
         error = None
         data = None
-        dataSlice = Map.empty
+        dataSlice = NoData
+        geojson = Map.empty
         filterByTaxa = []
         selectedRankFilter = "Genus"
-        dimension = ModelParts.Temporal []
+        dimension = ModelParts.Temporal ([], TaxonomicView.TaxonLevel)
         taxonList = Map.empty
         timelineList = []
         inpagelinks = []
@@ -258,9 +316,6 @@ let initModel =
 
 
 // Browse EBVs by time and by spatial aggregation.
-
-open ModelParts
-
 let ebvIndex = [
     { Label = "Species populations"
       EBVs = [
@@ -293,6 +348,9 @@ type Message =
     | LoadTimelineIndex
     | LoadedTimelineIndex of DataAccess.TimelineIndex.TimelineIndex.Row list
 
+    | LoadGeoJson of name:string
+    | LoadedGeoJson of name:string * json:obj
+
     | Error of exn
     | ClearError
 
@@ -303,6 +361,7 @@ type Message =
     | ChangeFilterRank of string
     | AddTaxonToFilter of string
     | AddTimelineToFilter of string
+    | SetDimension of DimensionView
 
 let update httpClient message model =
     match message with
@@ -315,8 +374,6 @@ let update httpClient message model =
             match ebv |> EssentialBiodiversityVariable.FromSlug with
             | Some ebv -> { model with page = page; data = None }, Cmd.ofMsg(LoadIndicatorData ebv)
             | None -> { model with page = Home; error = Some (sprintf "EBV not found: %s" ebv); data = None }, Cmd.none
-        | EssentialBioVariableSpatial ebv ->
-            { model with page = Home; error = Some "Spatial EBVs not yet implemented" }, Cmd.none
     | LoadMarkdownPage(name) ->
         let pageToLoad =
             if name.IsEmpty then "index"
@@ -361,34 +418,48 @@ let update httpClient message model =
         let task =
             match ebv with
             | RawAbundanceData -> DataAccess.loadRawData
-            | _ -> DataAccess.loadEbvData ebv
-        model, Cmd.OfTask.either (fun _ -> task httpClient) () LoadedIndicatorData Error
+            | _ ->
+                match model.dimension with
+                | DimensionView.SpatialStatic _ -> DataAccess.loadEbvData true ebv
+                | DimensionView.Temporal _ -> DataAccess.loadEbvData false ebv
+        { model with data = None }, Cmd.OfTask.either (fun _ -> task httpClient) () LoadedIndicatorData Error
     | LoadedIndicatorData raw ->
-        { model with data = Some raw }, Cmd.none
+        { model with data = Some raw }, Cmd.ofMsg SliceIndicatorData
 
     | SliceIndicatorData ->
         match model.data with
         | None -> { model with error = Some "Raw datasets not yet loaded"}, Cmd.none
         | Some dataset ->
             match model.dimension with
-            | Temporal timelines ->
+            | Temporal (timelines, view) ->
                 let sliced =
                     timelines
                     |> List.map (fun t -> 
                         model.timelineList |> Seq.find (fun ts -> ts.TimelineId = t), 
                         DataAccess.dataForTimeline model.filterByTaxa t dataset)
                     |> Map.ofList
-                { model with dataSlice = sliced }, Cmd.none
-            | Spatial _ -> model, Cmd.none
+                { model with dataSlice = DataIndexed.IndexedByTimeline sliced }, Cmd.none
+            | SpatialStatic _ ->
+                let sliced = DataAccess.indexByLocationFor model.filterByTaxa dataset
+                printfn "Sliced %A" sliced
+                { model with dataSlice = DataIndexed.IndexedByPolygonId sliced }, Cmd.none
 
+    | SetDimension dim -> { model with dimension = dim }, Cmd.ofMsg (SetPage model.page) // Causes reload of correct data
     | ChangeFilterRank r -> { model with selectedRankFilter = r}, Cmd.none
     | AddTaxonToFilter taxon ->
         let toAdd = model.taxonList |> Map.find model.selectedRankFilter |> Seq.find(fun t -> t.LatinName = taxon)
         { model with filterByTaxa = toAdd :: model.filterByTaxa }, Cmd.ofMsg SliceIndicatorData
     | AddTimelineToFilter timeline ->
         match model.dimension with
-        | Temporal t -> { model with dimension = Temporal (timeline :: t) }, Cmd.ofMsg SliceIndicatorData
-        | Spatial (t,s) -> { model with dimension = Spatial ((timeline :: t),s) }, Cmd.ofMsg SliceIndicatorData
+        | Temporal (t,t2) -> { model with dimension = Temporal (timeline :: t, t2) }, Cmd.ofMsg SliceIndicatorData
+        | SpatialStatic _ -> model, Cmd.none
+        // | SpatialDynamic (t,s) -> { model with dimension = SpatialDynamic ((timeline :: t),s) }, Cmd.ofMsg SliceIndicatorData
+
+    | LoadGeoJson name ->
+        model, Cmd.OfTask.either (fun _ -> DataAccess.GeoJSON.load name httpClient) () (fun x -> LoadedGeoJson (name,x)) Error
+    | LoadedGeoJson (name, json) ->
+        { model with geojson = model.geojson |> Map.add name json }, Cmd.none
+
 
 /// Connects the routing system to the Elmish application.
 let router = Router.infer SetPage (fun model -> model.page)
@@ -474,19 +545,23 @@ module View =
 module Plots =
 
     open Plotly.NET
+    open Plotly.NET.LayoutObjects
 
     Defaults.DefaultTemplate <- ChartTemplates.lightMirrored
     Defaults.DefaultHeight <- 300
 
-    let slicedRawData (model:Map<TimelineWithLocation,seq<int * float * option<string>>>) =
+    let slicedRawData (model:Map<TimelineWithLocation, Map<DataVariable,(int * float * option<string>) seq>>) =
         cond model.IsEmpty <| function
         | true -> text "No data to display"
         | false ->
             model
-            |> Seq.map(fun kv ->
-                Chart.Line(kv.Value |> Seq.map(fun (_,i,_) -> i), kv.Value |> Seq.map(fun (i,_,_) -> i), Name = kv.Key.LocationName, ShowMarkers = true, Orientation = StyleParam.Orientation.Vertical)
-                |> Chart.withYAxisStyle(MinMax = (12000, 0))
-                |> Chart.withXAxisStyle(MinMax = (0, 50))
+            |> Seq.collect(fun kv ->
+                kv.Value
+                |> Seq.map(fun kv2 ->
+                    Chart.Line(kv2.Value |> Seq.map(fun (_,i,_) -> i), kv2.Value |> Seq.map(fun (i,_,_) -> i), Name = kv.Key.LocationName, ShowMarkers = true, Orientation = StyleParam.Orientation.Vertical)
+                    |> Chart.withYAxisStyle(MinMax = (12000, 0))
+                    |> Chart.withXAxisStyle(MinMax = (0, 50), TitleText = sprintf "%s (%s)" kv2.Key.VariableName kv2.Key.VariableUnit)
+                )
             )
             |> Chart.Grid(nRows = 1, nCols = (model |> Seq.length), Pattern = StyleParam.LayoutGridPattern.Coupled)
             |> Chart.withLegendStyle(
@@ -498,19 +573,18 @@ module Plots =
             |> rawHtml
 
     // Assumes that 1 = present, 0.5 = maybe present, 0 = absent, NA = unknown
-    let presenceHeatmap (siteData: Map<TimelineWithLocation,seq<int * float * option<string>>>) = // (siteData: (string * float list) list) =
+    let presenceHeatmap (siteData: Map<TimelineWithLocation, Map<DataVariable,(int * float * option<string>) seq>>) = // (siteData: (string * float list) list) =
+        let v = { VariableName = "presence"; VariableUnit = "present-absent" }
         if siteData.Count = 0 then text "No timelines selected"
         else
             let annotation =
                 siteData |> Map.values |> Seq.map(fun p ->
-                    p |> Seq.map(fun (_,p2,confidence) ->
+                    p.[v] |> Seq.map(fun (_,p2,confidence) ->
                         match p2 with
                         | 1. -> "P" | 0.5 -> "M" | 0. -> "A" | f when Double.IsNaN f -> "Unk." | _ -> ""))
-            let timeBinStarts = siteData |> Map.values |> Seq.head |> Seq.map (fun (i,_,_) -> i)
+            let timeBinStarts = (siteData |> Map.values |> Seq.head).[v] |> Seq.map (fun (i,_,_) -> i)
             let zData =
-                siteData |> Map.values |> Seq.map(fun d -> d |> Seq.map (fun (_,i,_) -> i))
-
-            printfn "z data was %A" zData
+                siteData |> Map.values |> Seq.map(fun d -> d.[v] |> Seq.map (fun (_,i,_) -> i))
 
             let scale = 
                 StyleParam.Colorscale.Custom [
@@ -532,11 +606,122 @@ module Plots =
             |> rawHtml
 
 
-    let traitRadial =
-        let radial = [ 1; 2; 3; 2; 5; 11 ]
-        let theta = [ "Leaf area"; "Leaf nitrogen"; "Leaf mass"; "Plant height"; "Diaspore mass"; "Stem density" ]
-        let pointPolar = Chart.PointPolar(r = radial, theta = theta)
-        pointPolar |> GenericChart.toChartHTML |> rawHtml
+    let traitRadial (siteData: Map<TimelineWithLocation, Map<DataVariable,(int * float * option<string>) seq>>) =
+        cond (siteData.Count = 0) <| function
+        | true -> text "No timeline selected"
+        | false ->
+            let labels, radial =
+                siteData
+                |> Seq.collect(fun kv ->
+                    kv.Value
+                    |> Map.map(fun v data -> data |> Seq.head |> fun (_,t,_) -> t)
+                    |> Map.toList
+                    )
+                |> Seq.toList
+                |> List.unzip
+            let theta = [ "Leaf area"; "Leaf nitrogen"; "Leaf mass"; "Plant height"; "Diaspore mass"; "Stem density" ]
+            let pointPolar = Chart.LinePolar(r = radial, theta = theta)
+            pointPolar |> GenericChart.toChartHTML |> rawHtml
+
+    let responsiveConfig = Config.init (Responsive = true, DisplayModeBar = false)
+
+    /// Given a geojson with feature IDs 'id',
+    /// plot the data as it corresponds to the 'id' field
+    /// of the geojson.
+    let chloropleth geoJson (data:Map<string,seq<int * float * Option<string>>>) =
+        printfn "Starting chloropleth"
+        let steps = [ 0 .. 500 .. 12000 ]
+        let sliderSteps =
+            steps
+            |> List.indexed
+            |> List.map (fun (i, step) ->
+                let visible = (fun index -> index = i) |> Array.init steps.Length |> box
+                let title = sprintf "Presence-absence at %i cal yr BP" step |> box
+                SliderStep.init (
+                    Args = [ "visible", visible; "title", title ],
+                    Method = StyleParam.Method.Update,
+                    Label = "v = " + string (step)
+                ))
+        let slider =
+            Slider.init (
+                CurrentValue = SliderCurrentValue.init (Suffix = "cal yr BP"),
+                Steps = sliderSteps
+            )
+        
+        let map =
+            steps
+            |> List.map (fun stepYear ->
+                printfn "A"
+                let locations, z =
+                    data
+                    |> Seq.choose(fun kv ->
+                        kv.Value |> Seq.tryPick(fun (i,v,_) -> if i = stepYear then Some v else None)
+                        |> Option.map(fun v -> kv.Key, v)
+                        )
+                    |> Seq.toList
+                    |> List.unzip
+
+                let text =
+                    z |> List.map(fun v ->
+                        match v with
+                        | 1. -> "present"
+                        | 0.5 -> "present (borderline)"
+                        | 0. -> "absent"
+                        | _ -> "unknown whether present or absent" )
+                
+                printfn "B"
+                Chart.ChoroplethMap(
+                    locations = locations, z = z,
+                    LocationMode = StyleParam.LocationFormat.GeoJson_Id,
+                    GeoJson = geoJson,
+                    FeatureIdKey = "properties.id",
+                    MultiText = text
+                )
+                |> Chart.withSize(600, 600)
+                |> Chart.withConfig responsiveConfig
+                |> Chart.withLayout(Layout.init(
+                    Margin = Margin.init(0,0,0,0)
+                ))
+                |> Chart.withGeoStyle (
+                    FitBounds = StyleParam.GeoFitBounds.GeoJson,
+                    Projection = GeoProjection.init (projectionType = StyleParam.GeoProjectionType.AzimuthalEquidistant)
+                )
+                |> Chart.withYAxisStyle(ShowGrid = true)
+                |> Chart.withXAxisStyle(ShowGrid = true)
+            ) |> Chart.combine
+        printfn "C"
+        map
+        |> Chart.withSlider slider
+        |> GenericChart.toChartHTML
+        |> rawHtml
+
+
+    let simpleGeo caffGeoJson =
+        let locations, z = [ ("Belarus", 17.5); ("Moldova", 16.8) ] |> List.unzip
+        match caffGeoJson with
+        | Some json ->
+            Chart.ChoroplethMap(
+                locations = locations, z = z,
+                LocationMode = StyleParam.LocationFormat.CountryNames,
+                GeoJson = json
+            )
+        | None ->
+            Chart.ChoroplethMap(
+                locations = locations, z = z,
+                LocationMode = StyleParam.LocationFormat.CountryNames
+            )
+        |> Chart.withSize(600, 600)
+        |> Chart.withGeoStyle (
+            FitBounds = StyleParam.GeoFitBounds.GeoJson,
+            Projection = GeoProjection.init (projectionType = StyleParam.GeoProjectionType.AzimuthalEquidistant),
+            ShowLakes = true,
+            ShowOcean = true,
+            OceanColor = Color.fromString "white",
+            ShowRivers = true
+        )
+        |> GenericChart.toChartHTML
+        |> rawHtml
+
 
 let selectTaxaMulti model dispatch =
     div {        
@@ -587,7 +772,8 @@ let selectTaxaMulti model dispatch =
 
 let selectTimelineMulti dimension (timelineList: ModelParts.TimelineWithLocation list) dispatch =
     cond dimension <| function
-    | Temporal timelines ->
+    | SpatialStatic _ -> text "Displaying all locations"
+    | Temporal _ ->
         concat {
             div {
                 attr.``class`` "field"
@@ -637,7 +823,7 @@ let selectTimelineMulti dimension (timelineList: ModelParts.TimelineWithLocation
 
 let activeLocations model =
     cond model.dimension <| function
-    | Temporal timelines ->
+    | Temporal (timelines,_) ->
         div {
             attr.``class`` "tags"
             forEach timelines <| fun t ->
@@ -649,7 +835,7 @@ let activeLocations model =
                     }
                 | None -> empty ()
         }
-    | Spatial _ -> empty ()
+    | SpatialStatic _ -> text "All locations (summarised)"
 
 let ebvPage (ebv:EssentialBiodiversityVariable) model dispatch =
     concat {
@@ -671,15 +857,47 @@ let ebvPage (ebv:EssentialBiodiversityVariable) model dispatch =
                             attr.``class`` "content"
                             h2 { text "Taxon Presence-Absence" }
                             p { text "The presence or absence of a taxon within each 500-year time window." }
-                            Plots.presenceHeatmap model.dataSlice
+                            cond model.dimension <| function
+                            | DimensionView.Temporal _ ->
+                                cond model.dataSlice <| function
+                                | DataIndexed.NoData -> text "Data not loaded."
+                                | DataIndexed.IndexedByTimeline data -> Plots.presenceHeatmap data
+                                | _ -> text "Error. data not formatted correctly."
+                            | DimensionView.SpatialStatic _ ->
+                                cond model.dataSlice <| function
+                                | DataIndexed.NoData -> text "Data not loaded."
+                                | DataIndexed.IndexedByPolygonId data ->
+                                    cond (model.geojson |> Map.tryFind "phyto-subzones-simplified") <| function
+                                    | Some geojson -> Plots.chloropleth geojson (DataAccess.indexVariableByLocation {VariableName = "presence"; VariableUnit = "present-absent"} data)
+                                    | None -> text "Cannot load cloropleth: geojson base layer not loaded."
+                                | _ -> textf "Error. data not formatted correctly. %A" model.dataSlice
                             p { text "The indicator is 1 if the taxon/taxa was present in the window, or 0 if there was a reconstructed absence. Where the underlying proxy data was tending towards absence, the indicator is set as 'borderline' at 0.5. For example, for pollen percentage data the borderline level is set as below 2.5%." }
                             p { text "The confidence of the indicator is qualitative. Taxonomic uncertainty may exist where identified fossil remains may be from more than one taxon, yielding lower confidence." }
                         }
-                    | RawAbundanceData -> Plots.slicedRawData model.dataSlice        
+                    | RawAbundanceData ->
+                        cond model.dimension <| function
+                        | DimensionView.Temporal _ ->
+                            cond model.dataSlice <| function
+                            | DataIndexed.IndexedByTimeline data -> Plots.slicedRawData data
+                            | _ -> text "Error. Data not formatted correctly."
+                        | _ -> text "Error. Data not formatted correctly."
                     | Morphology ->
                         concat {
                             h1 { text "Plant traits test plot" }
-                            Plots.traitRadial
+                            cond model.dimension <| function
+                            | DimensionView.Temporal _ ->
+                                cond model.dataSlice <| function
+                                | DataIndexed.NoData -> text "Data not loaded."
+                                | DataIndexed.IndexedByTimeline data -> Plots.traitRadial data
+                                | _ -> text "Error. data not formatted correctly."
+                            | DimensionView.SpatialStatic _ ->
+                                cond model.dataSlice <| function
+                                | DataIndexed.NoData -> text "Data not loaded."
+                                | DataIndexed.IndexedByPolygonId data ->
+                                    cond (model.geojson |> Map.tryFind "phyto-subzones-simplified") <| function
+                                    | Some geojson -> Plots.chloropleth geojson (DataAccess.indexVariableByLocation {VariableName = "presence"; VariableUnit = "present-absent"} data)
+                                    | None -> text "Cannot load cloropleth: geojson base layer not loaded."
+                                | _ -> textf "Error. data not formatted correctly. %A" model.dataSlice
                         }
                     | Movement -> failwith "Not Implemented"
                     | TaxonomicAndPhylogeneticDiversity -> failwith "Not Implemented"
@@ -702,12 +920,13 @@ let ebvPage (ebv:EssentialBiodiversityVariable) model dispatch =
                         div {
                             attr.``class`` "buttons has-addons"
                             button {
-                                attr.``class`` "button is-selected"
+                                on.click (fun _ -> SetDimension (Temporal([],TaxonLevel)) |> dispatch)
+                                attr.``class`` (if model.dimension.IsTemporal then "button is-selected" else "button")
                                 text "Temporal indicator"
                             }
                             button {
-                                attr.``class`` "button"
-                                attr.disabled "disabled"
+                                on.click (fun _ -> SetDimension (SpatialStatic(TaxonLevel)) |> dispatch)
+                                attr.``class`` (if model.dimension.IsSpatialStatic then "button is-selected" else "button")
                                 text "Geo-temporal indicator"
                             }
                         }
@@ -761,5 +980,5 @@ type MyApp() =
 
     override this.Program =
         let update = update this.HttpClient
-        Program.mkProgram (fun _ -> initModel, Cmd.batch [ Cmd.ofMsg LoadTaxonIndex; Cmd.ofMsg LoadTimelineIndex ]) update view
+        Program.mkProgram (fun _ -> initModel, Cmd.batch [ Cmd.ofMsg LoadTaxonIndex; Cmd.ofMsg LoadTimelineIndex; Cmd.ofMsg (LoadGeoJson "caff"); Cmd.ofMsg (LoadGeoJson "phyto-subzones-simplified") ]) update view
         |> Program.withRouter router
