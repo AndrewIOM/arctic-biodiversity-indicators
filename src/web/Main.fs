@@ -7,29 +7,6 @@ open Elmish
 open Bolero
 open Bolero.Html
 
-// Structure of data sources - node visualisation + explore.
-// - For Greenland, how are datasets connected secondary -> primary?
-// - "Used in further analyses by..." (backwards link)
-
-// Dataset statuses
-// - Show sources by digitised vs not digitised datasets. Default to digitised only?
-
-// Essential biodiversity variables
-// - View individual time-series: focus not on pollen diagrams; they can be in Neotoma eventually.
-// - Compare and group time-series at a place (e.g. certain plants vs others based on defined lists 
-        // or taxonomic tree? Herbs etc.)
-
-// Spatial analysis:
-// - Map plots of individual time-series, individual points (colour coded)
-// - Switch to 
-
-// EBVs (specific things)
-// - Date of first occurrence maps
-
-// Data export:
-// - Allow data from any view to be exported to csv data frame.
-// - Include txt file with list of references for use in publications?
-
 type IndexItem = { Tag: string; Name: string }
 
 module Markdown =
@@ -129,6 +106,7 @@ module ModelParts =
 
     type EBVCategory = {
         Label: string
+        Slug: string
         EBVs: EssentialBiodiversityVariable list
     }
 
@@ -279,7 +257,7 @@ open ModelParts
 /// Routing endpoints definition.
 type Page =
     | [<EndPoint "/">] Home
-    | [<EndPoint "/ebv/{name}">] EssentialBioVariable of name:string
+    | [<EndPoint "/ebv/{category}/{name}">] EssentialBioVariable of category:string * name:string
     | [<EndPoint "/{*tags}">] MarkdownPage of tags: list<string>
 
 /// The Elmish application's model.
@@ -324,10 +302,12 @@ let initModel =
 // Browse EBVs by time and by spatial aggregation.
 let ebvIndex = [
     { Label = "Species populations"
+      Slug = "populations"
       EBVs = [
         TaxonDistribution
       ] }
     { Label = "Species traits"
+      Slug = "traits"
       EBVs = [
         Morphology
         // Movement
@@ -338,6 +318,7 @@ let ebvIndex = [
     //     TraitDiversity
     //   ] }
     { Label = "Underlying data"
+      Slug = "underlying-data"
       EBVs = [
         RawAbundanceData
       ] }
@@ -377,7 +358,7 @@ let update httpClient message model =
         | MarkdownPage tags ->
             { model with page = page }, Cmd.ofMsg(LoadMarkdownPage tags)
         | Home -> { model with page = page }, Cmd.ofMsg(LoadMarkdownPage ["index"])
-        | EssentialBioVariable ebv ->
+        | EssentialBioVariable (cat, ebv) ->
             match ebv |> EssentialBiodiversityVariable.FromSlug with
             | Some ebv -> { model with page = page; data = None }, Cmd.batch [ Cmd.ofMsg(LoadIndicatorData ebv); Cmd.ofMsg (SetVariable None) ]
             | None -> { model with page = Home; error = Some (sprintf "EBV not found: %s" ebv); data = None }, Cmd.none
@@ -495,53 +476,110 @@ module View =
             | None -> text "Loading..."
         }
 
-    let menu (model: Model) =
-        concat {
-            forEach ebvIndex <|
-                function i ->
-                            concat {
-                                p { i.Label }
-                                forEach i.EBVs <| function ebv ->
-                                                            li {
-                                                                a {
-                                                                    attr.``class`` (if model.page = (Page.EssentialBioVariable ebv.Slug) then "is-active" else "")
-                                                                    attr.href (router.Link (Page.EssentialBioVariable ebv.Slug ))
-                                                                    ebv.Name
-                                                                }
-                                                            }
-                            }
-            p { "Information" }
-            forEach [ "About", "about"; "The Arctic Holocene Biodiversity Database (AHBDB)", "ahbdb" ] <|
-                function (name,slug) ->
-                            li {
-                                a {
-                                    attr.``class`` (if model.page = (Page.MarkdownPage [slug]) then "is-active" else "")
-                                    attr.href (router.Link (Page.MarkdownPage [slug] ))
-                                    name
-                                }
-                            }
-        }
-
-    let main (menuHole: Node) (bodyHole: Node) (errorHole: Node) =
-        div {
-            attr.``class`` "columns"
+    let sideMenu' (links:Node) =
             aside {
                 attr.``class`` "column sidebar is-narrow"
-                section {
-                    attr.``class`` "section"
-                    nav {
-                        attr.``class`` "menu"
-                        ul {
-                            attr.``class`` "menu-list"
-                            menuHole
-                        }
+                nav {
+                    attr.``class`` "menu"
+                    ul {
+                        attr.``class`` "menu-list"
+                        links
                     }
                 }
             }
+
+    let sideMenu (model: Model) =
+        cond model.page <| function
+        | Page.Home -> empty ()
+        | Page.MarkdownPage _ ->
+            sideMenu'
+                (forEach model.inpagelinks <| fun l ->
+                    li {
+                        a {
+                            attr.href (sprintf "#%s" l.Tag)
+                            l.Name
+                        }
+                    } )
+        | Page.EssentialBioVariable (cat,_) -> 
+            cond (ebvIndex |> Seq.tryFind(fun n -> n.Slug = cat)) <| function
+            | Some cat ->
+                forEach cat.EBVs <| fun ebv ->
+                    li {
+                        a {
+                            attr.``class`` (if model.page = (Page.EssentialBioVariable (cat.Slug,ebv.Slug)) then "is-active" else "")
+                            attr.href (router.Link (Page.EssentialBioVariable (cat.Slug,ebv.Slug)))
+                            ebv.Name
+                        }
+                    }
+            | None -> empty ()
+            |> sideMenu'
+
+    let navbar (currentPage:Page) =
+        nav {
+            attr.``class`` "navbar navbar-multi-level"
+            attr.aria "label" "main navigation"
             div {
-                attr.``class`` "column"
-                section {
-                    attr.``class`` "section"
+                attr.``class`` "navbar-brand"
+                a {
+                    attr.``class`` "navbar-item"
+                    attr.href "/"
+                    img {
+                        attr.src "images/ahbm-logo.png"
+                        attr.alt "Arctic biodiversity map logo"
+                        attr.height "28"
+                    }
+                    text "Arctic Biodiversity Indicators for the Holocene"
+                }
+                div {
+                    attr.``class`` "navbar-item is-hidden-touch"
+                    forEach ["About this project", "about"; "The Arctic Holocene Biodiversity Map", "ahbdb"; "Citing data", "citing" ] <| fun (title,slug) ->
+                        a {
+                            attr.``class`` "navbar-top-list-item"
+                            attr.href (router.Link <| Page.MarkdownPage [slug])
+                            text title
+                        }
+                }
+                button {
+                    attr.``class`` "button navbar-burger"
+                    Attr.Make "data-target" "navMenu"
+                    span {}
+                    span {}
+                    span {}
+                }
+            }
+            div {
+                attr.``class`` "navbar-menu"
+                attr.id "navMenu"
+                div {
+                    attr.``class`` "navbar-start"
+                    forEach ebvIndex <| fun ebvCat ->
+                        cond ebvCat.EBVs.IsEmpty <| function
+                        | true -> empty ()
+                        | false ->
+                            a {
+                                attr.``class`` (if (match currentPage with | Page.EssentialBioVariable (c,_) -> c = ebvCat.Slug | _ -> false) then "navbar-item is-active" else "navbar-item")
+                                attr.href (router.Link (Page.EssentialBioVariable (ebvCat.Slug,ebvCat.EBVs.Head.Slug) ))
+                                ebvCat.Label
+                            }
+                }
+            }
+        }
+
+    let main (menuHole: Node) (sidebarHole: Node) (title:Node) (sideMenuHole: Node) (bodyHole: Node) (errorHole: Node) =
+        concat {
+            menuHole
+            div {
+                attr.``class`` "level head-row"
+                h1 {
+                    attr.``class`` "head-row-heading"
+                    title
+                }
+            }
+            div {
+                attr.``class`` "columns"
+                sidebarHole
+                div {
+                    attr.``class`` "column"
                     bodyHole
                     div {
                         attr.id "notification-area"
@@ -573,7 +611,7 @@ module Plots =
 
     let slicedRawData (model:Map<TimelineWithLocation, Map<DataVariable,(int * float * option<string>) seq>>) =
         cond model.IsEmpty <| function
-        | true -> text "No data to display"
+        | true -> div { attr.``class`` "notification"; text "Select one or more timelines to display data" }
         | false ->
             model
             |> Seq.collect(fun kv ->
@@ -596,7 +634,7 @@ module Plots =
     // Assumes that 1 = present, 0.5 = maybe present, 0 = absent, NA = unknown
     let presenceHeatmap (siteData: Map<TimelineWithLocation, Map<DataVariable,(int * float * option<string>) seq>>) = // (siteData: (string * float list) list) =
         let v = { VariableName = "presence"; VariableUnit = "present-absent" }
-        if siteData.Count = 0 then text "No timelines selected"
+        if siteData.Count = 0 then div { attr.``class`` "notification"; text "Select one or more timelines to display data" }
         else
             let annotation =
                 siteData |> Map.values |> Seq.map(fun p ->
@@ -629,7 +667,7 @@ module Plots =
 
     let traitRadial (siteData: Map<TimelineWithLocation, Map<DataVariable,(int * float * option<string>) seq>>) =
         cond (siteData.Count = 0) <| function
-        | true -> text "No timeline selected"
+        | true -> div { attr.``class`` "notification"; text "Select one or more timelines to display data" }
         | false ->
             let labels, radial =
                 siteData
@@ -931,75 +969,90 @@ let activeLocations model =
         }
     | SpatialStatic _ -> empty ()
 
-let ebvPage (ebv:EssentialBiodiversityVariable) model dispatch =
-    concat {
+module Filters =
+
+    let spatialTemporal model dispatch =
         div {
-            attr.``class`` "content"
-            h2 { text ebv.Name }
+            attr.``class`` "buttons has-addons"
+            button {
+                on.click (fun _ -> SetDimension (Temporal([],TaxonLevel)) |> dispatch)
+                attr.``class`` (if model.dimension.IsTemporal then "button is-primary is-selected" else "button")
+                text "Temporal indicator"
+            }
+            button {
+                on.click (fun _ -> SetDimension (SpatialStatic(ChangeOverTime(12000, 0), TaxonLevel)) |> dispatch)
+                attr.``class`` (if model.dimension.IsSpatialStatic then "button is-primary is-selected" else "button")
+                text "Geo-temporal indicator"
+            }
         }
 
+    let activeTaxonFilters model =
+        concat {
+            label {
+                attr.``class`` "label"
+                text "Showing indicators for..."
+            }
+            div {
+                attr.``class`` "tags"
+                forEach model.filterByTaxa <| fun t ->
+                    span {
+                        attr.``class`` "tag is-light"
+                        textf "%s (%s)" t.LatinName t.Rank
+                    }
+            }
+        }
+
+    let filterSpatialStatic timeMode model dispatch =
+        concat {
+            selectSpatialTime timeMode dispatch
+            cond model.dataSlice <| function
+            | DataIndexed.IndexedByPolygonId m ->
+                concat {
+                    label {
+                        attr.``class`` "label"
+                        text "Select a dimension to show"
+                    }
+                    div {
+                        attr.``class`` "select control"
+                        select {
+                            attr.``class`` "select"
+                            bind.change.string (if model.selectedVariable.IsSome then model.selectedVariable.Value.VariableName else "") (fun s -> (if s = "" then None else Some s) |> SetVariable |> dispatch)
+                            option {
+                                attr.disabled "disabled"
+                                attr.selected "selected"
+                                attr.value ""
+                                text "-- Select a variable --"
+                            }
+                            forEach (m |> Seq.collect(fun kv -> kv.Value.Keys)) <| fun v ->
+                                option {
+                                    attr.name v.VariableName
+                                    attr.value v.VariableName
+                                    text v.VariableName
+                                }
+                        }
+                    }
+                }
+            | _ -> empty ()
+        }
+
+
+
+let ebvPage' subtitle (graph: Node) legendText (filterCard: Node) (methodText: Node) =
+    concat {
         div {
             attr.``class`` "columns"
             div {
                 attr.``class`` "column"
-                section {
-                    attr.id "ebv-details"
-                    attr.``class`` "content"
-                    cond ebv <| function
-                    | TaxonDistribution ->
-                        div {
-                            attr.``class`` "content"
-                            h2 { text "Taxon Presence-Absence" }
-                            p { text "The presence or absence of a taxon within each 500-year time window." }
-                            cond model.dimension <| function
-                            | DimensionView.Temporal _ ->
-                                cond model.dataSlice <| function
-                                | DataIndexed.NoData -> text "Data not loaded."
-                                | DataIndexed.IndexedByTimeline data -> Plots.presenceHeatmap data
-                                | _ -> text "Error. data not formatted correctly."
-                            | DimensionView.SpatialStatic (timeMode,_) ->
-                                cond model.dataSlice <| function
-                                | DataIndexed.NoData -> text "Data not loaded."
-                                | DataIndexed.IndexedByPolygonId data ->
-                                    cond (model.geojson |> Map.tryFind "phyto-subzones-simplified") <| function
-                                    | Some geojson -> Plots.chloropleth timeMode geojson (DataAccess.indexVariableByLocation {VariableName = "presence"; VariableUnit = "present-absent"} data)
-                                    | None -> text "Cannot load cloropleth: geojson base layer not loaded."
-                                | _ -> textf "Error. data not formatted correctly. %A" model.dataSlice
-                            p { text "The indicator is 1 if the taxon/taxa was present in the window, or 0 if there was a reconstructed absence. Where the underlying proxy data was tending towards absence, the indicator is set as 'borderline' at 0.5. For example, for pollen percentage data the borderline level is set as below 2.5%." }
-                            p { text "The confidence of the indicator is qualitative. Taxonomic uncertainty may exist where identified fossil remains may be from more than one taxon, yielding lower confidence." }
-                        }
-                    | RawAbundanceData ->
-                        cond model.dimension <| function
-                        | DimensionView.Temporal _ ->
-                            cond model.dataSlice <| function
-                            | DataIndexed.IndexedByTimeline data -> Plots.slicedRawData data
-                            | _ -> text "Error. Data not formatted correctly."
-                        | _ -> text "Error. Data not formatted correctly."
-                    | Morphology ->
-                        concat {
-                            h1 { text "Plant traits test plot" }
-                            cond model.dimension <| function
-                            | DimensionView.Temporal _ ->
-                                cond model.dataSlice <| function
-                                | DataIndexed.NoData -> text "Data not loaded."
-                                | DataIndexed.IndexedByTimeline data -> Plots.traitRadial data
-                                | _ -> text "Error. data not formatted correctly."
-                            | DimensionView.SpatialStatic (timeMode, _) ->
-                                cond model.dataSlice <| function
-                                | DataIndexed.NoData -> text "Data not loaded."
-                                | DataIndexed.IndexedByPolygonId data ->
-                                    cond (model.geojson |> Map.tryFind "phyto-subzones-simplified") <| function
-                                    | Some geojson ->
-                                        cond model.selectedVariable <| function
-                                        | Some v -> Plots.chloropleth timeMode geojson (DataAccess.indexVariableByLocation v data)
-                                        | None -> text "Select a dimension to show first."
-                                    | None -> text "Cannot load cloropleth: geojson base layer not loaded."
-                                | _ -> textf "Error. data not formatted correctly. %A" model.dataSlice
-                        }
-                    | Movement -> failwith "Not Implemented"
-                    | TaxonomicAndPhylogeneticDiversity -> failwith "Not Implemented"
-                    | TraitDiversity -> failwith "Not Implemented"
+                p {
+                    attr.``class`` "subtitle"
+                    textf "%s " subtitle
+                    a {
+                        attr.href "#method"
+                        text "[Full Description]"
+                    }
                 }
+                graph
+                em { text legendText }
             }
             div {
                 attr.``class`` "column"
@@ -1014,83 +1067,125 @@ let ebvPage (ebv:EssentialBiodiversityVariable) model dispatch =
                     }
                     div {
                         attr.``class`` "card-content"
-                        div {
-                            attr.``class`` "buttons has-addons"
-                            button {
-                                on.click (fun _ -> SetDimension (Temporal([],TaxonLevel)) |> dispatch)
-                                attr.``class`` (if model.dimension.IsTemporal then "button is-primary is-selected" else "button")
-                                text "Temporal indicator"
-                            }
-                            button {
-                                on.click (fun _ -> SetDimension (SpatialStatic(ChangeOverTime(12000, 0), TaxonLevel)) |> dispatch)
-                                attr.``class`` (if model.dimension.IsSpatialStatic then "button is-primary is-selected" else "button")
-                                text "Geo-temporal indicator"
-                            }
-                        }
-                        label {
-                            attr.``class`` "label"
-                            text "Showing indicators for..."
-                        }
-                        div {
-                            attr.``class`` "tags"
-                            forEach model.filterByTaxa <| fun t ->
-                                span {
-                                    attr.``class`` "tag is-light"
-                                    textf "%s (%s)" t.LatinName t.Rank
-                                }
-                        }
-                        activeLocations model
-                        br {}
-                        selectTaxaMulti model dispatch
-                        br {}
-                        cond model.dimension <| function
-                        | Temporal _ -> selectTimelineMulti model.timelineList dispatch
-                        | SpatialStatic (timeMode,y) ->
-                            concat {
-                                selectSpatialTime timeMode dispatch
-                                cond model.dataSlice <| function
-                                | DataIndexed.IndexedByPolygonId m ->
-                                    concat {
-                                        label {
-                                            attr.``class`` "label"
-                                            text "Select a dimension to show"
-                                        }
-                                        div {
-                                            attr.``class`` "select control"
-                                            select {
-                                                attr.``class`` "select"
-                                                bind.change.string (if model.selectedVariable.IsSome then model.selectedVariable.Value.VariableName else "") (fun s -> (if s = "" then None else Some s) |> SetVariable |> dispatch)
-                                                option {
-                                                    attr.disabled "disabled"
-                                                    attr.selected "selected"
-                                                    attr.value ""
-                                                    text "-- Select a variable --"
-                                                }
-                                                forEach (m |> Seq.collect(fun kv -> kv.Value.Keys)) <| fun v ->
-                                                    option {
-                                                        attr.name v.VariableName
-                                                        attr.value v.VariableName
-                                                        text v.VariableName
-                                                    }
-                                            }
-                                        }
-                                    }
-                                | _ -> empty ()
-                            }
+                        filterCard
                     }
                 }
             }
         }
+        div {
+            attr.``class`` "columns"
+            div {
+                attr.``class`` "column content is-small dotted-top-border"
+                h3 { attr.id "method"; text "Methods" }
+                methodText
+            }
+        }
     }
+
+let defaultFilters model dispatch =
+    concat {
+        Filters.spatialTemporal model dispatch
+        Filters.activeTaxonFilters model
+        activeLocations model
+        br {}
+        selectTaxaMulti model dispatch
+        br {}
+        cond model.dimension <| function
+        | Temporal _ -> selectTimelineMulti model.timelineList dispatch
+        | SpatialStatic (timeMode,y) -> Filters.filterSpatialStatic timeMode model dispatch
+    }
+
+let ebvPage (ebv:EssentialBiodiversityVariable) model dispatch =
+    cond ebv <| function
+    | TaxonDistribution ->
+        ebvPage'
+            "The presence/absence of specific taxa"
+            (cond model.dimension <| function
+            | DimensionView.Temporal _ ->
+                cond model.dataSlice <| function
+                | DataIndexed.NoData -> div { attr.``class`` "notification is-warning"; text "No data is loaded." }
+                | DataIndexed.IndexedByTimeline data -> Plots.presenceHeatmap data
+                | _ -> div { attr.``class`` "notification is-danger"; text "Data not formatted correctly" }
+            | DimensionView.SpatialStatic (timeMode,_) ->
+                cond model.dataSlice <| function
+                | DataIndexed.NoData -> div { attr.``class`` "notification is-warning"; text "No data is loaded." }
+                | DataIndexed.IndexedByPolygonId data ->
+                    cond (model.geojson |> Map.tryFind "phyto-subzones-simplified") <| function
+                    | Some geojson -> Plots.chloropleth timeMode geojson (DataAccess.indexVariableByLocation {VariableName = "presence"; VariableUnit = "present-absent"} data)
+                    | None -> text "Cannot load cloropleth: geojson base layer not loaded."
+                | _ -> textf "Error. data not formatted correctly. %A" model.dataSlice )
+            "1 = present; 0.5 = borderline present; 0 = absent; NA = unknown"
+            (defaultFilters model dispatch)
+            (concat {
+                p { text "The presence or absence of a taxon within each 500-year time window." }
+                p { text "The indicator is 1 if the taxon/taxa was present in the window, or 0 if there was a reconstructed absence. Where the underlying proxy data was tending towards absence, the indicator is set as 'borderline' at 0.5. For example, for pollen percentage data the borderline level is set as below 2.5%." }
+                p { text "The confidence of the indicator is qualitative. Taxonomic uncertainty may exist where identified fossil remains may be from more than one taxon, yielding lower confidence." }
+            })
+    | RawAbundanceData ->
+        ebvPage'
+            "Raw datasets in original units"
+            (cond model.dimension <| function
+                    | DimensionView.Temporal _ ->
+                        cond model.dataSlice <| function
+                        | DataIndexed.IndexedByTimeline data -> Plots.slicedRawData data
+                        | _ -> text "Error. Data not formatted correctly."
+                    | _ -> text "Error. Data not formatted correctly.")
+            "Placeholder legend"
+            (defaultFilters model dispatch)
+            (concat {
+                p { text "Placeholder help text." }
+            })
+    | Morphology ->
+        ebvPage'
+            "Key morphological traits for plants"
+            (cond model.dimension <| function
+            | DimensionView.Temporal _ ->
+                cond model.dataSlice <| function
+                | DataIndexed.NoData -> text "Data not loaded."
+                | DataIndexed.IndexedByTimeline data -> Plots.traitRadial data
+                | _ -> text "Error. data not formatted correctly."
+            | DimensionView.SpatialStatic (timeMode, _) ->
+                cond model.dataSlice <| function
+                | DataIndexed.NoData -> text "Data not loaded."
+                | DataIndexed.IndexedByPolygonId data ->
+                    cond (model.geojson |> Map.tryFind "phyto-subzones-simplified") <| function
+                    | Some geojson ->
+                        cond model.selectedVariable <| function
+                        | Some v -> Plots.chloropleth timeMode geojson (DataAccess.indexVariableByLocation v data)
+                        | None -> text "Select a dimension to show first."
+                    | None -> text "Cannot load cloropleth: geojson base layer not loaded."
+                | _ -> textf "Error. data not formatted correctly. %A" model.dataSlice )
+            "Placeholder legend"
+            (defaultFilters model dispatch)
+            (concat {
+                p { text "Placeholder help text." }
+            })
+    | Movement -> failwith "Not Implemented"
+    | TaxonomicAndPhylogeneticDiversity -> failwith "Not Implemented"
+    | TraitDiversity -> failwith "Not Implemented"
+
+let pageTitle model =
+    cond model.page <| function
+    | Page.Home -> text "Home"
+    | Page.EssentialBioVariable (cat, ebv) ->
+        EssentialBiodiversityVariable.FromSlug ebv
+        |> Option.map(fun e -> e.Name)
+        |> Option.bind(fun e -> ebvIndex |> Seq.tryFind(fun c -> c.Slug = cat) |> Option.map(fun c -> sprintf "%s - %s" c.Label e))
+        |> Option.defaultValue "EBV"
+        |> text
+    | Page.MarkdownPage md -> text (md |> String.concat " - ")
 
 let view model dispatch =
     View.main
-        (View.menu model)
+        (View.navbar model.page)
+        (View.sideMenu model)
+        (pageTitle model)
+        (empty ())
         (
             cond model.page <| function
             | Home -> View.markdownPage model dispatch
             | MarkdownPage _ -> View.markdownPage model dispatch
-            | EssentialBioVariable ebv ->
+            | EssentialBioVariable (cat, ebv) ->
                 match EssentialBiodiversityVariable.FromSlug ebv with
                 | Some ebv -> ebvPage ebv model dispatch
                 | None -> text "Not found"
