@@ -1,3 +1,14 @@
+[data-theme=arctic-summer] {
+  --bulma-primary: #B15F12;
+  --bulma-link: #435264;
+  --bulma-dark: #31292F;
+  --bulma-background: #fff;
+  --bulma-radius: 0;
+  --bulma-family-primary: "STIX Two Text", serif;
+  --bulma-family-secondary: arial;
+  --bulma-border: #869BA8;
+}
+
 html, body {
   height: 100%;
 }
@@ -11,6 +22,55 @@ body {
   font-style: normal;
 }
 
+a {
+  text-decoration: none;
+  transition: 250ms color ease;
+  color: var(--bulma-primary);
+}
+
+.columns {
+  margin: 0 1em;
+}
+
+nav.navbar.navbar-multi-level {
+  padding-left: 2.5em;
+  padding-right: 2.5em;
+  flex-wrap: wrap;
+}
+
+.navbar-multi-level .navbar-brand {
+    justify-content: space-between;
+    border-bottom: 1px solid lightgrey;
+    width: 100%;
+  }
+
+.navbar-multi-level .navbar-brand .navbar-item img {
+  margin-right: 1em;
+}
+
+.navbar-multi-level .navbar-top-list-item {
+  margin: 0 1em;
+  text-decoration: underline;
+  font-size: 0.8em;
+}
+
+.navbar-multi-level .navbar-start .navbar-item {
+  height: 3.5rem;
+}
+
+.head-row {
+  padding: 1em 2em;
+  background-color: var(--bulma-primary);
+  color: white;
+  margin-bottom: 0.8em;
+  padding-left: 3.25em;
+  padding-right: 2.5em;
+}
+
+.head-row .head-row-heading {
+  font-size: 1.4em;
+}
+
 #main {
   flex: 1;
 }
@@ -21,7 +81,7 @@ body {
 
 .sidebar {
   width: 250px;
-  background: whitesmoke;
+  border-right: 1px solid lightgrey;
   min-height: 100%;
 }
 
@@ -37,4 +97,16 @@ body {
   margin-left: auto;
   margin-right: auto;
   margin-bottom: 5px;
+}
+
+.button.is-primary {
+  background-color: var(--bulma-primary);
+}
+
+.menu-list a.is-active {
+  background-color: var(--bulma-primary);
+}
+
+.dotted-top-border {
+  border-top: 1px dotted lightgrey;
 }
