@@ -1,0 +1,401 @@
+location_id	bin_early	bin_late	morphotype	taxon	rank	taxonomic_tree	taxon_ambiguous_with	variable	variable_unit	variable_value (float)	variable_ci (float option)	variable_confidence_qualitative (string option)
+individualtimelinenode_40f5222c-4060-4b23-8623-81944b44844f	12000	0	NA	Unknown (not yet coded)	Kingdom	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_40f5222c-4060-4b23-8623-81944b44844f	12000	0	NA	Life	Life	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_40f5222c-4060-4b23-8623-81944b44844f	12000	0	NA	Plantae	Kingdom	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_40f5222c-4060-4b23-8623-81944b44844f	12000	0	NA	Angiosperms	Phylum	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_40f5222c-4060-4b23-8623-81944b44844f	12000	0	NA	Fagales	Order	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_40f5222c-4060-4b23-8623-81944b44844f	12000	0	NA	Betulaceae	Family	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_40f5222c-4060-4b23-8623-81944b44844f	12000	0	NA	Alnus	Genus	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_40f5222c-4060-4b23-8623-81944b44844f	12000	0	NA	Asterales	Order	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_40f5222c-4060-4b23-8623-81944b44844f	12000	0	NA	Asteraceae	Family	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_40f5222c-4060-4b23-8623-81944b44844f	12000	0	NA	Asteroideae	Subfamily	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_40f5222c-4060-4b23-8623-81944b44844f	12000	0	NA	Anthemideae	Tribe	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_40f5222c-4060-4b23-8623-81944b44844f	12000	0	NA	Artemisia	Genus	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_40f5222c-4060-4b23-8623-81944b44844f	12000	0	NA	Betula	Genus	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_40f5222c-4060-4b23-8623-81944b44844f	12000	0	NA	Polypodiophyta	Phylum	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_40f5222c-4060-4b23-8623-81944b44844f	12000	0	NA	Polypodiopsida	Class	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_40f5222c-4060-4b23-8623-81944b44844f	12000	0	NA	Ophioglossales	Order	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_40f5222c-4060-4b23-8623-81944b44844f	12000	0	NA	Ophioglossaceae	Family	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_40f5222c-4060-4b23-8623-81944b44844f	12000	0	NA	Botrychioideae	Subfamily	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_40f5222c-4060-4b23-8623-81944b44844f	12000	0	NA	Botrychium	Genus	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_40f5222c-4060-4b23-8623-81944b44844f	12000	0	NA	Campanulaceae	Family	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_40f5222c-4060-4b23-8623-81944b44844f	12000	0	NA	Campanula	Genus	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_40f5222c-4060-4b23-8623-81944b44844f	12000	0	NA	Stellaria longipes Goldie	Species	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_40f5222c-4060-4b23-8623-81944b44844f	12000	0	NA	Cerastium fontanum Baumg.	Species	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_40f5222c-4060-4b23-8623-81944b44844f	12000	0	NA	Cerastium alpinum L.	Species	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_40f5222c-4060-4b23-8623-81944b44844f	12000	0	NA	Rosales	Order	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_40f5222c-4060-4b23-8623-81944b44844f	12000	0	NA	Rosaceae	Family	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_40f5222c-4060-4b23-8623-81944b44844f	12000	0	NA	Dryas	Genus	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_40f5222c-4060-4b23-8623-81944b44844f	12000	0	NA	Polypodiales	Order	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_40f5222c-4060-4b23-8623-81944b44844f	12000	0	NA	Polypodiaceae	Family	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_40f5222c-4060-4b23-8623-81944b44844f	12000	0	NA	Lamiales	Order	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_40f5222c-4060-4b23-8623-81944b44844f	12000	0	NA	Orobanchaceae	Family	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_40f5222c-4060-4b23-8623-81944b44844f	12000	0	NA	Rhinanthus	Genus	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_40f5222c-4060-4b23-8623-81944b44844f	12000	0	NA	Euphrasia	Genus	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_40f5222c-4060-4b23-8623-81944b44844f	12000	0	NA	Bartsia	Genus	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_40f5222c-4060-4b23-8623-81944b44844f	12000	0	NA	Gentianales	Order	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_40f5222c-4060-4b23-8623-81944b44844f	12000	0	NA	Rubiaceae	Family	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_40f5222c-4060-4b23-8623-81944b44844f	12000	0	NA	Galium	Genus	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_40f5222c-4060-4b23-8623-81944b44844f	12000	0	NA	Gymnocarpium dryopteris (L.) Newman	Species	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_40f5222c-4060-4b23-8623-81944b44844f	12000	0	NA	Pinophyta	Phylum	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_40f5222c-4060-4b23-8623-81944b44844f	12000	0	NA	Pinopsida	Class	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_40f5222c-4060-4b23-8623-81944b44844f	12000	0	NA	Cupressales	Order	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_40f5222c-4060-4b23-8623-81944b44844f	12000	0	NA	Cupressaceae	Family	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_40f5222c-4060-4b23-8623-81944b44844f	12000	0	NA	Juniperus	Genus	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_40f5222c-4060-4b23-8623-81944b44844f	12000	0	NA	Juniperus communis L.	Species	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_40f5222c-4060-4b23-8623-81944b44844f	12000	0	NA	Poales	Order	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_40f5222c-4060-4b23-8623-81944b44844f	12000	0	NA	Juncaceae	Family	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_40f5222c-4060-4b23-8623-81944b44844f	12000	0	NA	Juncus	Genus	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_40f5222c-4060-4b23-8623-81944b44844f	12000	0	NA	Luzula	Genus	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_40f5222c-4060-4b23-8623-81944b44844f	12000	0	NA	Lycopodiophyta	Phylum	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_40f5222c-4060-4b23-8623-81944b44844f	12000	0	NA	Lycopodiopsida	Class	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_40f5222c-4060-4b23-8623-81944b44844f	12000	0	NA	Lycopodiales	Order	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_40f5222c-4060-4b23-8623-81944b44844f	12000	0	NA	Lycopodiaceae	Family	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_40f5222c-4060-4b23-8623-81944b44844f	12000	0	NA	Lycopodioideae	Subfamily	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_40f5222c-4060-4b23-8623-81944b44844f	12000	0	NA	Lycopodium	Genus	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_40f5222c-4060-4b23-8623-81944b44844f	12000	0	NA	Lycopodium clavatum L.	Species	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_40f5222c-4060-4b23-8623-81944b44844f	12000	0	NA	Sibbaldia procumbens L.	Species	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_40f5222c-4060-4b23-8623-81944b44844f	12000	0	NA	Comarum	Genus	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_40f5222c-4060-4b23-8623-81944b44844f	12000	0	NA	Comarum palustre L.	Species	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_40f5222c-4060-4b23-8623-81944b44844f	12000	0	NA	Potentilla hyparctica Malte	Species	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_40f5222c-4060-4b23-8623-81944b44844f	12000	0	NA	Potentilla nivea L.	Species	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_40f5222c-4060-4b23-8623-81944b44844f	12000	0	NA	Potentilla hookeriana Lehm.	Species	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_40f5222c-4060-4b23-8623-81944b44844f	12000	0	NA	Ranunculales	Order	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_40f5222c-4060-4b23-8623-81944b44844f	12000	0	NA	Ranunculaceae	Family	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_40f5222c-4060-4b23-8623-81944b44844f	12000	0	NA	Ranunculus	Genus	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_40f5222c-4060-4b23-8623-81944b44844f	12000	0	NA	Caryophyllales	Order	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_40f5222c-4060-4b23-8623-81944b44844f	12000	0	NA	Polygonaceae	Family	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_40f5222c-4060-4b23-8623-81944b44844f	12000	0	NA	Rumex	Genus	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_40f5222c-4060-4b23-8623-81944b44844f	12000	0	NA	Rumex acetosella L.	Species	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_40f5222c-4060-4b23-8623-81944b44844f	12000	0	NA	Saxifraga paniculata Mill.	Species	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_40f5222c-4060-4b23-8623-81944b44844f	12000	0	NA	Saxifraga aizoides L.	Species	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_40f5222c-4060-4b23-8623-81944b44844f	12000	0	NA	Saxifraga tricuspidata Rottb.	Species	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_40f5222c-4060-4b23-8623-81944b44844f	12000	0	NA	Saxifragales	Order	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_40f5222c-4060-4b23-8623-81944b44844f	12000	0	NA	Saxifragaceae	Family	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_40f5222c-4060-4b23-8623-81944b44844f	12000	0	NA	Saxifraga	Genus	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_40f5222c-4060-4b23-8623-81944b44844f	12000	0	NA	Saxifraga oppositifolia L.	Species	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_40f5222c-4060-4b23-8623-81944b44844f	12000	0	NA	Thalictrum	Genus	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_40f5222c-4060-4b23-8623-81944b44844f	12000	0	NA	Thalictrum alpinum L.	Species	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_40f5222c-4060-4b23-8623-81944b44844f	12000	0	NA	Alismatales	Order	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_40f5222c-4060-4b23-8623-81944b44844f	12000	0	NA	Tofieldiaceae	Family	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_40f5222c-4060-4b23-8623-81944b44844f	12000	0	NA	Tofieldia	Genus	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_48d66bcb-89ff-4d3f-8713-057de0eb592b	12000	0	NA	Unknown (not yet coded)	Kingdom	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_48d66bcb-89ff-4d3f-8713-057de0eb592b	12000	0	NA	Life	Life	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_48d66bcb-89ff-4d3f-8713-057de0eb592b	12000	0	NA	Plantae	Kingdom	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_48d66bcb-89ff-4d3f-8713-057de0eb592b	12000	0	NA	Angiosperms	Phylum	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_48d66bcb-89ff-4d3f-8713-057de0eb592b	12000	0	NA	Fagales	Order	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_48d66bcb-89ff-4d3f-8713-057de0eb592b	12000	0	NA	Betulaceae	Family	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_48d66bcb-89ff-4d3f-8713-057de0eb592b	12000	0	NA	Alnus	Genus	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_48d66bcb-89ff-4d3f-8713-057de0eb592b	12000	0	NA	Asterales	Order	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_48d66bcb-89ff-4d3f-8713-057de0eb592b	12000	0	NA	Asteraceae	Family	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_48d66bcb-89ff-4d3f-8713-057de0eb592b	12000	0	NA	Asteroideae	Subfamily	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_48d66bcb-89ff-4d3f-8713-057de0eb592b	12000	0	NA	Anthemideae	Tribe	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_48d66bcb-89ff-4d3f-8713-057de0eb592b	12000	0	NA	Artemisia	Genus	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_48d66bcb-89ff-4d3f-8713-057de0eb592b	12000	0	NA	Betula	Genus	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_48d66bcb-89ff-4d3f-8713-057de0eb592b	12000	0	NA	Polypodiophyta	Phylum	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_48d66bcb-89ff-4d3f-8713-057de0eb592b	12000	0	NA	Polypodiopsida	Class	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_48d66bcb-89ff-4d3f-8713-057de0eb592b	12000	0	NA	Ophioglossales	Order	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_48d66bcb-89ff-4d3f-8713-057de0eb592b	12000	0	NA	Ophioglossaceae	Family	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_48d66bcb-89ff-4d3f-8713-057de0eb592b	12000	0	NA	Botrychioideae	Subfamily	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_48d66bcb-89ff-4d3f-8713-057de0eb592b	12000	0	NA	Botrychium	Genus	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_48d66bcb-89ff-4d3f-8713-057de0eb592b	12000	0	NA	Campanulaceae	Family	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_48d66bcb-89ff-4d3f-8713-057de0eb592b	12000	0	NA	Campanula	Genus	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_48d66bcb-89ff-4d3f-8713-057de0eb592b	12000	0	NA	Stellaria longipes Goldie	Species	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_48d66bcb-89ff-4d3f-8713-057de0eb592b	12000	0	NA	Cerastium fontanum Baumg.	Species	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_48d66bcb-89ff-4d3f-8713-057de0eb592b	12000	0	NA	Cerastium alpinum L.	Species	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_48d66bcb-89ff-4d3f-8713-057de0eb592b	12000	0	NA	Rosales	Order	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_48d66bcb-89ff-4d3f-8713-057de0eb592b	12000	0	NA	Rosaceae	Family	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_48d66bcb-89ff-4d3f-8713-057de0eb592b	12000	0	NA	Dryas	Genus	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_48d66bcb-89ff-4d3f-8713-057de0eb592b	12000	0	NA	Polypodiales	Order	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_48d66bcb-89ff-4d3f-8713-057de0eb592b	12000	0	NA	Polypodiaceae	Family	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_48d66bcb-89ff-4d3f-8713-057de0eb592b	12000	0	NA	Lamiales	Order	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_48d66bcb-89ff-4d3f-8713-057de0eb592b	12000	0	NA	Orobanchaceae	Family	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_48d66bcb-89ff-4d3f-8713-057de0eb592b	12000	0	NA	Rhinanthus	Genus	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_48d66bcb-89ff-4d3f-8713-057de0eb592b	12000	0	NA	Euphrasia	Genus	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_48d66bcb-89ff-4d3f-8713-057de0eb592b	12000	0	NA	Bartsia	Genus	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_48d66bcb-89ff-4d3f-8713-057de0eb592b	12000	0	NA	Gentianales	Order	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_48d66bcb-89ff-4d3f-8713-057de0eb592b	12000	0	NA	Rubiaceae	Family	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_48d66bcb-89ff-4d3f-8713-057de0eb592b	12000	0	NA	Galium	Genus	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_48d66bcb-89ff-4d3f-8713-057de0eb592b	12000	0	NA	Gymnocarpium dryopteris (L.) Newman	Species	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_48d66bcb-89ff-4d3f-8713-057de0eb592b	12000	0	NA	Pinophyta	Phylum	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_48d66bcb-89ff-4d3f-8713-057de0eb592b	12000	0	NA	Pinopsida	Class	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_48d66bcb-89ff-4d3f-8713-057de0eb592b	12000	0	NA	Cupressales	Order	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_48d66bcb-89ff-4d3f-8713-057de0eb592b	12000	0	NA	Cupressaceae	Family	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_48d66bcb-89ff-4d3f-8713-057de0eb592b	12000	0	NA	Juniperus	Genus	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_48d66bcb-89ff-4d3f-8713-057de0eb592b	12000	0	NA	Juniperus communis L.	Species	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_48d66bcb-89ff-4d3f-8713-057de0eb592b	12000	0	NA	Poales	Order	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_48d66bcb-89ff-4d3f-8713-057de0eb592b	12000	0	NA	Juncaceae	Family	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_48d66bcb-89ff-4d3f-8713-057de0eb592b	12000	0	NA	Juncus	Genus	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_48d66bcb-89ff-4d3f-8713-057de0eb592b	12000	0	NA	Luzula	Genus	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_48d66bcb-89ff-4d3f-8713-057de0eb592b	12000	0	NA	Lycopodiophyta	Phylum	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_48d66bcb-89ff-4d3f-8713-057de0eb592b	12000	0	NA	Lycopodiopsida	Class	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_48d66bcb-89ff-4d3f-8713-057de0eb592b	12000	0	NA	Lycopodiales	Order	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_48d66bcb-89ff-4d3f-8713-057de0eb592b	12000	0	NA	Lycopodiaceae	Family	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_48d66bcb-89ff-4d3f-8713-057de0eb592b	12000	0	NA	Lycopodioideae	Subfamily	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_48d66bcb-89ff-4d3f-8713-057de0eb592b	12000	0	NA	Lycopodium	Genus	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_48d66bcb-89ff-4d3f-8713-057de0eb592b	12000	0	NA	Lycopodium clavatum L.	Species	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_48d66bcb-89ff-4d3f-8713-057de0eb592b	12000	0	NA	Sibbaldia procumbens L.	Species	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_48d66bcb-89ff-4d3f-8713-057de0eb592b	12000	0	NA	Comarum	Genus	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_48d66bcb-89ff-4d3f-8713-057de0eb592b	12000	0	NA	Comarum palustre L.	Species	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_48d66bcb-89ff-4d3f-8713-057de0eb592b	12000	0	NA	Potentilla hyparctica Malte	Species	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_48d66bcb-89ff-4d3f-8713-057de0eb592b	12000	0	NA	Potentilla nivea L.	Species	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_48d66bcb-89ff-4d3f-8713-057de0eb592b	12000	0	NA	Potentilla hookeriana Lehm.	Species	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_48d66bcb-89ff-4d3f-8713-057de0eb592b	12000	0	NA	Ranunculales	Order	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_48d66bcb-89ff-4d3f-8713-057de0eb592b	12000	0	NA	Ranunculaceae	Family	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_48d66bcb-89ff-4d3f-8713-057de0eb592b	12000	0	NA	Ranunculus	Genus	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_48d66bcb-89ff-4d3f-8713-057de0eb592b	12000	0	NA	Caryophyllales	Order	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_48d66bcb-89ff-4d3f-8713-057de0eb592b	12000	0	NA	Polygonaceae	Family	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_48d66bcb-89ff-4d3f-8713-057de0eb592b	12000	0	NA	Rumex	Genus	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_48d66bcb-89ff-4d3f-8713-057de0eb592b	12000	0	NA	Rumex acetosella L.	Species	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_48d66bcb-89ff-4d3f-8713-057de0eb592b	12000	0	NA	Saxifraga paniculata Mill.	Species	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_48d66bcb-89ff-4d3f-8713-057de0eb592b	12000	0	NA	Saxifraga aizoides L.	Species	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_48d66bcb-89ff-4d3f-8713-057de0eb592b	12000	0	NA	Saxifraga tricuspidata Rottb.	Species	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_48d66bcb-89ff-4d3f-8713-057de0eb592b	12000	0	NA	Saxifragales	Order	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_48d66bcb-89ff-4d3f-8713-057de0eb592b	12000	0	NA	Saxifragaceae	Family	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_48d66bcb-89ff-4d3f-8713-057de0eb592b	12000	0	NA	Saxifraga	Genus	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_48d66bcb-89ff-4d3f-8713-057de0eb592b	12000	0	NA	Saxifraga oppositifolia L.	Species	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_48d66bcb-89ff-4d3f-8713-057de0eb592b	12000	0	NA	Thalictrum	Genus	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_48d66bcb-89ff-4d3f-8713-057de0eb592b	12000	0	NA	Thalictrum alpinum L.	Species	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_48d66bcb-89ff-4d3f-8713-057de0eb592b	12000	0	NA	Alismatales	Order	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_48d66bcb-89ff-4d3f-8713-057de0eb592b	12000	0	NA	Tofieldiaceae	Family	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_48d66bcb-89ff-4d3f-8713-057de0eb592b	12000	0	NA	Tofieldia	Genus	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_317065f9-d59a-4a58-9592-ba20dcf81572	12000	0	NA	Unknown (not yet coded)	Kingdom	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_317065f9-d59a-4a58-9592-ba20dcf81572	12000	0	NA	Life	Life	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_317065f9-d59a-4a58-9592-ba20dcf81572	12000	0	NA	Plantae	Kingdom	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_317065f9-d59a-4a58-9592-ba20dcf81572	12000	0	NA	Angiosperms	Phylum	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_317065f9-d59a-4a58-9592-ba20dcf81572	12000	0	NA	Fagales	Order	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_317065f9-d59a-4a58-9592-ba20dcf81572	12000	0	NA	Betulaceae	Family	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_317065f9-d59a-4a58-9592-ba20dcf81572	12000	0	NA	Alnus	Genus	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_317065f9-d59a-4a58-9592-ba20dcf81572	12000	0	NA	Asterales	Order	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_317065f9-d59a-4a58-9592-ba20dcf81572	12000	0	NA	Asteraceae	Family	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_317065f9-d59a-4a58-9592-ba20dcf81572	12000	0	NA	Asteroideae	Subfamily	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_317065f9-d59a-4a58-9592-ba20dcf81572	12000	0	NA	Anthemideae	Tribe	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_317065f9-d59a-4a58-9592-ba20dcf81572	12000	0	NA	Artemisia	Genus	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_317065f9-d59a-4a58-9592-ba20dcf81572	12000	0	NA	Betula	Genus	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_317065f9-d59a-4a58-9592-ba20dcf81572	12000	0	NA	Polypodiophyta	Phylum	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_317065f9-d59a-4a58-9592-ba20dcf81572	12000	0	NA	Polypodiopsida	Class	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_317065f9-d59a-4a58-9592-ba20dcf81572	12000	0	NA	Ophioglossales	Order	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_317065f9-d59a-4a58-9592-ba20dcf81572	12000	0	NA	Ophioglossaceae	Family	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_317065f9-d59a-4a58-9592-ba20dcf81572	12000	0	NA	Botrychioideae	Subfamily	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_317065f9-d59a-4a58-9592-ba20dcf81572	12000	0	NA	Botrychium	Genus	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_317065f9-d59a-4a58-9592-ba20dcf81572	12000	0	NA	Campanulaceae	Family	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_317065f9-d59a-4a58-9592-ba20dcf81572	12000	0	NA	Campanula	Genus	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_317065f9-d59a-4a58-9592-ba20dcf81572	12000	0	NA	Stellaria longipes Goldie	Species	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_317065f9-d59a-4a58-9592-ba20dcf81572	12000	0	NA	Cerastium fontanum Baumg.	Species	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_317065f9-d59a-4a58-9592-ba20dcf81572	12000	0	NA	Cerastium alpinum L.	Species	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_317065f9-d59a-4a58-9592-ba20dcf81572	12000	0	NA	Rosales	Order	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_317065f9-d59a-4a58-9592-ba20dcf81572	12000	0	NA	Rosaceae	Family	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_317065f9-d59a-4a58-9592-ba20dcf81572	12000	0	NA	Dryas	Genus	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_317065f9-d59a-4a58-9592-ba20dcf81572	12000	0	NA	Polypodiales	Order	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_317065f9-d59a-4a58-9592-ba20dcf81572	12000	0	NA	Polypodiaceae	Family	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_317065f9-d59a-4a58-9592-ba20dcf81572	12000	0	NA	Lamiales	Order	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_317065f9-d59a-4a58-9592-ba20dcf81572	12000	0	NA	Orobanchaceae	Family	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_317065f9-d59a-4a58-9592-ba20dcf81572	12000	0	NA	Rhinanthus	Genus	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_317065f9-d59a-4a58-9592-ba20dcf81572	12000	0	NA	Euphrasia	Genus	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_317065f9-d59a-4a58-9592-ba20dcf81572	12000	0	NA	Bartsia	Genus	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_317065f9-d59a-4a58-9592-ba20dcf81572	12000	0	NA	Gentianales	Order	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_317065f9-d59a-4a58-9592-ba20dcf81572	12000	0	NA	Rubiaceae	Family	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_317065f9-d59a-4a58-9592-ba20dcf81572	12000	0	NA	Galium	Genus	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_317065f9-d59a-4a58-9592-ba20dcf81572	12000	0	NA	Gymnocarpium dryopteris (L.) Newman	Species	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_317065f9-d59a-4a58-9592-ba20dcf81572	12000	0	NA	Pinophyta	Phylum	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_317065f9-d59a-4a58-9592-ba20dcf81572	12000	0	NA	Pinopsida	Class	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_317065f9-d59a-4a58-9592-ba20dcf81572	12000	0	NA	Cupressales	Order	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_317065f9-d59a-4a58-9592-ba20dcf81572	12000	0	NA	Cupressaceae	Family	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_317065f9-d59a-4a58-9592-ba20dcf81572	12000	0	NA	Juniperus	Genus	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_317065f9-d59a-4a58-9592-ba20dcf81572	12000	0	NA	Juniperus communis L.	Species	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_317065f9-d59a-4a58-9592-ba20dcf81572	12000	0	NA	Poales	Order	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_317065f9-d59a-4a58-9592-ba20dcf81572	12000	0	NA	Juncaceae	Family	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_317065f9-d59a-4a58-9592-ba20dcf81572	12000	0	NA	Juncus	Genus	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_317065f9-d59a-4a58-9592-ba20dcf81572	12000	0	NA	Luzula	Genus	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_317065f9-d59a-4a58-9592-ba20dcf81572	12000	0	NA	Lycopodiophyta	Phylum	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_317065f9-d59a-4a58-9592-ba20dcf81572	12000	0	NA	Lycopodiopsida	Class	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_317065f9-d59a-4a58-9592-ba20dcf81572	12000	0	NA	Lycopodiales	Order	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_317065f9-d59a-4a58-9592-ba20dcf81572	12000	0	NA	Lycopodiaceae	Family	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_317065f9-d59a-4a58-9592-ba20dcf81572	12000	0	NA	Lycopodioideae	Subfamily	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_317065f9-d59a-4a58-9592-ba20dcf81572	12000	0	NA	Lycopodium	Genus	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_317065f9-d59a-4a58-9592-ba20dcf81572	12000	0	NA	Lycopodium clavatum L.	Species	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_317065f9-d59a-4a58-9592-ba20dcf81572	12000	0	NA	Sibbaldia procumbens L.	Species	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_317065f9-d59a-4a58-9592-ba20dcf81572	12000	0	NA	Comarum	Genus	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_317065f9-d59a-4a58-9592-ba20dcf81572	12000	0	NA	Comarum palustre L.	Species	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_317065f9-d59a-4a58-9592-ba20dcf81572	12000	0	NA	Potentilla hyparctica Malte	Species	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_317065f9-d59a-4a58-9592-ba20dcf81572	12000	0	NA	Potentilla nivea L.	Species	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_317065f9-d59a-4a58-9592-ba20dcf81572	12000	0	NA	Potentilla hookeriana Lehm.	Species	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_317065f9-d59a-4a58-9592-ba20dcf81572	12000	0	NA	Ranunculales	Order	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_317065f9-d59a-4a58-9592-ba20dcf81572	12000	0	NA	Ranunculaceae	Family	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_317065f9-d59a-4a58-9592-ba20dcf81572	12000	0	NA	Ranunculus	Genus	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_317065f9-d59a-4a58-9592-ba20dcf81572	12000	0	NA	Caryophyllales	Order	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_317065f9-d59a-4a58-9592-ba20dcf81572	12000	0	NA	Polygonaceae	Family	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_317065f9-d59a-4a58-9592-ba20dcf81572	12000	0	NA	Rumex	Genus	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_317065f9-d59a-4a58-9592-ba20dcf81572	12000	0	NA	Rumex acetosella L.	Species	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_317065f9-d59a-4a58-9592-ba20dcf81572	12000	0	NA	Saxifraga paniculata Mill.	Species	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_317065f9-d59a-4a58-9592-ba20dcf81572	12000	0	NA	Saxifraga aizoides L.	Species	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_317065f9-d59a-4a58-9592-ba20dcf81572	12000	0	NA	Saxifraga tricuspidata Rottb.	Species	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_317065f9-d59a-4a58-9592-ba20dcf81572	12000	0	NA	Saxifragales	Order	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_317065f9-d59a-4a58-9592-ba20dcf81572	12000	0	NA	Saxifragaceae	Family	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_317065f9-d59a-4a58-9592-ba20dcf81572	12000	0	NA	Saxifraga	Genus	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_317065f9-d59a-4a58-9592-ba20dcf81572	12000	0	NA	Saxifraga oppositifolia L.	Species	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_317065f9-d59a-4a58-9592-ba20dcf81572	12000	0	NA	Thalictrum	Genus	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_317065f9-d59a-4a58-9592-ba20dcf81572	12000	0	NA	Thalictrum alpinum L.	Species	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_317065f9-d59a-4a58-9592-ba20dcf81572	12000	0	NA	Alismatales	Order	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_317065f9-d59a-4a58-9592-ba20dcf81572	12000	0	NA	Tofieldiaceae	Family	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_317065f9-d59a-4a58-9592-ba20dcf81572	12000	0	NA	Tofieldia	Genus	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_38a71e4f-a3fa-4afe-b3ab-7166c907c87e	12000	0	NA	Unknown (not yet coded)	Kingdom	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_38a71e4f-a3fa-4afe-b3ab-7166c907c87e	12000	0	NA	Life	Life	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_38a71e4f-a3fa-4afe-b3ab-7166c907c87e	12000	0	NA	Plantae	Kingdom	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_38a71e4f-a3fa-4afe-b3ab-7166c907c87e	12000	0	NA	Angiosperms	Phylum	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_38a71e4f-a3fa-4afe-b3ab-7166c907c87e	12000	0	NA	Fagales	Order	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_38a71e4f-a3fa-4afe-b3ab-7166c907c87e	12000	0	NA	Betulaceae	Family	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_38a71e4f-a3fa-4afe-b3ab-7166c907c87e	12000	0	NA	Alnus	Genus	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_38a71e4f-a3fa-4afe-b3ab-7166c907c87e	12000	0	NA	Asterales	Order	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_38a71e4f-a3fa-4afe-b3ab-7166c907c87e	12000	0	NA	Asteraceae	Family	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_38a71e4f-a3fa-4afe-b3ab-7166c907c87e	12000	0	NA	Asteroideae	Subfamily	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_38a71e4f-a3fa-4afe-b3ab-7166c907c87e	12000	0	NA	Anthemideae	Tribe	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_38a71e4f-a3fa-4afe-b3ab-7166c907c87e	12000	0	NA	Artemisia	Genus	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_38a71e4f-a3fa-4afe-b3ab-7166c907c87e	12000	0	NA	Betula	Genus	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_38a71e4f-a3fa-4afe-b3ab-7166c907c87e	12000	0	NA	Polypodiophyta	Phylum	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_38a71e4f-a3fa-4afe-b3ab-7166c907c87e	12000	0	NA	Polypodiopsida	Class	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_38a71e4f-a3fa-4afe-b3ab-7166c907c87e	12000	0	NA	Ophioglossales	Order	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_38a71e4f-a3fa-4afe-b3ab-7166c907c87e	12000	0	NA	Ophioglossaceae	Family	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_38a71e4f-a3fa-4afe-b3ab-7166c907c87e	12000	0	NA	Botrychioideae	Subfamily	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_38a71e4f-a3fa-4afe-b3ab-7166c907c87e	12000	0	NA	Botrychium	Genus	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_38a71e4f-a3fa-4afe-b3ab-7166c907c87e	12000	0	NA	Campanulaceae	Family	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_38a71e4f-a3fa-4afe-b3ab-7166c907c87e	12000	0	NA	Campanula	Genus	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_38a71e4f-a3fa-4afe-b3ab-7166c907c87e	12000	0	NA	Stellaria longipes Goldie	Species	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_38a71e4f-a3fa-4afe-b3ab-7166c907c87e	12000	0	NA	Cerastium fontanum Baumg.	Species	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_38a71e4f-a3fa-4afe-b3ab-7166c907c87e	12000	0	NA	Cerastium alpinum L.	Species	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_38a71e4f-a3fa-4afe-b3ab-7166c907c87e	12000	0	NA	Rosales	Order	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_38a71e4f-a3fa-4afe-b3ab-7166c907c87e	12000	0	NA	Rosaceae	Family	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_38a71e4f-a3fa-4afe-b3ab-7166c907c87e	12000	0	NA	Dryas	Genus	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_38a71e4f-a3fa-4afe-b3ab-7166c907c87e	12000	0	NA	Polypodiales	Order	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_38a71e4f-a3fa-4afe-b3ab-7166c907c87e	12000	0	NA	Polypodiaceae	Family	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_38a71e4f-a3fa-4afe-b3ab-7166c907c87e	12000	0	NA	Lamiales	Order	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_38a71e4f-a3fa-4afe-b3ab-7166c907c87e	12000	0	NA	Orobanchaceae	Family	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_38a71e4f-a3fa-4afe-b3ab-7166c907c87e	12000	0	NA	Rhinanthus	Genus	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_38a71e4f-a3fa-4afe-b3ab-7166c907c87e	12000	0	NA	Euphrasia	Genus	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_38a71e4f-a3fa-4afe-b3ab-7166c907c87e	12000	0	NA	Bartsia	Genus	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_38a71e4f-a3fa-4afe-b3ab-7166c907c87e	12000	0	NA	Gentianales	Order	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_38a71e4f-a3fa-4afe-b3ab-7166c907c87e	12000	0	NA	Rubiaceae	Family	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_38a71e4f-a3fa-4afe-b3ab-7166c907c87e	12000	0	NA	Galium	Genus	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_38a71e4f-a3fa-4afe-b3ab-7166c907c87e	12000	0	NA	Gymnocarpium dryopteris (L.) Newman	Species	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_38a71e4f-a3fa-4afe-b3ab-7166c907c87e	12000	0	NA	Pinophyta	Phylum	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_38a71e4f-a3fa-4afe-b3ab-7166c907c87e	12000	0	NA	Pinopsida	Class	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_38a71e4f-a3fa-4afe-b3ab-7166c907c87e	12000	0	NA	Cupressales	Order	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_38a71e4f-a3fa-4afe-b3ab-7166c907c87e	12000	0	NA	Cupressaceae	Family	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_38a71e4f-a3fa-4afe-b3ab-7166c907c87e	12000	0	NA	Juniperus	Genus	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_38a71e4f-a3fa-4afe-b3ab-7166c907c87e	12000	0	NA	Juniperus communis L.	Species	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_38a71e4f-a3fa-4afe-b3ab-7166c907c87e	12000	0	NA	Poales	Order	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_38a71e4f-a3fa-4afe-b3ab-7166c907c87e	12000	0	NA	Juncaceae	Family	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_38a71e4f-a3fa-4afe-b3ab-7166c907c87e	12000	0	NA	Juncus	Genus	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_38a71e4f-a3fa-4afe-b3ab-7166c907c87e	12000	0	NA	Luzula	Genus	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_38a71e4f-a3fa-4afe-b3ab-7166c907c87e	12000	0	NA	Lycopodiophyta	Phylum	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_38a71e4f-a3fa-4afe-b3ab-7166c907c87e	12000	0	NA	Lycopodiopsida	Class	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_38a71e4f-a3fa-4afe-b3ab-7166c907c87e	12000	0	NA	Lycopodiales	Order	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_38a71e4f-a3fa-4afe-b3ab-7166c907c87e	12000	0	NA	Lycopodiaceae	Family	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_38a71e4f-a3fa-4afe-b3ab-7166c907c87e	12000	0	NA	Lycopodioideae	Subfamily	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_38a71e4f-a3fa-4afe-b3ab-7166c907c87e	12000	0	NA	Lycopodium	Genus	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_38a71e4f-a3fa-4afe-b3ab-7166c907c87e	12000	0	NA	Lycopodium clavatum L.	Species	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_38a71e4f-a3fa-4afe-b3ab-7166c907c87e	12000	0	NA	Sibbaldia procumbens L.	Species	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_38a71e4f-a3fa-4afe-b3ab-7166c907c87e	12000	0	NA	Comarum	Genus	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_38a71e4f-a3fa-4afe-b3ab-7166c907c87e	12000	0	NA	Comarum palustre L.	Species	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_38a71e4f-a3fa-4afe-b3ab-7166c907c87e	12000	0	NA	Potentilla hyparctica Malte	Species	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_38a71e4f-a3fa-4afe-b3ab-7166c907c87e	12000	0	NA	Potentilla nivea L.	Species	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_38a71e4f-a3fa-4afe-b3ab-7166c907c87e	12000	0	NA	Potentilla hookeriana Lehm.	Species	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_38a71e4f-a3fa-4afe-b3ab-7166c907c87e	12000	0	NA	Ranunculales	Order	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_38a71e4f-a3fa-4afe-b3ab-7166c907c87e	12000	0	NA	Ranunculaceae	Family	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_38a71e4f-a3fa-4afe-b3ab-7166c907c87e	12000	0	NA	Ranunculus	Genus	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_38a71e4f-a3fa-4afe-b3ab-7166c907c87e	12000	0	NA	Caryophyllales	Order	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_38a71e4f-a3fa-4afe-b3ab-7166c907c87e	12000	0	NA	Polygonaceae	Family	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_38a71e4f-a3fa-4afe-b3ab-7166c907c87e	12000	0	NA	Rumex	Genus	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_38a71e4f-a3fa-4afe-b3ab-7166c907c87e	12000	0	NA	Rumex acetosella L.	Species	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_38a71e4f-a3fa-4afe-b3ab-7166c907c87e	12000	0	NA	Saxifraga paniculata Mill.	Species	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_38a71e4f-a3fa-4afe-b3ab-7166c907c87e	12000	0	NA	Saxifraga aizoides L.	Species	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_38a71e4f-a3fa-4afe-b3ab-7166c907c87e	12000	0	NA	Saxifraga tricuspidata Rottb.	Species	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_38a71e4f-a3fa-4afe-b3ab-7166c907c87e	12000	0	NA	Saxifragales	Order	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_38a71e4f-a3fa-4afe-b3ab-7166c907c87e	12000	0	NA	Saxifragaceae	Family	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_38a71e4f-a3fa-4afe-b3ab-7166c907c87e	12000	0	NA	Saxifraga	Genus	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_38a71e4f-a3fa-4afe-b3ab-7166c907c87e	12000	0	NA	Saxifraga oppositifolia L.	Species	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_38a71e4f-a3fa-4afe-b3ab-7166c907c87e	12000	0	NA	Thalictrum	Genus	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_38a71e4f-a3fa-4afe-b3ab-7166c907c87e	12000	0	NA	Thalictrum alpinum L.	Species	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_38a71e4f-a3fa-4afe-b3ab-7166c907c87e	12000	0	NA	Alismatales	Order	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_38a71e4f-a3fa-4afe-b3ab-7166c907c87e	12000	0	NA	Tofieldiaceae	Family	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_38a71e4f-a3fa-4afe-b3ab-7166c907c87e	12000	0	NA	Tofieldia	Genus	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_c2805b46-f963-491a-b825-766208e247a0	12000	0	NA	Unknown (not yet coded)	Kingdom	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_c2805b46-f963-491a-b825-766208e247a0	12000	0	NA	Life	Life	unknown	unknown	earliest_occurrence_date	cal yr BP	10253		
+individualtimelinenode_c2805b46-f963-491a-b825-766208e247a0	12000	0	NA	Plantae	Kingdom	unknown	unknown	earliest_occurrence_date	cal yr BP	10253		
+individualtimelinenode_c2805b46-f963-491a-b825-766208e247a0	12000	0	NA	Angiosperms	Phylum	unknown	unknown	earliest_occurrence_date	cal yr BP	10253		
+individualtimelinenode_c2805b46-f963-491a-b825-766208e247a0	12000	0	NA	Fagales	Order	unknown	unknown	earliest_occurrence_date	cal yr BP	10253		
+individualtimelinenode_c2805b46-f963-491a-b825-766208e247a0	12000	0	NA	Betulaceae	Family	unknown	unknown	earliest_occurrence_date	cal yr BP	10253		
+individualtimelinenode_c2805b46-f963-491a-b825-766208e247a0	12000	0	NA	Alnus	Genus	unknown	unknown	earliest_occurrence_date	cal yr BP	8896.75		
+individualtimelinenode_c2805b46-f963-491a-b825-766208e247a0	12000	0	NA	Asterales	Order	unknown	unknown	earliest_occurrence_date	cal yr BP	7349.38		
+individualtimelinenode_c2805b46-f963-491a-b825-766208e247a0	12000	0	NA	Asteraceae	Family	unknown	unknown	earliest_occurrence_date	cal yr BP	7349.38		
+individualtimelinenode_c2805b46-f963-491a-b825-766208e247a0	12000	0	NA	Asteroideae	Subfamily	unknown	unknown	earliest_occurrence_date	cal yr BP	7349.38		
+individualtimelinenode_c2805b46-f963-491a-b825-766208e247a0	12000	0	NA	Anthemideae	Tribe	unknown	unknown	earliest_occurrence_date	cal yr BP	7349.38		
+individualtimelinenode_c2805b46-f963-491a-b825-766208e247a0	12000	0	NA	Artemisia	Genus	unknown	unknown	earliest_occurrence_date	cal yr BP	7349.38		
+individualtimelinenode_c2805b46-f963-491a-b825-766208e247a0	12000	0	NA	Betula	Genus	unknown	unknown	earliest_occurrence_date	cal yr BP	10253		
+individualtimelinenode_c2805b46-f963-491a-b825-766208e247a0	12000	0	NA	Polypodiophyta	Phylum	unknown	unknown	earliest_occurrence_date	cal yr BP	10253		
+individualtimelinenode_c2805b46-f963-491a-b825-766208e247a0	12000	0	NA	Polypodiopsida	Class	unknown	unknown	earliest_occurrence_date	cal yr BP	10253		
+individualtimelinenode_c2805b46-f963-491a-b825-766208e247a0	12000	0	NA	Ophioglossales	Order	unknown	unknown	earliest_occurrence_date	cal yr BP	9181.529999999999		
+individualtimelinenode_c2805b46-f963-491a-b825-766208e247a0	12000	0	NA	Ophioglossaceae	Family	unknown	unknown	earliest_occurrence_date	cal yr BP	9181.529999999999		
+individualtimelinenode_c2805b46-f963-491a-b825-766208e247a0	12000	0	NA	Botrychioideae	Subfamily	unknown	unknown	earliest_occurrence_date	cal yr BP	9181.529999999999		
+individualtimelinenode_c2805b46-f963-491a-b825-766208e247a0	12000	0	NA	Botrychium	Genus	unknown	unknown	earliest_occurrence_date	cal yr BP	9181.529999999999		
+individualtimelinenode_c2805b46-f963-491a-b825-766208e247a0	12000	0	NA	Campanulaceae	Family	unknown	unknown	earliest_occurrence_date	cal yr BP	6551.18		
+individualtimelinenode_c2805b46-f963-491a-b825-766208e247a0	12000	0	NA	Campanula	Genus	unknown	unknown	earliest_occurrence_date	cal yr BP	6551.18		
+individualtimelinenode_c2805b46-f963-491a-b825-766208e247a0	12000	0	NA	Stellaria longipes Goldie	Species	unknown	unknown	earliest_occurrence_date	cal yr BP	10032.5		
+individualtimelinenode_c2805b46-f963-491a-b825-766208e247a0	12000	0	NA	Cerastium fontanum Baumg.	Species	unknown	unknown	earliest_occurrence_date	cal yr BP	10032.5		
+individualtimelinenode_c2805b46-f963-491a-b825-766208e247a0	12000	0	NA	Cerastium alpinum L.	Species	unknown	unknown	earliest_occurrence_date	cal yr BP	10032.5		
+individualtimelinenode_c2805b46-f963-491a-b825-766208e247a0	12000	0	NA	Rosales	Order	unknown	unknown	earliest_occurrence_date	cal yr BP	10032.5		
+individualtimelinenode_c2805b46-f963-491a-b825-766208e247a0	12000	0	NA	Rosaceae	Family	unknown	unknown	earliest_occurrence_date	cal yr BP	10032.5		
+individualtimelinenode_c2805b46-f963-491a-b825-766208e247a0	12000	0	NA	Dryas	Genus	unknown	unknown	earliest_occurrence_date	cal yr BP	7018.03		
+individualtimelinenode_c2805b46-f963-491a-b825-766208e247a0	12000	0	NA	Polypodiales	Order	unknown	unknown	earliest_occurrence_date	cal yr BP	10253		
+individualtimelinenode_c2805b46-f963-491a-b825-766208e247a0	12000	0	NA	Polypodiaceae	Family	unknown	unknown	earliest_occurrence_date	cal yr BP	10253		
+individualtimelinenode_c2805b46-f963-491a-b825-766208e247a0	12000	0	NA	Lamiales	Order	unknown	unknown	earliest_occurrence_date	cal yr BP	8010.36		
+individualtimelinenode_c2805b46-f963-491a-b825-766208e247a0	12000	0	NA	Orobanchaceae	Family	unknown	unknown	earliest_occurrence_date	cal yr BP	8010.36		
+individualtimelinenode_c2805b46-f963-491a-b825-766208e247a0	12000	0	NA	Rhinanthus	Genus	unknown	unknown	earliest_occurrence_date	cal yr BP	8010.36		
+individualtimelinenode_c2805b46-f963-491a-b825-766208e247a0	12000	0	NA	Euphrasia	Genus	unknown	unknown	earliest_occurrence_date	cal yr BP	8010.36		
+individualtimelinenode_c2805b46-f963-491a-b825-766208e247a0	12000	0	NA	Bartsia	Genus	unknown	unknown	earliest_occurrence_date	cal yr BP	8010.36		
+individualtimelinenode_c2805b46-f963-491a-b825-766208e247a0	12000	0	NA	Gentianales	Order	unknown	unknown	earliest_occurrence_date	cal yr BP	9181.529999999999		
+individualtimelinenode_c2805b46-f963-491a-b825-766208e247a0	12000	0	NA	Rubiaceae	Family	unknown	unknown	earliest_occurrence_date	cal yr BP	9181.529999999999		
+individualtimelinenode_c2805b46-f963-491a-b825-766208e247a0	12000	0	NA	Galium	Genus	unknown	unknown	earliest_occurrence_date	cal yr BP	9181.529999999999		
+individualtimelinenode_c2805b46-f963-491a-b825-766208e247a0	12000	0	NA	Gymnocarpium dryopteris (L.) Newman	Species	unknown	unknown	earliest_occurrence_date	cal yr BP	8896.75		
+individualtimelinenode_c2805b46-f963-491a-b825-766208e247a0	12000	0	NA	Pinophyta	Phylum	unknown	unknown	earliest_occurrence_date	cal yr BP	9181.529999999999		
+individualtimelinenode_c2805b46-f963-491a-b825-766208e247a0	12000	0	NA	Pinopsida	Class	unknown	unknown	earliest_occurrence_date	cal yr BP	9181.529999999999		
+individualtimelinenode_c2805b46-f963-491a-b825-766208e247a0	12000	0	NA	Cupressales	Order	unknown	unknown	earliest_occurrence_date	cal yr BP	9181.529999999999		
+individualtimelinenode_c2805b46-f963-491a-b825-766208e247a0	12000	0	NA	Cupressaceae	Family	unknown	unknown	earliest_occurrence_date	cal yr BP	9181.529999999999		
+individualtimelinenode_c2805b46-f963-491a-b825-766208e247a0	12000	0	NA	Juniperus	Genus	unknown	unknown	earliest_occurrence_date	cal yr BP	9181.529999999999		
+individualtimelinenode_c2805b46-f963-491a-b825-766208e247a0	12000	0	NA	Juniperus communis L.	Species	unknown	unknown	earliest_occurrence_date	cal yr BP	9181.529999999999		
+individualtimelinenode_c2805b46-f963-491a-b825-766208e247a0	12000	0	NA	Poales	Order	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_c2805b46-f963-491a-b825-766208e247a0	12000	0	NA	Juncaceae	Family	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_c2805b46-f963-491a-b825-766208e247a0	12000	0	NA	Juncus	Genus	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_c2805b46-f963-491a-b825-766208e247a0	12000	0	NA	Luzula	Genus	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+individualtimelinenode_c2805b46-f963-491a-b825-766208e247a0	12000	0	NA	Lycopodiophyta	Phylum	unknown	unknown	earliest_occurrence_date	cal yr BP	9181.529999999999		
+individualtimelinenode_c2805b46-f963-491a-b825-766208e247a0	12000	0	NA	Lycopodiopsida	Class	unknown	unknown	earliest_occurrence_date	cal yr BP	9181.529999999999		
+individualtimelinenode_c2805b46-f963-491a-b825-766208e247a0	12000	0	NA	Lycopodiales	Order	unknown	unknown	earliest_occurrence_date	cal yr BP	9181.529999999999		
+individualtimelinenode_c2805b46-f963-491a-b825-766208e247a0	12000	0	NA	Lycopodiaceae	Family	unknown	unknown	earliest_occurrence_date	cal yr BP	9181.529999999999		
+individualtimelinenode_c2805b46-f963-491a-b825-766208e247a0	12000	0	NA	Lycopodioideae	Subfamily	unknown	unknown	earliest_occurrence_date	cal yr BP	9181.529999999999		
+individualtimelinenode_c2805b46-f963-491a-b825-766208e247a0	12000	0	NA	Lycopodium	Genus	unknown	unknown	earliest_occurrence_date	cal yr BP	9181.529999999999		
+individualtimelinenode_c2805b46-f963-491a-b825-766208e247a0	12000	0	NA	Lycopodium clavatum L.	Species	unknown	unknown	earliest_occurrence_date	cal yr BP	9181.529999999999		
+individualtimelinenode_c2805b46-f963-491a-b825-766208e247a0	12000	0	NA	Sibbaldia procumbens L.	Species	unknown	unknown	earliest_occurrence_date	cal yr BP	10032.5		
+individualtimelinenode_c2805b46-f963-491a-b825-766208e247a0	12000	0	NA	Comarum	Genus	unknown	unknown	earliest_occurrence_date	cal yr BP	10032.5		
+individualtimelinenode_c2805b46-f963-491a-b825-766208e247a0	12000	0	NA	Comarum palustre L.	Species	unknown	unknown	earliest_occurrence_date	cal yr BP	10032.5		
+individualtimelinenode_c2805b46-f963-491a-b825-766208e247a0	12000	0	NA	Potentilla hyparctica Malte	Species	unknown	unknown	earliest_occurrence_date	cal yr BP	10032.5		
+individualtimelinenode_c2805b46-f963-491a-b825-766208e247a0	12000	0	NA	Potentilla nivea L.	Species	unknown	unknown	earliest_occurrence_date	cal yr BP	10032.5		
+individualtimelinenode_c2805b46-f963-491a-b825-766208e247a0	12000	0	NA	Potentilla hookeriana Lehm.	Species	unknown	unknown	earliest_occurrence_date	cal yr BP	10032.5		
+individualtimelinenode_c2805b46-f963-491a-b825-766208e247a0	12000	0	NA	Ranunculales	Order	unknown	unknown	earliest_occurrence_date	cal yr BP	10032.5		
+individualtimelinenode_c2805b46-f963-491a-b825-766208e247a0	12000	0	NA	Ranunculaceae	Family	unknown	unknown	earliest_occurrence_date	cal yr BP	10032.5		
+individualtimelinenode_c2805b46-f963-491a-b825-766208e247a0	12000	0	NA	Ranunculus	Genus	unknown	unknown	earliest_occurrence_date	cal yr BP	10032.5		
+individualtimelinenode_c2805b46-f963-491a-b825-766208e247a0	12000	0	NA	Caryophyllales	Order	unknown	unknown	earliest_occurrence_date	cal yr BP	6551.18		
+individualtimelinenode_c2805b46-f963-491a-b825-766208e247a0	12000	0	NA	Polygonaceae	Family	unknown	unknown	earliest_occurrence_date	cal yr BP	6551.18		
+individualtimelinenode_c2805b46-f963-491a-b825-766208e247a0	12000	0	NA	Rumex	Genus	unknown	unknown	earliest_occurrence_date	cal yr BP	6551.18		
+individualtimelinenode_c2805b46-f963-491a-b825-766208e247a0	12000	0	NA	Rumex acetosella L.	Species	unknown	unknown	earliest_occurrence_date	cal yr BP	6551.18		
+individualtimelinenode_c2805b46-f963-491a-b825-766208e247a0	12000	0	NA	Saxifraga paniculata Mill.	Species	unknown	unknown	earliest_occurrence_date	cal yr BP	8896.75		
+individualtimelinenode_c2805b46-f963-491a-b825-766208e247a0	12000	0	NA	Saxifraga aizoides L.	Species	unknown	unknown	earliest_occurrence_date	cal yr BP	8896.75		
+individualtimelinenode_c2805b46-f963-491a-b825-766208e247a0	12000	0	NA	Saxifraga tricuspidata Rottb.	Species	unknown	unknown	earliest_occurrence_date	cal yr BP	8896.75		
+individualtimelinenode_c2805b46-f963-491a-b825-766208e247a0	12000	0	NA	Saxifragales	Order	unknown	unknown	earliest_occurrence_date	cal yr BP	8896.75		
+individualtimelinenode_c2805b46-f963-491a-b825-766208e247a0	12000	0	NA	Saxifragaceae	Family	unknown	unknown	earliest_occurrence_date	cal yr BP	8896.75		
+individualtimelinenode_c2805b46-f963-491a-b825-766208e247a0	12000	0	NA	Saxifraga	Genus	unknown	unknown	earliest_occurrence_date	cal yr BP	8896.75		
+individualtimelinenode_c2805b46-f963-491a-b825-766208e247a0	12000	0	NA	Saxifraga oppositifolia L.	Species	unknown	unknown	earliest_occurrence_date	cal yr BP	8896.75		
+individualtimelinenode_c2805b46-f963-491a-b825-766208e247a0	12000	0	NA	Thalictrum	Genus	unknown	unknown	earliest_occurrence_date	cal yr BP	8683.1		
+individualtimelinenode_c2805b46-f963-491a-b825-766208e247a0	12000	0	NA	Thalictrum alpinum L.	Species	unknown	unknown	earliest_occurrence_date	cal yr BP	8683.1		
+individualtimelinenode_c2805b46-f963-491a-b825-766208e247a0	12000	0	NA	Alismatales	Order	unknown	unknown	earliest_occurrence_date	cal yr BP	8215.01		
+individualtimelinenode_c2805b46-f963-491a-b825-766208e247a0	12000	0	NA	Tofieldiaceae	Family	unknown	unknown	earliest_occurrence_date	cal yr BP	8215.01		
+individualtimelinenode_c2805b46-f963-491a-b825-766208e247a0	12000	0	NA	Tofieldia	Genus	unknown	unknown	earliest_occurrence_date	cal yr BP	8215.01		
