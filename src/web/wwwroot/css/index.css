@@ -103,6 +103,14 @@ nav.navbar.navbar-multi-level {
   background-color: var(--bulma-primary);
 }
 
+.button.is-selected:hover {
+  background-color: var(--bulma-primary);
+}
+
+.button.is-active {
+  background-color: var(--bulma-primary);
+}
+
 .menu-list a.is-active {
   background-color: var(--bulma-primary);
 }
