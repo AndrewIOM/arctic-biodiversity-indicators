@@ -6,6 +6,11 @@ open BiodiversityCoder.Core.FieldDataTypes
 // What are the biodiversity variables of interest?
 // Per-taxon probability of occurrence per 500-year interval
 
+module Triple =
+    let fst (a,_,_) = a
+    let snd (_,a,_) = a
+    let thd (_,_,a) = a
+
 /// Common time-bins to use across EBVs.
 let timeBins =
     [ 0<OldDate.calYearBP> .. 500<OldDate.calYearBP> .. 12500<OldDate.calYearBP> ]
@@ -541,6 +546,16 @@ let calculateBiodiversityVariables graph =
             | "borderline present" -> 0.5
             | _ -> nan
 
+        let taxaOrDefault taxonLookup t =
+            taxonLookup
+            |> Map.tryFind t
+            |> Option.map(fun l ->
+                l |> List.map(fun tree ->
+                    tree |> List.map TaxonomyLookup.taxonName
+            ))
+            |> Option.defaultValue ([["Unverified taxon", "Unknown"]])
+
+
         /// Taxonomic trees for all taxa in the datasets
         let masterTaxonList =
             newAges 
@@ -548,6 +563,7 @@ let calculateBiodiversityVariables graph =
             |> Seq.filter(fun tree -> tree.IsEmpty |> not)
             |> Seq.toList
 
+        // Earliest occurrence date, is exact match, presence
         let presenceInBin =
             newAges |> List.collect(fun (tsId, ageDepth, taxonLookup, _) ->
                 
@@ -557,26 +573,22 @@ let calculateBiodiversityVariables graph =
                     let binEarly = float binEarly * 1.<OldDate.calYearBP>
                     let binLate = float binLate * 1.<OldDate.calYearBP>
                     
-                    let taxaOrDefault t =
-                        taxonLookup
-                        |> Map.tryFind t
-                        |> Option.map(fun l ->
-                            l |> List.map(fun tree ->
-                                tree |> List.map TaxonomyLookup.taxonName
-                        ))
-                        |> Option.defaultValue ([["Unverified taxon", "Unknown"]])
-
                     // Find the presence category for each morphotype
                     // present within the time window.
                     let binTaxaByPresenceCategory =
                         ageDepth
                         |> Map.filter (fun k _ -> overlapsBin binEarly binLate k)
                         |> Map.toList
-                        |> Seq.collect (snd >> Seq.toList)
-                        |> Seq.groupBy(fun t -> t.Key)
+                        |> Seq.collect (fun (d,m) -> m |> Seq.toList |> Seq.map(fun kv -> d,kv))
+                        |> Seq.groupBy(fun (_,t) -> t.Key)
                         |> Seq.map(fun (_,g) ->
-                            let maxValue = g |> Seq.maxBy(fun kv -> kv.Value)
-                            taxaOrDefault maxValue.Key, presenceClass maxValue.Value )
+                            let maxValue = g |> Seq.map snd |> Seq.maxBy(fun kv -> kv.Value)
+                            let presences = g |> Seq.filter(fun (_,g) -> g.Value > 0)
+                            let earliestDatePresent = 
+                                if presences |> Seq.isEmpty
+                                then None
+                                else presences |> Seq.map(fun (d,_) -> d.Date) |> Seq.max |> Some
+                            taxaOrDefault taxonLookup maxValue.Key, presenceClass maxValue.Value, earliestDatePresent )
                         |> Seq.toList
 
                     let forBotanicalTaxa =
@@ -588,69 +600,87 @@ let calculateBiodiversityVariables graph =
                             // Exact matches
                             let exactMorphotypeMatches =
                                 binTaxaByPresenceCategory
-                                |> List.filter(fun (taxa,c) ->
+                                |> List.filter(fun (taxa,c,_) ->
                                     taxa |> List.exists(fun t -> t |> Seq.last = thisTaxon))
 
                             // Matches to lower-rank morphotype links (e.g. matched Pinaceae to Pinus sp. pollen)
-                            let lowerRankMatches =
+                            let childrenMatches =
                                 binTaxaByPresenceCategory
-                                |> List.filter(fun (taxa,c) ->
+                                |> List.filter(fun (taxa,c,_) ->
                                     taxa |> List.exists(fun t -> t |> Seq.contains thisTaxon))
 
-                            // Matches at lower levels (e.g if this is J. communis and there is a pollen type for Juniper).
+                            // Matches at higher levels (e.g if this is J. communis and there is a pollen type for Juniper).
                             // NB could state uncertainty as distance between ranks, or ... ?
-                            let upperRankMatches =
+                            let parentMatches =
                                 binTaxaByPresenceCategory
-                                |> List.filter(fun (b,c) ->
+                                |> List.filter(fun (b,c,_) ->
                                     b |> List.exists(fun t ->
+                                        let t = t |> List.filter(fun (_,r) -> r <> "Life" && r <> "Kingdom")
                                         not (Set.intersect (Set.ofList t) (Set.ofList thisTree)).IsEmpty))
 
+                            // printfn "%s exact: %A" (fst thisTaxon) (exactMorphotypeMatches |> List.map Triple.fst)
+                            // printfn "%s lower: %A" (fst thisTaxon) (childrenMatches |> List.map Triple.fst)
+                            // printfn "%s upper: %A" (fst thisTaxon) (parentMatches |> List.map Triple.fst)
+
+                            // Earliest occurrences are nan if 
+                            let earliestOccurrence =
+                                let occs = 
+                                    Seq.concat [
+                                        exactMorphotypeMatches |> Seq.choose Triple.thd
+                                        childrenMatches |> Seq.choose Triple.thd
+                                        // parentMatches |> Seq.choose Triple.thd
+                                    ]
+                                if occs |> Seq.isEmpty then None
+                                else occs |> Seq.max |> Some
+
                             thisTaxon,
-                            match exactMorphotypeMatches.Length, lowerRankMatches.Length, upperRankMatches.Length with
-                            | 1, _, _ -> true, snd exactMorphotypeMatches.Head, "high-confidence"
+                            earliestOccurrence,
+                            match exactMorphotypeMatches.Length, childrenMatches.Length, parentMatches.Length with
+                            | 1, _, _ -> true, Triple.snd exactMorphotypeMatches.Head, "high-confidence"
                             | i, _, _ when i > 1 ->
-                                match exactMorphotypeMatches |> Seq.map snd |> Seq.distinct |> Seq.length with
-                                | 1 -> true, snd exactMorphotypeMatches.Head, "high-confidence"
+                                match exactMorphotypeMatches |> Seq.map Triple.snd |> Seq.distinct |> Seq.length with
+                                | 1 -> true, Triple.snd exactMorphotypeMatches.Head, "high-confidence"
                                 | _ ->
-                                    if exactMorphotypeMatches |> Seq.map snd |> Seq.contains "present"
+                                    if exactMorphotypeMatches |> Seq.map Triple.snd |> Seq.contains "present"
                                     then true, "present", "medium-confidence"
                                     else true, "borderline present", "medium-confidence"
                             | 0, 0, 0 -> false, "unknown", "unknown"
-                            | 0, 1, _ -> false, snd lowerRankMatches.Head, "high-confidence"
-                            | _, _, 1 -> false, snd upperRankMatches.Head, "low-confidence"
+                            | 0, 1, _ -> false, Triple.snd childrenMatches.Head, "high-confidence"
+                            | _, _, 1 -> false, Triple.snd parentMatches.Head, "low-confidence"
                             | _, _, 0 ->
                                 // No matches exactly, but matches at lower ranks.
-                                match lowerRankMatches |> Seq.distinct |> Seq.length with
-                                | 1 -> false, snd exactMorphotypeMatches.Head, "high-confidence"
+                                match childrenMatches |> Seq.distinct |> Seq.length with
+                                | 1 -> false, Triple.snd exactMorphotypeMatches.Head, "high-confidence"
                                 | _ -> false, "unknown", "unknown"
                             | _, _, _ ->
                                 // No matches exactly, but matches at upper ranks.
-                                match lowerRankMatches |> Seq.distinct |> Seq.length with
-                                | 1 -> false, snd exactMorphotypeMatches.Head, "low-confidence"
+                                match childrenMatches |> Seq.distinct |> Seq.length with
+                                | 1 -> false, Triple.snd exactMorphotypeMatches.Head, "low-confidence"
                                 | _ -> false, "unknown", "unknown"
                         )
 
                     forBotanicalTaxa |> List.map(fun b ->
-                        (b |> snd |> (fun (isExactMatch,_,_) -> isExactMatch)),
+                        (b |> Triple.thd |> (fun (isExactMatch,_,_) -> isExactMatch)),
+                        Triple.snd b,
                         DataFiles.BiodiversityVariableFile.Row(
                             locationId = tsId.AsString,
                             binEarly = int binEarly - 1,
                             binLate = int binLate,
                             morphotype = "unknown",
-                            taxon = fst (fst b),
-                            rank = snd (fst b),
+                            taxon = fst (Triple.fst b),
+                            rank = snd (Triple.fst b),
                             taxonomicTree = "unknown",
                             taxonAmbiguousWith = "unknown",
                             variable = "presence",
                             variableUnit = "present-absent",
-                            variableValue = (b |> snd |> (fun (_,b,_) -> b) |> presenceToValue),
+                            variableValue = (b |> Triple.thd |> (fun (_,b,_) -> b) |> presenceToValue),
                             variableCi = None,
-                            variableConfidenceQualitative = Some(b |> snd |> (fun (_,_,c) -> c)) )
+                            variableConfidenceQualitative = Some(b |> Triple.thd |> (fun (_,_,c) -> c)) )
                     )
                 )
             )
 
-        let presenceFile = new DataFiles.BiodiversityVariableFile(presenceInBin |> List.map snd)
+        let presenceFile = new DataFiles.BiodiversityVariableFile(presenceInBin |> List.map Triple.thd)
         presenceFile.Save("../../data-derived/populations/taxon-presence.tsv")
 
         // Trait spaces
@@ -669,8 +699,8 @@ let calculateBiodiversityVariables graph =
 
         let withTraits =
             presenceInBin
-            |> List.filter(fun (isExactMatch, _) -> isExactMatch)
-            |> List.map snd
+            |> List.filter(fun (isExactMatch,_,_) -> isExactMatch)
+            |> List.map Triple.thd
             |> List.filter(fun x -> x.Variable_value <> 0.) // remove absent taxa
             |> List.groupBy(fun r -> r.Bin_early, r.Bin_late, r.Location_id)
             |> List.collect(fun ((binEarly, binLate, timeline),records) ->
@@ -746,86 +776,95 @@ let calculateBiodiversityVariables graph =
         let traitFile = new DataFiles.BiodiversityVariableFile(withTraits)
         traitFile.Save("../../data-derived/traits/plant-morphology.tsv")
 
+        // Taxon first occurrence date:
+        let firstOccurrences =
+            presenceInBin
+            |> List.groupBy(fun (_,_,r) -> r.Location_id, r.Taxon)
+            |> List.map(fun ((locationId, taxon),rows) ->
+                
+                let earliestDates = rows |> Seq.choose Triple.snd
+                printfn "Earliest dates for %s are %A" taxon earliestDates
+                let earliest =
+                    match earliestDates |> Seq.length with
+                    | 0 -> nan
+                    | _ -> earliestDates |> Seq.max |> float
+
+                DataFiles.BiodiversityVariableFile.Row(
+                    locationId = locationId,
+                    binEarly = 12000, // Whole Holocene
+                    binLate = 0, // Whole Holocene
+                    morphotype = "NA",
+                    taxon = (Triple.thd rows.Head).Taxon,
+                    rank = (Triple.thd rows.Head).Rank,
+                    taxonomicTree = (Triple.thd rows.Head).Taxonomic_tree,
+                    taxonAmbiguousWith = (Triple.thd rows.Head).Taxon_ambiguous_with,
+                    variable = "earliest_occurrence_date",
+                    variableUnit = "cal yr BP",
+                    variableValue = earliest,
+                    variableCi = None,
+                    variableConfidenceQualitative = None )
+                )
+
+        let firstOccurrenceFile = new DataFiles.BiodiversityVariableFile(firstOccurrences)
+        firstOccurrenceFile.Save("../../data-derived/traits/movement-migration.tsv")
+
         // SPATIAL INTERSECTIONS
-        // Now to do intersections spatially
-        let traitsSpatial =
-            withTraits
+        // ---------------------
+
+        /// Convert a dataset into a spatial summary based on the phytogeographic x subzone
+        /// polygons. The three functions represent the summary methods used for the respective value fields.
+        let asSpatial (dataset: DataFiles.BiodiversityVariableFile.Row list) valueFn sdFn sdQualFn =
+            dataset
             |> List.choose(fun r ->
                 let loc = locationIndex.Rows |> Seq.find(fun l -> l.Timeline_id = r.Location_id)
                 loc.Phyto_subzone_region_id |> Option.map(fun x -> x, r))
             |> List.groupBy fst
             |> List.collect(fun (regionId,records) ->
-                
-                // Use mean of mean and sd for region for each trait
-                let traits =
-                    records
-                    |> List.map snd
-                    |> List.groupBy(fun r -> r.Variable, r.Bin_early, r.Bin_late)
-                    |> List.map(fun (_, rows) ->
-                        
-                        let newMean = rows |> Seq.map(fun r -> r.Variable_value) |> Seq.average
-                        let newSd = rows |> Seq.choose(fun r -> r.Variable_ci) |> Seq.average
+                records
+                |> List.map snd
+                |> List.groupBy(fun r -> r.Variable, r.Bin_early, r.Bin_late, r.Taxon)
+                |> List.map(fun (_, rows) ->
+                    let newMean = rows |> Seq.map(fun r -> r.Variable_value) |> valueFn
+                    let newSd = rows |> Seq.choose(fun r -> r.Variable_ci) |> sdFn
+                    let newQual = rows |> Seq.choose(fun r -> r.Variable_confidence_qualitative) |> sdQualFn
+                    DataFiles.BiodiversityVariableFile.Row(
+                        locationId = regionId,
+                        binEarly = rows.Head.Bin_early,
+                        binLate = rows.Head.Bin_late,
+                        morphotype = rows.Head.Morphotype,
+                        taxon = rows.Head.Taxon,
+                        rank = rows.Head.Rank,
+                        taxonomicTree = rows.Head.Taxonomic_tree,
+                        taxonAmbiguousWith = rows.Head.Taxon_ambiguous_with,
+                        variable = rows.Head.Variable,
+                        variableUnit = rows.Head.Variable_unit,
+                        variableValue = newMean,
+                        variableCi = newSd,
+                        variableConfidenceQualitative = newQual )))
 
-                        DataFiles.BiodiversityVariableFile.Row(
-                            locationId = regionId,
-                            binEarly = rows.Head.Bin_early,
-                            binLate = rows.Head.Bin_late,
-                            morphotype = rows.Head.Morphotype,
-                            taxon = rows.Head.Taxon,
-                            rank = rows.Head.Rank,
-                            taxonomicTree = rows.Head.Taxonomic_tree,
-                            taxonAmbiguousWith = rows.Head.Taxon_ambiguous_with,
-                            variable = rows.Head.Variable,
-                            variableUnit = rows.Head.Variable_unit,
-                            variableValue = newMean,
-                            variableCi = Some newSd,
-                            variableConfidenceQualitative = None )
-                        )
-
-                traits
-            )
-
-        let traitSpatialFile = new DataFiles.BiodiversityVariableFile(traitsSpatial)
-        traitSpatialFile.Save("../../data-derived/traits/plant-morphology_spatial.tsv")
-
-
+        // Taxon presence per time-bin:
         let presenceSpatial =
-            presenceInBin
-            |> List.choose(fun (isExact,r) ->
-                let loc = locationIndex.Rows |> Seq.find(fun l -> l.Timeline_id = r.Location_id)
-                loc.Phyto_subzone_region_id |> Option.map(fun x -> x, r))
-            |> List.groupBy fst
-            |> List.collect(fun (regionId,records) ->
-                    records
-                    |> List.map snd
-                    |> List.groupBy(fun r -> r.Bin_early, r.Bin_late, r.Taxon)
-                    |> List.map(fun (_, rows) ->
-                        let newPresence = rows |> List.map(fun r -> r.Variable_value) |> Seq.max
-                        let confidences = rows |> List.choose(fun r -> r.Variable_confidence_qualitative)
-                        let newConfidence =
-                            if confidences |> List.contains "high-confidence" then "high-confidence"
-                            else if confidences |> List.contains "medium-confidence" then "medium-confidence"
-                            else if confidences |> List.contains "low-confidence" then "medium-confidence"
-                            else "unknown"
-                        DataFiles.BiodiversityVariableFile.Row(
-                            locationId = regionId,
-                            binEarly = rows.Head.Bin_early,
-                            binLate = rows.Head.Bin_late,
-                            morphotype = rows.Head.Morphotype,
-                            taxon = rows.Head.Taxon,
-                            rank = rows.Head.Rank,
-                            taxonomicTree = rows.Head.Taxonomic_tree,
-                            taxonAmbiguousWith = rows.Head.Taxon_ambiguous_with,
-                            variable = rows.Head.Variable,
-                            variableUnit = rows.Head.Variable_unit,
-                            variableValue = newPresence,
-                            variableCi = None,
-                            variableConfidenceQualitative = Some newConfidence )
-                        )
-            )
+            asSpatial (presenceInBin |> List.map Triple.thd)
+                Seq.max
+                (fun _ -> None)
+                (fun confidences ->
+                    if confidences |> Seq.contains "high-confidence" then Some "high-confidence"
+                    else if confidences |> Seq.contains "medium-confidence" then Some "medium-confidence"
+                    else if confidences |> Seq.contains "low-confidence" then Some "medium-confidence"
+                    else Some "unknown" )
 
         let presenceSpatialFile = new DataFiles.BiodiversityVariableFile(presenceSpatial)
         presenceSpatialFile.Save("../../data-derived/populations/taxon-presence_spatial.tsv")
+
+        // Plant 6x traits:
+        let traitsSpatial = asSpatial withTraits Seq.average (Seq.average >> Some) (fun _ -> None)
+        let traitSpatialFile = new DataFiles.BiodiversityVariableFile(traitsSpatial)
+        traitSpatialFile.Save("../../data-derived/traits/plant-morphology_spatial.tsv")
+
+        // First occurrence dates (per-taxon):
+        let firstOccurrencesSpatial = asSpatial firstOccurrences Seq.max (fun _ -> None) (fun _ -> None)
+        let firstOccurrenceSpatialFile = new DataFiles.BiodiversityVariableFile(firstOccurrencesSpatial)
+        firstOccurrenceSpatialFile.Save("../../data-derived/traits/movement-migration_spatial.tsv")
 
         return newAges
     }
