@@ -835,11 +835,13 @@ let calculateBiodiversityVariables graph =
                             |> Seq.filter(fun t -> t |> Seq.last |> snd = "Genus")
                             |> Seq.filter(fun t -> generaOfSpecies |> Seq.contains (t |> Seq.last |> fst) |> not)
                             |> Seq.distinct
+                        let familiesOfAdditionalGenera = additionalGenera |> Seq.choose(fun t -> t |> Seq.tryFind(fun t -> snd t = "Family")) |> Seq.map fst |> Seq.distinct
 
                         let additionalFamilies =
                             taxonomicTrees
                             |> Seq.filter(fun t -> t |> Seq.last |> snd = "Family")
                             |> Seq.filter(fun t -> familiesOfGenera |> Seq.contains (t |> Seq.last |> fst) |> not)
+                            |> Seq.filter(fun t -> familiesOfAdditionalGenera |> Seq.contains (t |> Seq.last |> fst) |> not)
                             |> Seq.distinct
 
                         Some (Seq.length species + Seq.length additionalGenera + Seq.length additionalFamilies)
