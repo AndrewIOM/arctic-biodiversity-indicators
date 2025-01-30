@@ -808,6 +808,67 @@ let calculateBiodiversityVariables graph =
         let firstOccurrenceFile = new DataFiles.BiodiversityVariableFile(firstOccurrences)
         firstOccurrenceFile.Save("../../data-derived/traits/movement-migration.tsv")
 
+        // Taxon richness at family, genus, species.
+        let richness =
+            presenceInBin
+            |> List.groupBy(fun (_,_,r) -> r.Bin_early, r.Bin_late, r.Location_id, r.Rank)
+            |> List.choose(fun ((binEarly, binLate, locationId, rank),rows) ->
+
+                let taxonomicTrees =
+                    rows 
+                    |> List.filter(fun (_,_,r) -> r.Variable_value <> 0. && not(System.Double.IsNaN(r.Variable_value)))
+                    |> Seq.map(fun (_,_,r) ->
+                        masterTaxonList |> List.find(fun t -> t |> List.last = (r.Taxon, r.Rank)))
+
+                let count =
+                    match rank with
+                    | "Family" -> Some 100
+                    | "Genus" -> Some 200
+                    | "Species" ->
+                        let species = taxonomicTrees |> Seq.filter(fun t -> t |> Seq.last |> snd = "Species") |> Seq.distinct
+                        let generaOfSpecies = species |> Seq.choose(fun t -> t |> Seq.tryFind(fun t -> snd t = "Genus")) |> Seq.map fst |> Seq.distinct
+                        let genera = taxonomicTrees |> Seq.filter(fun t -> t |> Seq.last |> snd = "Genus") |> Seq.distinct
+                        let familiesOfGenera = genera |> Seq.choose(fun t -> t |> Seq.tryFind(fun t -> snd t = "Family")) |> Seq.map fst |> Seq.distinct
+
+                        let additionalGenera =
+                            taxonomicTrees
+                            |> Seq.filter(fun t -> t |> Seq.last |> snd = "Genus")
+                            |> Seq.filter(fun t -> generaOfSpecies |> Seq.contains (t |> Seq.last |> fst) |> not)
+                            |> Seq.distinct
+
+                        let additionalFamilies =
+                            taxonomicTrees
+                            |> Seq.filter(fun t -> t |> Seq.last |> snd = "Family")
+                            |> Seq.filter(fun t -> familiesOfGenera |> Seq.contains (t |> Seq.last |> fst) |> not)
+                            |> Seq.distinct
+
+                        Some (Seq.length species + Seq.length additionalGenera + Seq.length additionalFamilies)
+                    | _ -> None
+
+                // If species, each upper rank should count as one (if not already included).
+                // e.g. Pinaceae = 0 if Pinus = 1, but Pinaceae = 1 if no children of it present.
+
+                count |> Option.map(fun c ->
+                    DataFiles.BiodiversityVariableFile.Row(
+                        locationId = locationId,
+                        binEarly = binEarly,
+                        binLate = binLate,
+                        morphotype = "NA",
+                        taxon = "community",
+                        rank = "NA",
+                        taxonomicTree = "NA",
+                        taxonAmbiguousWith = "NA",
+                        variable = sprintf "%s_richness" rank,
+                        variableUnit = "minimum_possible_count",
+                        variableValue = float c,
+                        variableCi = None,
+                        variableConfidenceQualitative = None ))
+            )
+
+        let richnessFile = new DataFiles.BiodiversityVariableFile(richness)
+        richnessFile.Save("../../data-derived/community-composition/richness.tsv")
+
+
         // SPATIAL INTERSECTIONS
         // ---------------------
 
@@ -865,6 +926,11 @@ let calculateBiodiversityVariables graph =
         let firstOccurrencesSpatial = asSpatial firstOccurrences Seq.max (fun _ -> None) (fun _ -> None)
         let firstOccurrenceSpatialFile = new DataFiles.BiodiversityVariableFile(firstOccurrencesSpatial)
         firstOccurrenceSpatialFile.Save("../../data-derived/traits/movement-migration_spatial.tsv")
+
+        // Richness:
+        let richnessSpatial = asSpatial richness Seq.max (fun _ -> None) (fun _ -> None)
+        let richnesspatialFile = new DataFiles.BiodiversityVariableFile(richnessSpatial)
+        richnesspatialFile.Save("../../data-derived/community-composition/richness_spatial.tsv")
 
         return newAges
     }

@@ -115,6 +115,10 @@ nav.navbar.navbar-multi-level {
   background-color: var(--bulma-primary);
 }
 
+a.navbar-item:hover {
+  color: var(--bulma-link);
+}
+
 .dotted-top-border {
   border-top: 1px dotted lightgrey;
 }

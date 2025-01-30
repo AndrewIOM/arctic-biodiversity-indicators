@@ -201,6 +201,7 @@ module DataAccess =
                 | ModelParts.EssentialBiodiversityVariable.TaxonDistribution -> "content/indicators/populations/taxon-presence.tsv"
                 | ModelParts.EssentialBiodiversityVariable.Morphology -> "content/indicators/traits/plant-morphology.tsv"
                 | ModelParts.EssentialBiodiversityVariable.Movement -> "content/indicators/traits/movement-migration.tsv"
+                | ModelParts.EssentialBiodiversityVariable.TaxonomicAndPhylogeneticDiversity -> "content/indicators/community-composition/richness.tsv"
                 |> fun u ->
                     match isSpatial with
                     | true -> u.Replace(".tsv", "_spatial.tsv")
@@ -355,11 +356,12 @@ let ebvIndex = [
         Morphology
         Movement
       ] }
-    // { Label = "Community composition"
-    //   EBVs = [
-    //     TaxonomicAndPhylogeneticDiversity
-    //     TraitDiversity
-    //   ] }
+    { Label = "Community composition"
+      Slug = "community-composition"
+      EBVs = [
+        TaxonomicAndPhylogeneticDiversity
+        // TraitDiversity
+      ] }
     { Label = "Underlying data"
       Slug = "underlying-data"
       EBVs = [
@@ -681,7 +683,7 @@ module Plots =
         match sortMode with
         | Northwards -> data |> Seq.sortBy(fun kv -> - kv.Key.LatitudeDD)
 
-    let slicedRawData sortMode (model:Map<TimelineWithLocation, Map<DataVariable,(int * float * option<string>) seq>>) =
+    let slicedRawData sortMode xAxisRange (model:Map<TimelineWithLocation, Map<DataVariable,(int * float * option<string>) seq>>) =
         cond model.IsEmpty <| function
         | true -> div { attr.``class`` "notification"; text "Select one or more timelines to display data" }
         | false ->
@@ -692,7 +694,8 @@ module Plots =
                 |> Seq.map(fun kv2 ->
                     Chart.Line(kv2.Value |> Seq.map(fun (_,i,_) -> i), kv2.Value |> Seq.map(fun (i,_,_) -> i), Name = kv.Key.LocationName, ShowMarkers = true, Orientation = StyleParam.Orientation.Vertical)
                     |> Chart.withYAxisStyle(MinMax = (12000, 0))
-                    |> Chart.withXAxisStyle(MinMax = (0, 50), TitleText = sprintf "%s (%s)" kv2.Key.VariableName kv2.Key.VariableUnit)
+                    |> fun c -> if Option.isSome xAxisRange then c |> Chart.withXAxisStyle(MinMax = xAxisRange.Value) else c
+                    |> Chart.withXAxisStyle(TitleText = sprintf "%s (%s)" kv2.Key.VariableName kv2.Key.VariableUnit)
                 )
             )
             |> Chart.Grid(nRows = 1, nCols = (model |> Seq.length), Pattern = StyleParam.LayoutGridPattern.Coupled)
@@ -1283,7 +1286,7 @@ let ebvPage (ebv:EssentialBiodiversityVariable) model dispatch =
             (cond model.dimension <| function
                     | DimensionView.Temporal _ ->
                         cond model.dataSlice <| function
-                        | DataIndexed.IndexedByTimeline data -> Plots.slicedRawData model.sortMode data
+                        | DataIndexed.IndexedByTimeline data -> Plots.slicedRawData model.sortMode (Some (0., 50.)) data
                         | _ -> text "Error. Data not formatted correctly."
                     | _ -> text "Error. Data not formatted correctly.")
             "Placeholder legend"
@@ -1325,7 +1328,7 @@ let ebvPage (ebv:EssentialBiodiversityVariable) model dispatch =
             | DimensionView.Temporal _ ->
                 cond model.dataSlice <| function
                 | DataIndexed.NoData -> div { attr.``class`` "notification is-warning"; text "No data is loaded." }
-                | DataIndexed.IndexedByTimeline data -> Plots.presenceHeatmap model.sortMode data
+                | DataIndexed.IndexedByTimeline data -> Plots.slicedRawData model.sortMode None data
                 | _ -> div { attr.``class`` "notification is-danger"; text "Data not formatted correctly" }
             | DimensionView.SpatialStatic (timeMode,_) ->
                 cond model.dataSlice <| function
@@ -1340,7 +1343,32 @@ let ebvPage (ebv:EssentialBiodiversityVariable) model dispatch =
             (concat {
                 p { text "Placeholder method text" }
             })
-    | TaxonomicAndPhylogeneticDiversity -> failwith "Not Implemented"
+    | TaxonomicAndPhylogeneticDiversity ->
+        ebvPage'
+            model.page
+            "Taxonomic richness"
+            (cond model.dimension <| function
+            | DimensionView.Temporal _ ->
+                cond model.dataSlice <| function
+                | DataIndexed.NoData -> div { attr.``class`` "notification is-warning"; text "No data is loaded." }
+                | DataIndexed.IndexedByTimeline data -> Plots.slicedRawData model.sortMode None data
+                | _ -> div { attr.``class`` "notification is-danger"; text "Data not formatted correctly" }
+            | DimensionView.SpatialStatic (timeMode,_) ->
+                cond model.dataSlice <| function
+                | DataIndexed.NoData -> div { attr.``class`` "notification is-warning"; text "No data is loaded." }
+                | DataIndexed.IndexedByPolygonId data ->
+                    cond (model.geojson |> Map.tryFind "phyto-subzones-simplified") <| function
+                    | Some geojson ->
+                        cond model.selectedVariable <| function
+                        | Some v -> Plots.chloropleth timeMode geojson (sprintf "%s (%s)" v.VariableName v.VariableUnit) (DataAccess.indexVariableByLocation v data)
+                        | None -> text "Select a dimension to show first."
+                    | None -> text "Cannot load cloropleth: geojson base layer not loaded."
+                | _ -> textf "Error. data not formatted correctly. %A" model.dataSlice )
+            "placeholder"
+            (defaultFilters model dispatch)
+            (concat {
+                p { text "Placeholder - minimum taxonomic richness." }
+            })
     | TraitDiversity -> failwith "Not Implemented"
 
 let pageTitle model =
