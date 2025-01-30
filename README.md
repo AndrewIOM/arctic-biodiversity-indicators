@@ -1,5 +1,8 @@
 # Arctic Biodiversity Indicators for the Holocene
-Indicators of Arctic biodiversity change over the last 12,000 years (the Holocene).
+
+[![DOI](https://zenodo.org/badge/910104267.svg)](https://doi.org/10.5281/zenodo.14775862)
+
+**Indicators of Arctic biodiversity change over the last 12,000 years (the Holocene).**
 
 Within the CHARTER Horizon 2020 project, we aimed to reconstruct trends and stability of Arctic biodiversity during the Holocene. To achieve the goal of understanding trends and stability in Arctic biodiversity over the long-term, we developed tools to scaffold Arctic biodiversity indicators based on the framework of *Essential Biodiversity Variables* (Pereira et al 2013). We applied the tools to the [Arctic Holocene Biodiversity Database](https://github.com/AndrewIOM/holocene-arctic-biodiversity-map) dataset, to gain an understanding of trends and stability in biodiversity over time.
 
