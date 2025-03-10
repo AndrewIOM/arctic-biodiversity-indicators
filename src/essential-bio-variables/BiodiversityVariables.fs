@@ -417,6 +417,63 @@ module Spatial =
             layer.ResetReading()
             tryFindIntersectId layer testPoint
 
+/// Contains access to the pan-arctic flora for calculating
+/// species richness etc.
+module PanArcticFlora =
+
+    open FSharp.Data
+
+    type PanArcticFlora = CsvProvider<"../../data-third-party/checklist/arctic-species-checklist.tsv">
+    type PanArcticFloraRegionLookup = CsvProvider<"../../data-third-party/checklist/arctic-species-checklist-polygon-lookup.tsv">
+
+    let flora = PanArcticFlora.Load "/Users/andrewmartin/Documents/GitHub Projects/arctic-biodiversity-indicators/data-third-party/checklist/arctic-species-checklist.tsv"
+    let floraRegionIndex = PanArcticFlora.Load "/Users/andrewmartin/Documents/GitHub Projects/arctic-biodiversity-indicators/data-third-party/checklist/arctic-species-checklist-polygon-lookup.tsv"
+
+    type Presence =
+        | Frequent
+        | Scattered
+        | Rare
+        | Present
+        | Uncertain
+        | BorderlineArctic
+        | NotPresent
+
+    let asPresence (s: string) =
+        match s.ToLower() with
+        | "f" -> Frequent
+        | "s" -> Scattered
+        | "r" -> Rare
+        | "x" -> Present
+        | "?" -> Uncertain
+        | "b" -> BorderlineArctic
+        | _ -> NotPresent
+
+    let order = [ Frequent; Scattered; Rare; Present; Uncertain; BorderlineArctic; NotPresent ]
+
+    let concatPresences (l: Presence list) =
+        order |> List.tryFind(fun t -> l |> List.contains t) |> Option.defaultValue Uncertain
+
+    let limitPresence l1 l2 =
+        order |> List.rev |> List.tryFind(fun t -> [l1; l2 ] |> List.contains t) |> Option.defaultValue Uncertain
+    
+    let presenceInFloristicRegion (r:PanArcticFlora.Row) = function
+        | "West Greenland" -> asPresence r.GW
+        | "East Greenland" -> asPresence r.GE
+        | "North Greenland" -> concatPresences [ asPresence r.GW; asPresence r.GE ]
+        | _ -> Uncertain
+
+    let presenceInSubzone (r:PanArcticFlora.Row) = function
+        | "1" -> r.A | "2" -> r.B | "3" -> r.C | "4" -> r.D | "5" -> r.E | "6" -> r.N | _ -> "?"
+
+    // Number of species, genera in local neo-environment.
+    let taxaPresent floristicRegion subzone =
+        flora.Rows
+        |> Seq.map(fun r ->
+            let inRegion = presenceInFloristicRegion r floristicRegion
+            let inSubzone = presenceInSubzone r subzone |> asPresence
+            {| Taxon = r.TaxonOriginal; Genus = r.Genus; Species = r.Species |}, limitPresence inRegion inSubzone
+        )
+    
 
 let calculateBiodiversityVariables graph =
     result {
@@ -430,7 +487,7 @@ let calculateBiodiversityVariables graph =
                 applyAgeDepthModelToData data calibration
                 |> Option.map(fun r ->
                     let taxonLookup = TaxonomyLookup.proxiedTaxaLookup timeline graph |> Result.forceOk
-                    timeline, r, taxonLookup, location)
+                    timeline, r, taxonLookup, location, data)
             )
 
         printfn "Matched age-depth model and data for %i series." series.Length
@@ -450,7 +507,7 @@ let calculateBiodiversityVariables graph =
         printfn "Generating taxonomic index"
         let taxonIndex =
             newAges 
-            |> Seq.collect(fun (_,_,lookup,_) -> taxonomicTreesAllLevels lookup)
+            |> Seq.collect(fun (_,_,lookup,_,_) -> taxonomicTreesAllLevels lookup)
             |> Seq.filter(fun tree -> tree.IsEmpty |> not)
             |> Seq.map(fun tree ->
                 DataFiles.TaxonIndex.Row(fst (List.last tree), snd (List.last tree), tree.Tail |> Seq.map fst |> String.concat " > ")
@@ -463,7 +520,7 @@ let calculateBiodiversityVariables graph =
 
         printfn "Generating location index"
         let locationIndex =
-            newAges |> List.map(fun (tsId, ageDepth, taxonLookup, location) ->
+            newAges |> List.map(fun (tsId, ageDepth, taxonLookup, location, digitisedData) ->
                 let earliestDate = ageDepth.Keys |> Seq.map(fun k -> k.Date) |> Seq.max
                 let latestDate = ageDepth.Keys |> Seq.map(fun k -> k.Date) |> Seq.min
                 let locName = location |> Option.map(fun l ->l.Name.Value.Replace(",", " ")) |> Option.defaultValue "Unknown location"
@@ -489,7 +546,7 @@ let calculateBiodiversityVariables graph =
 
         // Output dataset against calibrated ages:
         let dataWithCalibratedAges =
-            newAges |> List.collect(fun (tsId, ageDepth, taxonLookup, location) ->
+            newAges |> List.collect(fun (tsId, ageDepth, taxonLookup, location, digitisedData) ->
  
                 ageDepth
                 |> Seq.collect(fun kv ->
@@ -534,11 +591,57 @@ let calculateBiodiversityVariables graph =
             | Some sd ->
                 k.Date <= binEarly + sd && k.Date > binLate - sd
 
-        let presenceClass percentageValue =
-            match percentageValue with
-            | p when p > 2.50 -> "present"
-            | p when p > 0.00 -> "borderline present"
-            | _ -> "absent"
+        /// For a given metric at a particular time,
+        /// determine a qualitative category of possible presence.
+        let presenceClass (lookupDimension: string -> float option) (metric:Datasets.Metric) (units:Datasets.MetricUnit) values =
+            match units with
+            | Datasets.MetricUnit.PercentAbundance ->
+
+                match Seq.max values with
+                | p when p > 2.50 -> "present"
+                | p when p > 0.00 -> "borderline present"
+                | _ -> "absent"
+
+                // let depositionRate = lookupDimension "dimension: deposition rate (cm per year)"
+                // let fossilSum = lookupDimension "dimension: pollen sum"
+
+                // match fossilSum, depositionRate with
+                // | None, _ ->
+                //     printfn "[Warning] Percent abundance data with no denominator"
+                //     match Seq.max values with
+                //     | p when p > 2.50 -> "present"
+                //     | p when p > 0.00 -> "borderline present"
+                //     | _ -> "absent"
+                // | Some sum, Some rate ->
+
+                //     let totalFossilsInSample =
+
+
+
+                // | Some sum, None ->
+                //     printfn "[Warning] Could not calculate influx; no deposition rates from age-depth model."
+                //     match Seq.max values with
+                //     | p when p > 2.50 -> "present"
+                //     | p when p > 0.00 -> "borderline present"
+                //     | _ -> "absent"
+
+            | Datasets.MetricUnit.Count -> if Seq.max values > 0 then "present" else "absent"
+            | Datasets.MetricUnit.CountPerCmCubed cm3 -> "unknown"
+            | Datasets.MetricUnit.OtherUnit u ->
+                match u.Value with
+                | "grains per mg of dry sediment" -> "unknown"
+                | _ ->
+                    printfn "Unknown unit: %s" u.Value
+                    "unknown"
+
+        let isPresent (metricUnit:Datasets.MetricUnit) value =
+            match metricUnit with
+            | Datasets.MetricUnit.PercentAbundance
+            | Datasets.MetricUnit.Count
+            | Datasets.MetricUnit.CountPerCmCubed _ -> value > 0.
+            | Datasets.MetricUnit.OtherUnit other ->
+                printfn "Cannot identify if presence from metric: %s" other.Value
+                false
 
         let presenceToValue = function
             | "present" -> 1.0
@@ -559,13 +662,13 @@ let calculateBiodiversityVariables graph =
         /// Taxonomic trees for all taxa in the datasets
         let masterTaxonList =
             newAges 
-            |> Seq.collect(fun (_,_,lookup,_) -> taxonomicTreesAllLevels lookup)
+            |> Seq.collect(fun (_,_,lookup,_, digitisedData) -> taxonomicTreesAllLevels lookup)
             |> Seq.filter(fun tree -> tree.IsEmpty |> not)
             |> Seq.toList
 
         // Earliest occurrence date, is exact match, presence
         let presenceInBin =
-            newAges |> List.collect(fun (tsId, ageDepth, taxonLookup, _) ->
+            newAges |> List.collect(fun (tsId, ageDepth, taxonLookup, _, digitisedData) ->
                 
                 timeBins
                 |> List.collect(fun (binLate, binEarly) ->
@@ -579,16 +682,27 @@ let calculateBiodiversityVariables graph =
                         ageDepth
                         |> Map.filter (fun k _ -> overlapsBin binEarly binLate k)
                         |> Map.toList
-                        |> Seq.collect (fun (d,m) -> m |> Seq.toList |> Seq.map(fun kv -> d,kv))
-                        |> Seq.groupBy(fun (_,t) -> t.Key)
-                        |> Seq.map(fun (_,g) ->
-                            let maxValue = g |> Seq.map snd |> Seq.maxBy(fun kv -> kv.Value)
-                            let presences = g |> Seq.filter(fun (_,g) -> g.Value > 0)
+                        |> Seq.collect (fun (d,m) ->
+                            m |> Seq.toList |> Seq.map(fun kv -> d,kv,m))
+                        |> Seq.groupBy(fun (_,t,_) -> t.Key)
+                        |> Seq.map(fun (taxon,g) ->
+                            
+                            // All data are using same metric and unit, as within single timeline / digitised dataset.
+                            let dataValues = g |> Seq.map Triple.snd |> Seq.map(fun kv -> kv.Value)
+
+                            let presences = g |> Seq.filter(fun (_,g,_) -> isPresent digitisedData.Units g.Value)
                             let earliestDatePresent = 
                                 if presences |> Seq.isEmpty
                                 then None
-                                else presences |> Seq.map(fun (d,_) -> d.Date) |> Seq.max |> Some
-                            taxaOrDefault taxonLookup maxValue.Key, presenceClass maxValue.Value, earliestDatePresent )
+                                else presences |> Seq.map(fun d -> (Triple.fst d).Date) |> Seq.max |> Some
+
+                            // Allow lookup of additional dimensions that may be required
+                            // e.g. pollen sum (for percentage pollen data)
+                            let tryFindDimension dim = g |> Seq.head |> Triple.thd |> Map.tryFind dim
+                            let realTaxon = taxaOrDefault taxonLookup taxon
+                            let present = presenceClass tryFindDimension digitisedData.Metric digitisedData.Units dataValues
+
+                            realTaxon, present, earliestDatePresent )
                         |> Seq.toList
 
                     let forBotanicalTaxa =
@@ -807,6 +921,7 @@ let calculateBiodiversityVariables graph =
 
         let firstOccurrenceFile = new DataFiles.BiodiversityVariableFile(firstOccurrences)
         firstOccurrenceFile.Save("../../data-derived/traits/movement-migration.tsv")
+
 
         // Taxon richness at family, genus, species.
         let richness =

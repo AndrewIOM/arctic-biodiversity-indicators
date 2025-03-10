@@ -1,0 +1,82 @@
+Polygon Id	Phyto region CAVM	Zone	Phyto region checklist
+z0-p0	0	0	
+z4-p1	1	4	
+z5-p2	2	5	
+z6-p2	2	6	
+z4-p2	2	4	
+z5-p3	3	5	
+z3-p3	3	3	
+z4-p3	3	4	
+z1-p4	4	1	
+z2-p4	4	2	
+z5-p4	4	5	
+z3-p4	4	3	
+z4-p4	4	4	
+z2-p5	5	2	
+z5-p5	5	5	
+z3-p5	5	3	
+z4-p5	5	4	
+z5-p6	6	5	
+z6-p6	6	6	
+z3-p6	6	3	
+z4-p6	6	4	
+z1-p7	7	1	North Greenland
+z2-p7	7	2	North Greenland
+z3-p7	7	3	North Greenland
+z5-p10	10	5	
+z3-p10	10	3	
+z5-p11	11	5	
+z1-p12	12	1	
+z2-p12	12	2	
+z3-p12	12	3	
+z5-p13	13	5	
+z4-p13	13	4	
+z1-p14	14	1	
+z2-p14	14	2	
+z5-p14	14	5	
+z3-p14	14	3	
+z4-p14	14	4	
+z2-p15	15	2	
+z5-p15	15	5	
+z3-p15	15	3	
+z4-p15	15	4	
+z1-p16	16	1	
+z2-p16	16	2	
+z5-p16	16	5	
+z3-p16	16	3	
+z4-p16	16	4	
+z5-p17	17	5	
+z3-p17	17	3	
+z4-p17	17	4	
+z5-p18	18	5	
+z4-p18	18	4	
+z1-p19	19	1	
+z2-p19	19	2	
+z5-p19	19	5	
+z3-p19	19	3	
+z4-p19	19	4	
+z5-p20	20	5	
+z3-p20	20	3	
+z4-p20	20	4	
+z5-p21	21	5	
+z4-p21	21	4	
+z5-p22	22	5	
+z6-p22	22	6	
+z4-p22	22	4	
+z2-p23	23	2	
+z3-p81	81	3	West Greenland
+z4-p81	81	4	West Greenland
+z3-p82	82	3	West Greenland
+z4-p82	82	4	West Greenland
+z5-p83	83	5	West Greenland
+z4-p83	83	4	West Greenland
+z5-p84	84	5	West Greenland
+z6-p84	84	6	West Greenland
+z4-p84	84	4	West Greenland
+z4-p91	91	4	East Greenland
+z2-p92	92	2	East Greenland
+z3-p92	92	3	East Greenland
+z4-p92	92	4	East Greenland
+z2-p93	93	2	East Greenland
+z3-p93	93	3	East Greenland
+z4-p93	93	4	East Greenland
