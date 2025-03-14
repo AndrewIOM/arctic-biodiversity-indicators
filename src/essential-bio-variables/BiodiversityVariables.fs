@@ -41,7 +41,24 @@ let rawDataByTimeSeriesId graph =
                     match rawNode |> fst |> snd with
                     | GraphStructure.Node.DatasetNode d ->
                         match d with
-                        | Datasets.DatasetNode.Digitised c -> Some (a ,c)
+                        | Datasets.DatasetNode.Digitised c ->
+                            let proxyGroup =
+                                rawNode |> snd |> Seq.tryPick(fun (_,relSink,_,r) ->
+                                    match r with
+                                    | GraphStructure.Relation.Dataset dr ->
+                                        match dr with
+                                        | Datasets.DatasetRelation.IsProxyGroup -> Some relSink
+                                    | _ -> None )
+                                |> Option.bind (Storage.loadAtom graph.Directory "BioticProxyGroupNode" >> Result.toOption)
+                                |> Option.bind(fun o ->
+                                    match o |> fst |> snd with
+                                    | GraphStructure.Node.PopulationNode p ->
+                                        match p with
+                                        | GraphStructure.BioticProxyCategoryNode c -> Some c
+                                        | _ -> None
+                                    | _ -> None )
+
+                            Some (a ,c, proxyGroup)
                     | _ -> None ))
 
         printfn "Found %A series with raw data" withRawData.Length
@@ -51,7 +68,7 @@ let rawDataByTimeSeriesId graph =
             |> List.map(fun a ->
                 
                 let location =
-                    a |> fst |> snd
+                    a |> Triple.fst |> snd
                     |> List.tryPick(fun (_,sinkId,_,conn) ->
                         match conn with
                         | GraphStructure.Relation.Exposure r ->
@@ -89,7 +106,7 @@ let rawDataByTimeSeriesId graph =
             |> List.choose(fun (a,location) ->
                 
                 let dates =
-                    a |> fst |> snd
+                    a |> Triple.fst |> snd
                     |> List.choose(fun (_,sinkId,_,conn) ->
                         match conn with
                         | GraphStructure.Relation.Exposure r ->
@@ -104,8 +121,6 @@ let rawDataByTimeSeriesId graph =
                 |> Result.toOption
                 |> Option.bind(fun dateNodes ->
                 
-                    printfn "Rels are %A" (dateNodes |> Seq.map snd |> Seq.toList)
-
                     let calibrations =
                         dateNodes
                         |> List.collect(fun (_,rels) ->
@@ -131,7 +146,7 @@ let rawDataByTimeSeriesId graph =
                             match n |> fst |> snd with
                             | GraphStructure.Node.ExposureNode e ->
                                 match e with
-                                | Exposure.ExposureNode.DateCalibrationInstanceNode c -> Some (fst a |> fst |> fst, snd a, c, location)
+                                | Exposure.ExposureNode.DateCalibrationInstanceNode c -> Some (Triple.fst a |> fst |> fst, Triple.snd a, c, location, Triple.thd a)
                                 | _ -> None
                             | _ -> None
                             )
@@ -427,7 +442,13 @@ module PanArcticFlora =
     type PanArcticFloraRegionLookup = CsvProvider<"../../data-third-party/checklist/arctic-species-checklist-polygon-lookup.tsv">
 
     let flora = PanArcticFlora.Load "/Users/andrewmartin/Documents/GitHub Projects/arctic-biodiversity-indicators/data-third-party/checklist/arctic-species-checklist.tsv"
-    let floraRegionIndex = PanArcticFlora.Load "/Users/andrewmartin/Documents/GitHub Projects/arctic-biodiversity-indicators/data-third-party/checklist/arctic-species-checklist-polygon-lookup.tsv"
+    let floraRegionIndex = PanArcticFloraRegionLookup.Load "/Users/andrewmartin/Documents/GitHub Projects/arctic-biodiversity-indicators/data-third-party/checklist/arctic-species-checklist-polygon-lookup.tsv"
+
+    /// Returns a tuple of the bioclimate zone x flora checklist region.
+    let tryFindFloraArea regionPolygonId =
+        floraRegionIndex.Rows
+        |> Seq.tryFind(fun r -> r.``Polygon Id`` = regionPolygonId)
+        |> Option.map(fun r -> r.Zone, r.``Phyto region checklist``)
 
     type Presence =
         | Frequent
@@ -463,17 +484,55 @@ module PanArcticFlora =
         | _ -> Uncertain
 
     let presenceInSubzone (r:PanArcticFlora.Row) = function
-        | "1" -> r.A | "2" -> r.B | "3" -> r.C | "4" -> r.D | "5" -> r.E | "6" -> r.N | _ -> "?"
+        | 1 -> r.A | 2 -> r.B | 3 -> r.C | 4 -> r.D | 5 -> r.E | 6 -> r.N | _ -> "?"
+
+    type TaxonResult =
+        { Taxon: string; Family: string; Genus: string; Species: string; IsLowerRankThanSpecies: bool; Presence: Presence }
 
     // Number of species, genera in local neo-environment.
-    let taxaPresent floristicRegion subzone =
+    let taxaPresence floristicRegion subzone =
         flora.Rows
         |> Seq.map(fun r ->
             let inRegion = presenceInFloristicRegion r floristicRegion
             let inSubzone = presenceInSubzone r subzone |> asPresence
-            {| Taxon = r.TaxonOriginal; Genus = r.Genus; Species = r.Species |}, limitPresence inRegion inSubzone
+            { Taxon = r.TaxonOriginal; Family = r.Family; Genus = r.Genus; Species = r.Species; IsLowerRankThanSpecies = r.Subunit |> Option.isSome; Presence = limitPresence inRegion inSubzone }
         )
+        |> Seq.toList
     
+    let familyRichness familyName (taxa: TaxonResult list) =
+        taxa 
+        |> List.groupBy(fun g -> g.Family)
+        |> List.tryFind(fun (f,_) -> f = familyName)
+        |> Option.map(fun (_,children) ->
+            children
+            |> List.groupBy(fun t -> t.Genus, t.Species)
+            |> List.length )
+        |> Option.defaultValue 0
+
+    let genusRichness genusName (taxa: TaxonResult list) =
+        taxa 
+        |> List.groupBy(fun g -> g.Genus)
+        |> List.tryFind(fun (g,_) -> g = genusName)
+        |> Option.map(fun (_,children) ->
+            children
+            |> List.groupBy(fun t -> t.Genus, t.Species)
+            |> List.length )
+        |> Option.defaultValue 0
+
+
+type PresenceClass =
+    | Present
+    | BorderlinePresent
+    | Absent
+    | Unknown
+
+with
+    member this.Value =
+        match this with
+        | Present -> "present"
+        | BorderlinePresent -> "borderline-present"
+        | Absent -> "absent"
+        | Unknown -> "unknown"
 
 let calculateBiodiversityVariables graph =
     result {
@@ -483,11 +542,11 @@ let calculateBiodiversityVariables graph =
         printfn "Found %i series with age-depth models and raw data." series.Length
 
         let newAges =
-            series |> List.choose(fun (timeline, data, calibration, location ) ->
+            series |> List.choose(fun (timeline, data, calibration, location, proxyGroup) ->
                 applyAgeDepthModelToData data calibration
                 |> Option.map(fun r ->
                     let taxonLookup = TaxonomyLookup.proxiedTaxaLookup timeline graph |> Result.forceOk
-                    timeline, r, taxonLookup, location, data)
+                    timeline, r, taxonLookup, location, data, proxyGroup)
             )
 
         printfn "Matched age-depth model and data for %i series." series.Length
@@ -507,27 +566,28 @@ let calculateBiodiversityVariables graph =
         printfn "Generating taxonomic index"
         let taxonIndex =
             newAges 
-            |> Seq.collect(fun (_,_,lookup,_,_) -> taxonomicTreesAllLevels lookup)
+            |> Seq.collect(fun (_,_,lookup,_,_,_) -> taxonomicTreesAllLevels lookup)
             |> Seq.filter(fun tree -> tree.IsEmpty |> not)
             |> Seq.map(fun tree ->
                 DataFiles.TaxonIndex.Row(fst (List.last tree), snd (List.last tree), tree.Tail |> Seq.map fst |> String.concat " > ")
                 )
+            |> Seq.distinct
+            |> Seq.sortBy(fun t -> t.Rank, t.Taxon)
             |> fun d -> new DataFiles.TaxonIndex(d)
 
         taxonIndex.Save("../../data-derived/taxon-index.tsv")
 
         let intersects = Spatial.intersectsRegionFn ()
 
-        printfn "Generating location index"
+        printfn "Generating location index."
+        printfn "(Where multiple datasets exist at single timeline, we only include one timeline record)."
         let locationIndex =
-            newAges |> List.map(fun (tsId, ageDepth, taxonLookup, location, digitisedData) ->
+            newAges |> List.map(fun (tsId, ageDepth, taxonLookup, location, digitisedData, proxyGroup) ->
                 let earliestDate = ageDepth.Keys |> Seq.map(fun k -> k.Date) |> Seq.max
                 let latestDate = ageDepth.Keys |> Seq.map(fun k -> k.Date) |> Seq.min
                 let locName = location |> Option.map(fun l ->l.Name.Value.Replace(",", " ")) |> Option.defaultValue "Unknown location"
                 let latDd, lonDd, geomType = Conversions.locationToDecimalDegrees location
                 let isIntersect = intersects latDd lonDd
-                printfn "Intersects? %A" isIntersect
-
                 DataFiles.TimelineIndex.Row(
                     timelineId = tsId.AsString,
                     siteName = locName,
@@ -539,6 +599,8 @@ let calculateBiodiversityVariables graph =
                     phytoSubzoneRegionId = isIntersect
                 )
             )
+            |> List.groupBy(fun r -> r.Timeline_id)
+            |> List.map (snd >> Seq.head)
             |> fun d -> new DataFiles.TimelineIndex(d)
 
         locationIndex.Save("../../data-derived/timeline-index.tsv")
@@ -546,7 +608,7 @@ let calculateBiodiversityVariables graph =
 
         // Output dataset against calibrated ages:
         let dataWithCalibratedAges =
-            newAges |> List.collect(fun (tsId, ageDepth, taxonLookup, location, digitisedData) ->
+            newAges |> List.collect(fun (tsId, ageDepth, taxonLookup, location, digitisedData, proxyGroup) ->
  
                 ageDepth
                 |> Seq.collect(fun kv ->
@@ -593,14 +655,41 @@ let calculateBiodiversityVariables graph =
 
         /// For a given metric at a particular time,
         /// determine a qualitative category of possible presence.
-        let presenceClass (lookupDimension: string -> float option) (metric:Datasets.Metric) (units:Datasets.MetricUnit) values =
+        let presenceClass (lookupDimension: string -> float option) (proxyGroup:option<BioticProxyCategoryNode>) (metric:Datasets.Metric) (units:Datasets.MetricUnit) values =
+            
+            let unspecifiedMode =
+                proxyGroup |> Option.map(fun p ->
+                    match p with
+                    | BioticProxyCategoryNode.Fossil _ -> Unknown
+                    | BioticProxyCategoryNode.Microfossil m ->
+                        match m with
+                        | MicrofossilGroup.Pollen
+                        | MicrofossilGroup.Ostracod
+                        | MicrofossilGroup.Diatom -> Absent
+                        | MicrofossilGroup.PlantMacrofossil -> Unknown
+                        | MicrofossilGroup.OtherMicrofossilGroup o ->
+                            printfn "[Warning] Don't know how to specify absence mode for proxy: %s" o.Value
+                            Unknown
+                    | _ ->
+                            printfn "[Warning] Don't know how to specify absence mode for proxy: %A" p
+                            Unknown
+                )
+                |> Option.defaultValue Unknown
+            
             match units with
+            | Datasets.MetricUnit.OtherUnit other when other.Value = "Percent based on sum(A)+x, where A = totaI pollen sum (excl. Pinus)" ->
+
+                match Seq.max values with
+                | p when p > 2.50 -> Present
+                | p when p > 0.00 -> BorderlinePresent
+                | _ -> unspecifiedMode
+
             | Datasets.MetricUnit.PercentAbundance ->
 
                 match Seq.max values with
-                | p when p > 2.50 -> "present"
-                | p when p > 0.00 -> "borderline present"
-                | _ -> "absent"
+                | p when p > 2.50 -> Present
+                | p when p > 0.00 -> BorderlinePresent
+                | _ -> unspecifiedMode
 
                 // let depositionRate = lookupDimension "dimension: deposition rate (cm per year)"
                 // let fossilSum = lookupDimension "dimension: pollen sum"
@@ -625,28 +714,26 @@ let calculateBiodiversityVariables graph =
                 //     | p when p > 0.00 -> "borderline present"
                 //     | _ -> "absent"
 
-            | Datasets.MetricUnit.Count -> if Seq.max values > 0 then "present" else "absent"
-            | Datasets.MetricUnit.CountPerCmCubed cm3 -> "unknown"
+            | Datasets.MetricUnit.CountPerCmCubed _
+            | Datasets.MetricUnit.Count -> if Seq.max values > 0 then Present else unspecifiedMode
             | Datasets.MetricUnit.OtherUnit u ->
                 match u.Value with
-                | "grains per mg of dry sediment" -> "unknown"
+                | "grains per mg of dry sediment" -> Unknown
                 | _ ->
                     printfn "Unknown unit: %s" u.Value
-                    "unknown"
+                    Unknown
 
-        let isPresent (metricUnit:Datasets.MetricUnit) value =
-            match metricUnit with
-            | Datasets.MetricUnit.PercentAbundance
-            | Datasets.MetricUnit.Count
-            | Datasets.MetricUnit.CountPerCmCubed _ -> value > 0.
-            | Datasets.MetricUnit.OtherUnit other ->
-                printfn "Cannot identify if presence from metric: %s" other.Value
-                false
+        let isPresent (lookupDimension: string -> float option) (proxyGroup:option<BioticProxyCategoryNode>) (metric:Datasets.Metric) (units:Datasets.MetricUnit) value =
+            match presenceClass lookupDimension proxyGroup metric units [ value ] with
+            | Present
+            | BorderlinePresent -> true
+            | Absent -> false
+            | Unknown -> false
 
         let presenceToValue = function
-            | "present" -> 1.0
-            | "absent" -> 0.0
-            | "borderline present" -> 0.5
+            | Present -> 1.0
+            | Absent -> 0.0
+            | BorderlinePresent -> 0.5
             | _ -> nan
 
         let taxaOrDefault taxonLookup t =
@@ -662,13 +749,13 @@ let calculateBiodiversityVariables graph =
         /// Taxonomic trees for all taxa in the datasets
         let masterTaxonList =
             newAges 
-            |> Seq.collect(fun (_,_,lookup,_, digitisedData) -> taxonomicTreesAllLevels lookup)
+            |> Seq.collect(fun (_,_,lookup,_, digitisedData, _) -> taxonomicTreesAllLevels lookup)
             |> Seq.filter(fun tree -> tree.IsEmpty |> not)
             |> Seq.toList
 
         // Earliest occurrence date, is exact match, presence
         let presenceInBin =
-            newAges |> List.collect(fun (tsId, ageDepth, taxonLookup, _, digitisedData) ->
+            newAges |> List.collect(fun (tsId, ageDepth, taxonLookup, _, digitisedData, proxyGroup) ->
                 
                 timeBins
                 |> List.collect(fun (binLate, binEarly) ->
@@ -687,20 +774,37 @@ let calculateBiodiversityVariables graph =
                         |> Seq.groupBy(fun (_,t,_) -> t.Key)
                         |> Seq.map(fun (taxon,g) ->
                             
+                            // For plant macrofossil, if data is for any part (any) the morphotype
+                            // in the database is just named as the taxon name. If a specific part, this
+                            // is specified in brackets e.g. Carex sp. (leaves)
+                            let taxon =
+                                proxyGroup |> Option.map(fun p ->
+                                    if p = (Microfossil PlantMacrofossil) then taxon.Replace(" (any)", "")
+                                    else taxon )
+                                |> Option.defaultValue taxon
+
                             // All data are using same metric and unit, as within single timeline / digitised dataset.
                             let dataValues = g |> Seq.map Triple.snd |> Seq.map(fun kv -> kv.Value)
 
-                            let presences = g |> Seq.filter(fun (_,g,_) -> isPresent digitisedData.Units g.Value)
+                            // Allow lookup of additional dimensions that may be required
+                            // e.g. pollen sum (for percentage pollen data)
+                            let tryFindDimension dim = g |> Seq.head |> Triple.thd |> Map.tryFind dim
+                            let presences = g |> Seq.filter(fun (_,g,_) -> isPresent tryFindDimension proxyGroup digitisedData.Metric digitisedData.Units g.Value)
+                        
                             let earliestDatePresent = 
                                 if presences |> Seq.isEmpty
                                 then None
                                 else presences |> Seq.map(fun d -> (Triple.fst d).Date) |> Seq.max |> Some
 
-                            // Allow lookup of additional dimensions that may be required
-                            // e.g. pollen sum (for percentage pollen data)
-                            let tryFindDimension dim = g |> Seq.head |> Triple.thd |> Map.tryFind dim
                             let realTaxon = taxaOrDefault taxonLookup taxon
-                            let present = presenceClass tryFindDimension digitisedData.Metric digitisedData.Units dataValues
+                            let present = presenceClass tryFindDimension proxyGroup digitisedData.Metric digitisedData.Units dataValues
+
+                            // if taxon.Contains "Carex" then
+                            //     printfn "For %s in %s (%A), %A" taxon tsId.AsString proxyGroup presences
+                            //     printfn "Presences are %A" (presences |> Seq.toList)
+                            //     printfn "Real taxon is %A" realTaxon
+                            //     printfn "Present? %A" present
+                            //     System.Console.ReadLine() |> ignore
 
                             realTaxon, present, earliestDatePresent )
                         |> Seq.toList
@@ -755,22 +859,22 @@ let calculateBiodiversityVariables graph =
                                 match exactMorphotypeMatches |> Seq.map Triple.snd |> Seq.distinct |> Seq.length with
                                 | 1 -> true, Triple.snd exactMorphotypeMatches.Head, "high-confidence"
                                 | _ ->
-                                    if exactMorphotypeMatches |> Seq.map Triple.snd |> Seq.contains "present"
-                                    then true, "present", "medium-confidence"
-                                    else true, "borderline present", "medium-confidence"
-                            | 0, 0, 0 -> false, "unknown", "unknown"
+                                    if exactMorphotypeMatches |> Seq.map Triple.snd |> Seq.contains Present
+                                    then true, Present, "medium-confidence"
+                                    else true, BorderlinePresent, "medium-confidence"
+                            | 0, 0, 0 -> false, Unknown, "unknown"
                             | 0, 1, _ -> false, Triple.snd childrenMatches.Head, "high-confidence"
                             | _, _, 1 -> false, Triple.snd parentMatches.Head, "low-confidence"
                             | _, _, 0 ->
                                 // No matches exactly, but matches at lower ranks.
                                 match childrenMatches |> Seq.distinct |> Seq.length with
                                 | 1 -> false, Triple.snd exactMorphotypeMatches.Head, "high-confidence"
-                                | _ -> false, "unknown", "unknown"
+                                | _ -> false, Unknown, "unknown"
                             | _, _, _ ->
                                 // No matches exactly, but matches at upper ranks.
                                 match childrenMatches |> Seq.distinct |> Seq.length with
                                 | 1 -> false, Triple.snd exactMorphotypeMatches.Head, "low-confidence"
-                                | _ -> false, "unknown", "unknown"
+                                | _ -> false, Unknown, "unknown"
                         )
 
                     forBotanicalTaxa |> List.map(fun b ->
@@ -897,7 +1001,6 @@ let calculateBiodiversityVariables graph =
             |> List.map(fun ((locationId, taxon),rows) ->
                 
                 let earliestDates = rows |> Seq.choose Triple.snd
-                printfn "Earliest dates for %s are %A" taxon earliestDates
                 let earliest =
                     match earliestDates |> Seq.length with
                     | 0 -> nan
@@ -926,46 +1029,75 @@ let calculateBiodiversityVariables graph =
         // Taxon richness at family, genus, species.
         let richness =
             presenceInBin
-            |> List.groupBy(fun (_,_,r) -> r.Bin_early, r.Bin_late, r.Location_id, r.Rank)
-            |> List.choose(fun ((binEarly, binLate, locationId, rank),rows) ->
+            |> List.groupBy(fun (_,_,r) -> r.Bin_early, r.Bin_late, r.Location_id)
+            |> List.collect(fun ((binEarly, binLate, locationId),rows) ->
 
+                // Full taxonomic trees for all taxa that are (+ borderline) present.
                 let taxonomicTrees =
                     rows 
                     |> List.filter(fun (_,_,r) -> r.Variable_value <> 0. && not(System.Double.IsNaN(r.Variable_value)))
                     |> Seq.map(fun (_,_,r) ->
                         masterTaxonList |> List.find(fun t -> t |> List.last = (r.Taxon, r.Rank)))
 
-                let count =
-                    match rank with
-                    | "Family" -> Some 100
-                    | "Genus" -> Some 200
-                    | "Species" ->
-                        let species = taxonomicTrees |> Seq.filter(fun t -> t |> Seq.last |> snd = "Species") |> Seq.distinct
-                        let generaOfSpecies = species |> Seq.choose(fun t -> t |> Seq.tryFind(fun t -> snd t = "Genus")) |> Seq.map fst |> Seq.distinct
+                let counts =
+                    // A list of species present. If subspecies, varieties etc. are present, limits them
+                    // to species-level identity.
+                    let species =
+                        taxonomicTrees 
+                        |> Seq.filter(fun t -> t |> Seq.map snd |> Seq.contains "Species")
+                        |> Seq.map(fun tree -> tree |> List.rev |> List.skipWhile(fun (_,r) -> r <> "Species") |> List.rev)
+                        |> Seq.distinct
+                    
+                    let generaOfSpecies = species |> Seq.choose(fun t -> t |> Seq.tryFind(fun t -> snd t = "Genus")) |> Seq.map fst |> Seq.distinct
+                    let familiesOfSpecies =
                         let genera = taxonomicTrees |> Seq.filter(fun t -> t |> Seq.last |> snd = "Genus") |> Seq.distinct
-                        let familiesOfGenera = genera |> Seq.choose(fun t -> t |> Seq.tryFind(fun t -> snd t = "Family")) |> Seq.map fst |> Seq.distinct
+                        genera |> Seq.choose(fun t -> t |> Seq.tryFind(fun t -> snd t = "Family")) |> Seq.map fst |> Seq.distinct
 
-                        let additionalGenera =
-                            taxonomicTrees
-                            |> Seq.filter(fun t -> t |> Seq.last |> snd = "Genus")
-                            |> Seq.filter(fun t -> generaOfSpecies |> Seq.contains (t |> Seq.last |> fst) |> not)
-                            |> Seq.distinct
-                        let familiesOfAdditionalGenera = additionalGenera |> Seq.choose(fun t -> t |> Seq.tryFind(fun t -> snd t = "Family")) |> Seq.map fst |> Seq.distinct
+                    let additionalTaxaFor rank latinNames =
+                        taxonomicTrees
+                        |> Seq.filter(fun t -> t |> Seq.last |> snd = rank)
+                        |> Seq.filter(fun t -> latinNames |> Seq.contains (t |> Seq.last |> fst) |> not)
+                        |> Seq.distinct
+                    
+                    let additionalGenera = additionalTaxaFor "Genus" generaOfSpecies
+                    let familiesOfGenera = additionalGenera |> Seq.choose(fun t -> t |> Seq.tryFind(fun t -> snd t = "Family")) |> Seq.map fst |> Seq.distinct
+                    let additionalFamilies = additionalTaxaFor "Family" (Seq.concat [ familiesOfSpecies; familiesOfGenera])
+                    let minimumSpeciesCount = Seq.length species + Seq.length additionalGenera + Seq.length additionalFamilies
+                    
+                    // For additional genera and families, find counts in Arctic species lists.
 
-                        let additionalFamilies =
-                            taxonomicTrees
-                            |> Seq.filter(fun t -> t |> Seq.last |> snd = "Family")
-                            |> Seq.filter(fun t -> familiesOfGenera |> Seq.contains (t |> Seq.last |> fst) |> not)
-                            |> Seq.filter(fun t -> familiesOfAdditionalGenera |> Seq.contains (t |> Seq.last |> fst) |> not)
-                            |> Seq.distinct
+                    let neoTaxaInArea =
+                        locationIndex.Rows 
+                        |> Seq.find(fun l -> l.Timeline_id = locationId)
+                        |> fun r -> r.Phyto_subzone_region_id
+                        |> Option.bind(fun locId -> PanArcticFlora.tryFindFloraArea locId)
+                        |> Option.map(fun (s,f) -> PanArcticFlora.taxaPresence f s)
+                    if neoTaxaInArea.IsNone then printfn "[Warn] Cannot find plausable richness for %s. No intersect with either CAVM areas or flora areas." locationId
 
-                        Some (Seq.length species + Seq.length additionalGenera + Seq.length additionalFamilies)
-                    | _ -> None
+                    let plausableAdditionalSpecies =
+                        neoTaxaInArea
+                        |> Option.map(fun neoTaxa ->
+                            
+                            let fromFamilies =
+                                additionalFamilies |> Seq.sumBy(fun f ->
+
+                                    PanArcticFlora.familyRichness (f |> Seq.last |> fst) neoTaxa)
+                            let fromGenera =
+                                additionalGenera |> Seq.sumBy(fun g ->
+                                    PanArcticFlora.genusRichness (g |> Seq.last |> fst) neoTaxa)
+                        
+                            fromFamilies + fromGenera)
+                        |> Option.defaultValue 0
+
+                    [
+                        "Species", "minimum_possible_count", minimumSpeciesCount
+                        "Species", "plausable_count", minimumSpeciesCount + plausableAdditionalSpecies
+                    ]
 
                 // If species, each upper rank should count as one (if not already included).
                 // e.g. Pinaceae = 0 if Pinus = 1, but Pinaceae = 1 if no children of it present.
 
-                count |> Option.map(fun c ->
+                counts |> List.map(fun (rank, variableUnit, count) ->
                     DataFiles.BiodiversityVariableFile.Row(
                         locationId = locationId,
                         binEarly = binEarly,
@@ -976,8 +1108,8 @@ let calculateBiodiversityVariables graph =
                         taxonomicTree = "NA",
                         taxonAmbiguousWith = "NA",
                         variable = sprintf "%s_richness" rank,
-                        variableUnit = "minimum_possible_count",
-                        variableValue = float c,
+                        variableUnit = variableUnit,
+                        variableValue = float count,
                         variableCi = None,
                         variableConfidenceQualitative = None ))
             )
@@ -1000,7 +1132,7 @@ let calculateBiodiversityVariables graph =
             |> List.collect(fun (regionId,records) ->
                 records
                 |> List.map snd
-                |> List.groupBy(fun r -> r.Variable, r.Bin_early, r.Bin_late, r.Taxon)
+                |> List.groupBy(fun r -> r.Variable, r.Variable_unit, r.Bin_early, r.Bin_late, r.Taxon)
                 |> List.map(fun (_, rows) ->
                     let newMean = rows |> Seq.map(fun r -> r.Variable_value) |> valueFn
                     let newSd = rows |> Seq.choose(fun r -> r.Variable_ci) |> sdFn

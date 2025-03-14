@@ -90,9 +90,9 @@ module ModelParts =
 
         member this.AggregateFn =
             match this with
-            | TaxonDistribution -> Seq.max
+            | TaxonDistribution -> Seq.append [0.] >> Seq.max
             | Morphology -> Seq.average
-            | Movement -> Seq.max
+            | Movement -> Seq.append [0.] >> Seq.max
             | TaxonomicAndPhylogeneticDiversity -> Seq.average
             | TraitDiversity -> Seq.average
             | RawAbundanceData -> Seq.sum
@@ -830,6 +830,7 @@ module Plots =
                     |> Seq.sortBy(fun (i,_,_) -> -i) // Sort from oldest to newest
                     |> Seq.fold (fun (state, lastVal) (i,v,_) ->
                         if lastVal = Double.MaxValue then state, v
+                        else if Double.IsNaN v then state, lastVal
                         else state + abs(v-lastVal), v) (0.,Double.MaxValue)
                     |> fst
                 )
@@ -1358,10 +1359,7 @@ let ebvPage (ebv:EssentialBiodiversityVariable) model dispatch =
                 | DataIndexed.NoData -> div { attr.``class`` "notification is-warning"; text "No data is loaded." }
                 | DataIndexed.IndexedByPolygonId data ->
                     cond (model.geojson |> Map.tryFind "phyto-subzones-simplified") <| function
-                    | Some geojson ->
-                        cond model.selectedVariable <| function
-                        | Some v -> Plots.chloropleth timeMode geojson (sprintf "%s (%s)" v.VariableName v.VariableUnit) (DataAccess.indexVariableByLocation v data)
-                        | None -> text "Select a dimension to show first."
+                    | Some geojson -> Plots.chloropleth timeMode geojson "Plausable richness (n species)" (DataAccess.indexVariableByLocation {VariableName = "Species_richness"; VariableUnit = "plausable_count"} data)
                     | None -> text "Cannot load cloropleth: geojson base layer not loaded."
                 | _ -> textf "Error. data not formatted correctly. %A" model.dataSlice )
             "placeholder"
