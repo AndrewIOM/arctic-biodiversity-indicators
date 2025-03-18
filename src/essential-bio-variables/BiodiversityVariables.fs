@@ -499,10 +499,10 @@ module PanArcticFlora =
         )
         |> Seq.toList
     
-    let familyRichness familyName (taxa: TaxonResult list) =
+    let familyRichness (familyName:string) (taxa: TaxonResult list) =
         taxa 
         |> List.groupBy(fun g -> g.Family)
-        |> List.tryFind(fun (f,_) -> f = familyName)
+        |> List.tryFind(fun (f,_) -> f.ToLower() = familyName.ToLower())
         |> Option.map(fun (_,children) ->
             children
             |> List.groupBy(fun t -> t.Genus, t.Species)

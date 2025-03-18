@@ -7,11 +7,14 @@ Betulaceae	Family	Plantae > Angiosperms > Fagales > Betulaceae
 Brassicaceae	Family	Plantae > Angiosperms > Brassicales > Brassicaceae
 Campanulaceae	Family	Plantae > Angiosperms > Asterales > Campanulaceae
 Caryophyllaceae	Family	Plantae > Angiosperms > Caryophyllales > Caryophyllaceae
+Cruciferae	Family	Plantae > Cruciferae
 Cupressaceae	Family	Plantae > Pinophyta > Pinopsida > Cupressales > Cupressaceae
 Cyperaceae	Family	Plantae > Angiosperms > Poales > Cyperaceae
 Ericaceae	Family	Plantae > Angiosperms > Ericales > Ericaceae
 Juncaceae	Family	Plantae > Angiosperms > Poales > Juncaceae
+Liguiflorae	Family	Plantae > Liguiflorae
 Lycopodiaceae	Family	Plantae > Lycopodiophyta > Lycopodiopsida > Lycopodiales > Lycopodiaceae
+Onagraceae	Family	Plantae > Angiosperms > Myrtales > Onagraceae
 Ophioglossaceae	Family	Plantae > Polypodiophyta > Polypodiopsida > Ophioglossales > Ophioglossaceae
 Orobanchaceae	Family	Plantae > Angiosperms > Lamiales > Orobanchaceae
 Poaceae	Family	Plantae > Angiosperms > Poales > Poaceae
@@ -32,16 +35,22 @@ Betula	Genus	Plantae > Angiosperms > Fagales > Betulaceae > Betula
 Botrychium	Genus	Plantae > Polypodiophyta > Polypodiopsida > Ophioglossales > Ophioglossaceae > Botrychioideae > Botrychium
 Campanula	Genus	Plantae > Angiosperms > Asterales > Campanulaceae > Campanula
 Carex	Genus	Plantae > Angiosperms > Poales > Cyperaceae > Carex
+Cassiope	Genus	Plantae > Angiosperms > Ericales > Ericaceae > Cassiopoideae > Cassiope
+Chamaenerion	Genus	Plantae > Angiosperms > Myrtales > Onagraceae > Chamaenerion
 Comarum	Genus	Plantae > Angiosperms > Rosales > Rosaceae > Comarum
 Draba	Genus	Plantae > Angiosperms > Brassicales > Brassicaceae > Brassicoideae > Arabideae > Draba
 Dryas	Genus	Plantae > Angiosperms > Rosales > Rosaceae > Dryas
 Euphrasia	Genus	
 Galium	Genus	Plantae > Angiosperms > Gentianales > Rubiaceae > Galium
+Gramineae	Genus	Plantae > Gramineae
 Hippuris	Genus	Plantae > Angiosperms > Lamiales > Hippuris
 Juncus	Genus	Plantae > Angiosperms > Poales > Juncaceae > Juncus
 Juniperus	Genus	Plantae > Pinophyta > Pinopsida > Cupressales > Cupressaceae > Juniperus
+Koenigia	Genus	Plantae > Angiosperms > Caryophyllales > Polygonaceae > Koenigia
 Luzula	Genus	Plantae > Angiosperms > Poales > Juncaceae > Luzula
 Lycopodium	Genus	Plantae > Lycopodiophyta > Lycopodiopsida > Lycopodiales > Lycopodiaceae > Lycopodioideae > Lycopodium
+Oxyria	Genus	Plantae > Angiosperms > Caryophyllales > Polygonaceae > Oxyria
+Pedicuralis	Genus	Plantae > Pedicuralis
 Phyllodoce	Genus	Plantae > Phyllodoce
 Poa	Genus	Plantae > Angiosperms > Poales > Poaceae > Poa
 Potamogeton	Genus	Plantae > Angiosperms > Alismatales > Potamogetonaceae > Potamogeton
@@ -56,6 +65,7 @@ Thalictrum	Genus	Plantae > Angiosperms > Ranunculales > Ranunculaceae > Thalictr
 Tofieldia	Genus	Plantae > Angiosperms > Alismatales > Tofieldiaceae > Tofieldia
 Vaccinium	Genus	Plantae > Angiosperms > Ericales > Ericaceae > Vaccinioideae > Vaccinium
 Plantae	Kingdom	Plantae
+Problematic (Placeholder)	Kingdom	Problematic (Placeholder)
 Unknown (not yet coded)	Kingdom	
 Life	Life	
 Alismatales	Order	Plantae > Angiosperms > Alismatales
@@ -69,6 +79,7 @@ Gentianales	Order	Plantae > Angiosperms > Gentianales
 Lamiales	Order	Plantae > Angiosperms > Lamiales
 Lycopodiales	Order	Plantae > Lycopodiophyta > Lycopodiopsida > Lycopodiales
 Malpighiales	Order	Plantae > Angiosperms > Malpighiales
+Myrtales	Order	Plantae > Angiosperms > Myrtales
 Ophioglossales	Order	Plantae > Polypodiophyta > Polypodiopsida > Ophioglossales
 Poales	Order	Plantae > Angiosperms > Poales
 Polypodiales	Order	Plantae > Polypodiophyta > Polypodiopsida > Polypodiales
@@ -80,6 +91,7 @@ Lycopodiophyta	Phylum	Plantae > Lycopodiophyta
 Pinophyta	Phylum	Plantae > Pinophyta
 Polypodiophyta	Phylum	Plantae > Polypodiophyta
 Alchemilla alpina L.	Species	Plantae > Angiosperms > Rosales > Rosaceae > Alchemilla > Alchemilla alpina L.
+Arctostaphylos alpina (L.) Spreng.	Species	Plantae > Arctostaphylos alpina (L.) Spreng.
 Betula nana L.	Species	Plantae > Angiosperms > Fagales > Betulaceae > Betula > Betula nana L.
 Carex bigelowii Torr.	Species	Plantae > Carex bigelowii Torr.
 Carex brunescens (Pers.) Poir.	Species	Plantae > Carex brunescens (Pers.) Poir.
@@ -88,30 +100,40 @@ Carex gynocrates Wormsk.	Species	Plantae > Angiosperms > Poales > Cyperaceae > C
 Carex lachenalii Schkuhr.	Species	Plantae > Carex lachenalii Schkuhr.
 Carex norvegica L.	Species	Plantae > Carex norvegica L.
 Carex rufina Drej.	Species	Plantae > Carex rufina Drej.
+Cassiope tetragona (L.) D.Don	Species	Plantae > Angiosperms > Ericales > Ericaceae > Cassiopoideae > Cassiope > Cassiope tetragona (L.) D.Don
 Cerastium alpinum L.	Species	
 Cerastium fontanum Baumg.	Species	
 Chamaenerion latifolium (L.) Th. Fries & Lge.	Species	Plantae > Chamaenerion latifolium (L.) Th. Fries & Lge.
 Comarum palustre L.	Species	Plantae > Angiosperms > Rosales > Rosaceae > Comarum > Comarum palustre L.
 Dryas integrifolia M. Vahl.	Species	Plantae > Dryas integrifolia M. Vahl.
 Empetrum hermaphroditum (Hagerup) Böch.	Species	Plantae > Empetrum hermaphroditum (Hagerup) Böch.
+Empetrum nigrum (Hagerup) Böch.	Species	Plantae > Empetrum nigrum (Hagerup) Böch.
 Gymnocarpium dryopteris (L.) Newman	Species	
-Harrimanella hypnoides (L.) Coville.	Species	Plantae > Harrimanella hypnoides (L.) Coville.
+Harrimanella hypnoides (L.) Coville	Species	Plantae > Harrimanella hypnoides (L.) Coville
 Hippuris vulgaris L.	Species	Plantae > Angiosperms > Lamiales > Hippuris > Hippuris vulgaris L.
+Huperzia selago (L.) Bernh. ex Schrank. & Mart.	Species	Plantae > Huperzia selago (L.) Bernh. ex Schrank. & Mart.
 Juniperus communis L.	Species	Plantae > Pinophyta > Pinopsida > Cupressales > Cupressaceae > Juniperus > Juniperus communis L.
+Koenigia islandica L.	Species	Plantae > Angiosperms > Caryophyllales > Polygonaceae > Koenigia > Koenigia islandica L.
 Lycopodium clavatum L.	Species	Plantae > Lycopodiophyta > Lycopodiopsida > Lycopodiales > Lycopodiaceae > Lycopodioideae > Lycopodium > Lycopodium clavatum L.
 Minuratia rubella (Wbg.) Hiern.	Species	Plantae > Minuratia rubella (Wbg.) Hiern.
 Phippsia algida (Sol.) R. Br.	Species	Plantae > Phippsia algida (Sol.) R. Br.
+Phyllodoce corerulea (L.) Bab.	Species	Plantae > Phyllodoce corerulea (L.) Bab.
+Polygonum viviparum L.	Species	Plantae > Polygonum viviparum L.
 Potamogeton pusillus L.	Species	Plantae > Angiosperms > Alismatales > Potamogetonaceae > Potamogeton > Potamogeton pusillus L.
 Potentilla hookeriana Lehm.	Species	
 Potentilla hyparctica Malte	Species	
 Potentilla nivea L.	Species	
 Ranunculus confervoides (Fr.) Asch. & Graebn.	Species	Plantae > Ranunculus confervoides (Fr.) Asch. & Graebn.
 Ranunculus hyperboreus Rottb.	Species	Plantae > Angiosperms > Ranunculales > Ranunculaceae > Ranunculus > Ranunculus hyperboreus Rottb.
+Rhododendron lapponicum (L.) Wbg.	Species	Plantae > Rhododendron lapponicum (L.) Wbg.
 Rumex acetosella L.	Species	Plantae > Angiosperms > Caryophyllales > Polygonaceae > Rumex > Rumex acetosella L.
 Salix herbacea L.	Species	Plantae > Angiosperms > Malpighiales > Salicaceae > Salix > Salix herbacea L.
 Saxifraga aizoides L.	Species	
+Saxifraga hieraciifolia W. & K.	Species	Plantae > Saxifraga hieraciifolia W. & K.
+Saxifraga nivalis L.	Species	Plantae > Angiosperms > Saxifragales > Saxifragaceae > Saxifraga > Saxifraga nivalis L.
 Saxifraga oppositifolia L.	Species	Plantae > Angiosperms > Saxifragales > Saxifragaceae > Saxifraga > Saxifraga oppositifolia L.
 Saxifraga paniculata Mill.	Species	
+Saxifraga tenuis (Wbg.) H. Sm.	Species	Plantae > Saxifraga tenuis (Wbg.) H. Sm.
 Saxifraga tricuspidata Rottb.	Species	
 Sibbaldia procumbens L.	Species	
 Silene acaulis (L.) Jacq.	Species	Plantae > Angiosperms > Caryophyllales > Caryophyllaceae > Silene > Silene acaulis (L.) Jacq.
@@ -121,6 +143,7 @@ Vaccinium uliginosum L.	Species	Plantae > Angiosperms > Ericales > Ericaceae > V
 Asteroideae	Subfamily	Plantae > Angiosperms > Asterales > Asteraceae > Asteroideae
 Botrychioideae	Subfamily	Plantae > Polypodiophyta > Polypodiopsida > Ophioglossales > Ophioglossaceae > Botrychioideae
 Brassicoideae	Subfamily	Plantae > Angiosperms > Brassicales > Brassicaceae > Brassicoideae
+Cassiopoideae	Subfamily	Plantae > Angiosperms > Ericales > Ericaceae > Cassiopoideae
 Lycopodioideae	Subfamily	Plantae > Lycopodiophyta > Lycopodiopsida > Lycopodiales > Lycopodiaceae > Lycopodioideae
 Vaccinioideae	Subfamily	Plantae > Angiosperms > Ericales > Ericaceae > Vaccinioideae
 Anthemideae	Tribe	Plantae > Angiosperms > Asterales > Asteraceae > Asteroideae > Anthemideae

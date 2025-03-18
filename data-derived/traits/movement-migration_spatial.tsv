@@ -34,7 +34,7 @@ z4-p93	12000	0	NA	Salicaceae	Family	unknown	unknown	earliest_occurrence_date	cal
 z4-p93	12000	0	NA	Salix	Genus	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
 z4-p93	12000	0	NA	Salix herbacea L.	Species	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
 z4-p93	12000	0	NA	Ericales	Order	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
-z4-p93	12000	0	NA	Harrimanella hypnoides (L.) Coville.	Species	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+z4-p93	12000	0	NA	Harrimanella hypnoides (L.) Coville	Species	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
 z4-p93	12000	0	NA	Lamiales	Order	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
 z4-p93	12000	0	NA	Hippuris	Genus	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
 z4-p93	12000	0	NA	Hippuris vulgaris L.	Species	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
@@ -125,6 +125,29 @@ z4-p93	12000	0	NA	Thalictrum	Genus	unknown	unknown	earliest_occurrence_date	cal 
 z4-p93	12000	0	NA	Thalictrum alpinum L.	Species	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
 z4-p93	12000	0	NA	Tofieldiaceae	Family	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
 z4-p93	12000	0	NA	Tofieldia	Genus	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+z4-p93	12000	0	NA	Arctostaphylos alpina (L.) Spreng.	Species	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+z4-p93	12000	0	NA	Cassiopoideae	Subfamily	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+z4-p93	12000	0	NA	Cassiope	Genus	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+z4-p93	12000	0	NA	Cassiope tetragona (L.) D.Don	Species	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+z4-p93	12000	0	NA	Myrtales	Order	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+z4-p93	12000	0	NA	Onagraceae	Family	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+z4-p93	12000	0	NA	Chamaenerion	Genus	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+z4-p93	12000	0	NA	Cruciferae	Family	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+z4-p93	12000	0	NA	Empetrum nigrum (Hagerup) Böch.	Species	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+z4-p93	12000	0	NA	Gramineae	Genus	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+z4-p93	12000	0	NA	Huperzia selago (L.) Bernh. ex Schrank. & Mart.	Species	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+z4-p93	12000	0	NA	Koenigia	Genus	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+z4-p93	12000	0	NA	Koenigia islandica L.	Species	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+z4-p93	12000	0	NA	Liguiflorae	Family	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+z4-p93	12000	0	NA	Problematic (Placeholder)	Kingdom	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+z4-p93	12000	0	NA	Oxyria	Genus	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+z4-p93	12000	0	NA	Pedicuralis	Genus	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+z4-p93	12000	0	NA	Phyllodoce corerulea (L.) Bab.	Species	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+z4-p93	12000	0	NA	Polygonum viviparum L.	Species	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+z4-p93	12000	0	NA	Rhododendron lapponicum (L.) Wbg.	Species	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+z4-p93	12000	0	NA	Saxifraga hieraciifolia W. & K.	Species	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+z4-p93	12000	0	NA	Saxifraga tenuis (Wbg.) H. Sm.	Species	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+z4-p93	12000	0	NA	Saxifraga nivalis L.	Species	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
 z3-p92	12000	0	NA	Unknown (not yet coded)	Kingdom	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
 z3-p92	12000	0	NA	Life	Life	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
 z3-p92	12000	0	NA	Plantae	Kingdom	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
@@ -160,7 +183,7 @@ z3-p92	12000	0	NA	Salicaceae	Family	unknown	unknown	earliest_occurrence_date	cal
 z3-p92	12000	0	NA	Salix	Genus	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
 z3-p92	12000	0	NA	Salix herbacea L.	Species	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
 z3-p92	12000	0	NA	Ericales	Order	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
-z3-p92	12000	0	NA	Harrimanella hypnoides (L.) Coville.	Species	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+z3-p92	12000	0	NA	Harrimanella hypnoides (L.) Coville	Species	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
 z3-p92	12000	0	NA	Lamiales	Order	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
 z3-p92	12000	0	NA	Hippuris	Genus	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
 z3-p92	12000	0	NA	Hippuris vulgaris L.	Species	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
@@ -251,6 +274,29 @@ z3-p92	12000	0	NA	Thalictrum	Genus	unknown	unknown	earliest_occurrence_date	cal 
 z3-p92	12000	0	NA	Thalictrum alpinum L.	Species	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
 z3-p92	12000	0	NA	Tofieldiaceae	Family	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
 z3-p92	12000	0	NA	Tofieldia	Genus	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+z3-p92	12000	0	NA	Arctostaphylos alpina (L.) Spreng.	Species	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+z3-p92	12000	0	NA	Cassiopoideae	Subfamily	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+z3-p92	12000	0	NA	Cassiope	Genus	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+z3-p92	12000	0	NA	Cassiope tetragona (L.) D.Don	Species	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+z3-p92	12000	0	NA	Myrtales	Order	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+z3-p92	12000	0	NA	Onagraceae	Family	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+z3-p92	12000	0	NA	Chamaenerion	Genus	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+z3-p92	12000	0	NA	Cruciferae	Family	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+z3-p92	12000	0	NA	Empetrum nigrum (Hagerup) Böch.	Species	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+z3-p92	12000	0	NA	Gramineae	Genus	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+z3-p92	12000	0	NA	Huperzia selago (L.) Bernh. ex Schrank. & Mart.	Species	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+z3-p92	12000	0	NA	Koenigia	Genus	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+z3-p92	12000	0	NA	Koenigia islandica L.	Species	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+z3-p92	12000	0	NA	Liguiflorae	Family	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+z3-p92	12000	0	NA	Problematic (Placeholder)	Kingdom	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+z3-p92	12000	0	NA	Oxyria	Genus	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+z3-p92	12000	0	NA	Pedicuralis	Genus	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+z3-p92	12000	0	NA	Phyllodoce corerulea (L.) Bab.	Species	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+z3-p92	12000	0	NA	Polygonum viviparum L.	Species	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+z3-p92	12000	0	NA	Rhododendron lapponicum (L.) Wbg.	Species	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+z3-p92	12000	0	NA	Saxifraga hieraciifolia W. & K.	Species	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+z3-p92	12000	0	NA	Saxifraga tenuis (Wbg.) H. Sm.	Species	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+z3-p92	12000	0	NA	Saxifraga nivalis L.	Species	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
 z4-p82	12000	0	NA	Unknown (not yet coded)	Kingdom	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
 z4-p82	12000	0	NA	Life	Life	unknown	unknown	earliest_occurrence_date	cal yr BP	10188.15		
 z4-p82	12000	0	NA	Plantae	Kingdom	unknown	unknown	earliest_occurrence_date	cal yr BP	10188.15		
@@ -286,7 +332,7 @@ z4-p82	12000	0	NA	Salicaceae	Family	unknown	unknown	earliest_occurrence_date	cal
 z4-p82	12000	0	NA	Salix	Genus	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
 z4-p82	12000	0	NA	Salix herbacea L.	Species	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
 z4-p82	12000	0	NA	Ericales	Order	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
-z4-p82	12000	0	NA	Harrimanella hypnoides (L.) Coville.	Species	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+z4-p82	12000	0	NA	Harrimanella hypnoides (L.) Coville	Species	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
 z4-p82	12000	0	NA	Lamiales	Order	unknown	unknown	earliest_occurrence_date	cal yr BP	9868.220000000001		
 z4-p82	12000	0	NA	Hippuris	Genus	unknown	unknown	earliest_occurrence_date	cal yr BP	9868.220000000001		
 z4-p82	12000	0	NA	Hippuris vulgaris L.	Species	unknown	unknown	earliest_occurrence_date	cal yr BP	9868.220000000001		
@@ -377,6 +423,29 @@ z4-p82	12000	0	NA	Thalictrum	Genus	unknown	unknown	earliest_occurrence_date	cal 
 z4-p82	12000	0	NA	Thalictrum alpinum L.	Species	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
 z4-p82	12000	0	NA	Tofieldiaceae	Family	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
 z4-p82	12000	0	NA	Tofieldia	Genus	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+z4-p82	12000	0	NA	Arctostaphylos alpina (L.) Spreng.	Species	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+z4-p82	12000	0	NA	Cassiopoideae	Subfamily	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+z4-p82	12000	0	NA	Cassiope	Genus	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+z4-p82	12000	0	NA	Cassiope tetragona (L.) D.Don	Species	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+z4-p82	12000	0	NA	Myrtales	Order	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+z4-p82	12000	0	NA	Onagraceae	Family	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+z4-p82	12000	0	NA	Chamaenerion	Genus	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+z4-p82	12000	0	NA	Cruciferae	Family	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+z4-p82	12000	0	NA	Empetrum nigrum (Hagerup) Böch.	Species	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+z4-p82	12000	0	NA	Gramineae	Genus	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+z4-p82	12000	0	NA	Huperzia selago (L.) Bernh. ex Schrank. & Mart.	Species	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+z4-p82	12000	0	NA	Koenigia	Genus	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+z4-p82	12000	0	NA	Koenigia islandica L.	Species	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+z4-p82	12000	0	NA	Liguiflorae	Family	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+z4-p82	12000	0	NA	Problematic (Placeholder)	Kingdom	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+z4-p82	12000	0	NA	Oxyria	Genus	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+z4-p82	12000	0	NA	Pedicuralis	Genus	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+z4-p82	12000	0	NA	Phyllodoce corerulea (L.) Bab.	Species	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+z4-p82	12000	0	NA	Polygonum viviparum L.	Species	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+z4-p82	12000	0	NA	Rhododendron lapponicum (L.) Wbg.	Species	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+z4-p82	12000	0	NA	Saxifraga hieraciifolia W. & K.	Species	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+z4-p82	12000	0	NA	Saxifraga tenuis (Wbg.) H. Sm.	Species	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+z4-p82	12000	0	NA	Saxifraga nivalis L.	Species	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
 z5-p83	12000	0	NA	Unknown (not yet coded)	Kingdom	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
 z5-p83	12000	0	NA	Life	Life	unknown	unknown	earliest_occurrence_date	cal yr BP	10253		
 z5-p83	12000	0	NA	Plantae	Kingdom	unknown	unknown	earliest_occurrence_date	cal yr BP	10253		
@@ -412,7 +481,7 @@ z5-p83	12000	0	NA	Salicaceae	Family	unknown	unknown	earliest_occurrence_date	cal
 z5-p83	12000	0	NA	Salix	Genus	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
 z5-p83	12000	0	NA	Salix herbacea L.	Species	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
 z5-p83	12000	0	NA	Ericales	Order	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
-z5-p83	12000	0	NA	Harrimanella hypnoides (L.) Coville.	Species	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+z5-p83	12000	0	NA	Harrimanella hypnoides (L.) Coville	Species	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
 z5-p83	12000	0	NA	Lamiales	Order	unknown	unknown	earliest_occurrence_date	cal yr BP	8010.36		
 z5-p83	12000	0	NA	Hippuris	Genus	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
 z5-p83	12000	0	NA	Hippuris vulgaris L.	Species	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
@@ -503,22 +572,45 @@ z5-p83	12000	0	NA	Thalictrum	Genus	unknown	unknown	earliest_occurrence_date	cal 
 z5-p83	12000	0	NA	Thalictrum alpinum L.	Species	unknown	unknown	earliest_occurrence_date	cal yr BP	8683.1		
 z5-p83	12000	0	NA	Tofieldiaceae	Family	unknown	unknown	earliest_occurrence_date	cal yr BP	8215.01		
 z5-p83	12000	0	NA	Tofieldia	Genus	unknown	unknown	earliest_occurrence_date	cal yr BP	8215.01		
+z5-p83	12000	0	NA	Arctostaphylos alpina (L.) Spreng.	Species	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+z5-p83	12000	0	NA	Cassiopoideae	Subfamily	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+z5-p83	12000	0	NA	Cassiope	Genus	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+z5-p83	12000	0	NA	Cassiope tetragona (L.) D.Don	Species	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+z5-p83	12000	0	NA	Myrtales	Order	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+z5-p83	12000	0	NA	Onagraceae	Family	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+z5-p83	12000	0	NA	Chamaenerion	Genus	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+z5-p83	12000	0	NA	Cruciferae	Family	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+z5-p83	12000	0	NA	Empetrum nigrum (Hagerup) Böch.	Species	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+z5-p83	12000	0	NA	Gramineae	Genus	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+z5-p83	12000	0	NA	Huperzia selago (L.) Bernh. ex Schrank. & Mart.	Species	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+z5-p83	12000	0	NA	Koenigia	Genus	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+z5-p83	12000	0	NA	Koenigia islandica L.	Species	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+z5-p83	12000	0	NA	Liguiflorae	Family	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+z5-p83	12000	0	NA	Problematic (Placeholder)	Kingdom	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+z5-p83	12000	0	NA	Oxyria	Genus	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+z5-p83	12000	0	NA	Pedicuralis	Genus	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+z5-p83	12000	0	NA	Phyllodoce corerulea (L.) Bab.	Species	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+z5-p83	12000	0	NA	Polygonum viviparum L.	Species	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+z5-p83	12000	0	NA	Rhododendron lapponicum (L.) Wbg.	Species	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+z5-p83	12000	0	NA	Saxifraga hieraciifolia W. & K.	Species	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+z5-p83	12000	0	NA	Saxifraga tenuis (Wbg.) H. Sm.	Species	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+z5-p83	12000	0	NA	Saxifraga nivalis L.	Species	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
 z4-p92	12000	0	NA	Unknown (not yet coded)	Kingdom	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
-z4-p92	12000	0	NA	Life	Life	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
-z4-p92	12000	0	NA	Plantae	Kingdom	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
-z4-p92	12000	0	NA	Angiosperms	Phylum	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
-z4-p92	12000	0	NA	Rosales	Order	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
-z4-p92	12000	0	NA	Rosaceae	Family	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+z4-p92	12000	0	NA	Life	Life	unknown	unknown	earliest_occurrence_date	cal yr BP	8643.68		
+z4-p92	12000	0	NA	Plantae	Kingdom	unknown	unknown	earliest_occurrence_date	cal yr BP	8643.68		
+z4-p92	12000	0	NA	Angiosperms	Phylum	unknown	unknown	earliest_occurrence_date	cal yr BP	8643.68		
+z4-p92	12000	0	NA	Rosales	Order	unknown	unknown	earliest_occurrence_date	cal yr BP	8643.68		
+z4-p92	12000	0	NA	Rosaceae	Family	unknown	unknown	earliest_occurrence_date	cal yr BP	8643.68		
 z4-p92	12000	0	NA	Alchemilla	Genus	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
 z4-p92	12000	0	NA	Alchemilla alpina L.	Species	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
-z4-p92	12000	0	NA	Fagales	Order	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
-z4-p92	12000	0	NA	Betulaceae	Family	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
-z4-p92	12000	0	NA	Betula	Genus	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+z4-p92	12000	0	NA	Fagales	Order	unknown	unknown	earliest_occurrence_date	cal yr BP	8643.68		
+z4-p92	12000	0	NA	Betulaceae	Family	unknown	unknown	earliest_occurrence_date	cal yr BP	8643.68		
+z4-p92	12000	0	NA	Betula	Genus	unknown	unknown	earliest_occurrence_date	cal yr BP	8643.68		
 z4-p92	12000	0	NA	Betula nana L.	Species	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
 z4-p92	12000	0	NA	Carex bigelowii Torr.	Species	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
 z4-p92	12000	0	NA	Carex brunescens (Pers.) Poir.	Species	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
-z4-p92	12000	0	NA	Poales	Order	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
-z4-p92	12000	0	NA	Cyperaceae	Family	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+z4-p92	12000	0	NA	Poales	Order	unknown	unknown	earliest_occurrence_date	cal yr BP	8643.68		
+z4-p92	12000	0	NA	Cyperaceae	Family	unknown	unknown	earliest_occurrence_date	cal yr BP	8643.68		
 z4-p92	12000	0	NA	Carex	Genus	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
 z4-p92	12000	0	NA	Carex capillaris L.	Species	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
 z4-p92	12000	0	NA	Carex gynocrates Wormsk.	Species	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
@@ -533,12 +625,12 @@ z4-p92	12000	0	NA	Arabideae	Tribe	unknown	unknown	earliest_occurrence_date	cal y
 z4-p92	12000	0	NA	Draba	Genus	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
 z4-p92	12000	0	NA	Dryas integrifolia M. Vahl.	Species	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
 z4-p92	12000	0	NA	Empetrum hermaphroditum (Hagerup) Böch.	Species	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
-z4-p92	12000	0	NA	Malpighiales	Order	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
-z4-p92	12000	0	NA	Salicaceae	Family	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
-z4-p92	12000	0	NA	Salix	Genus	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+z4-p92	12000	0	NA	Malpighiales	Order	unknown	unknown	earliest_occurrence_date	cal yr BP	8643.68		
+z4-p92	12000	0	NA	Salicaceae	Family	unknown	unknown	earliest_occurrence_date	cal yr BP	8643.68		
+z4-p92	12000	0	NA	Salix	Genus	unknown	unknown	earliest_occurrence_date	cal yr BP	8643.68		
 z4-p92	12000	0	NA	Salix herbacea L.	Species	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
-z4-p92	12000	0	NA	Ericales	Order	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
-z4-p92	12000	0	NA	Harrimanella hypnoides (L.) Coville.	Species	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+z4-p92	12000	0	NA	Ericales	Order	unknown	unknown	earliest_occurrence_date	cal yr BP	8360.98		
+z4-p92	12000	0	NA	Harrimanella hypnoides (L.) Coville	Species	unknown	unknown	earliest_occurrence_date	cal yr BP	8360.98		
 z4-p92	12000	0	NA	Lamiales	Order	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
 z4-p92	12000	0	NA	Hippuris	Genus	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
 z4-p92	12000	0	NA	Hippuris vulgaris L.	Species	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
@@ -560,40 +652,40 @@ z4-p92	12000	0	NA	Alismatales	Order	unknown	unknown	earliest_occurrence_date	cal
 z4-p92	12000	0	NA	Potamogetonaceae	Family	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
 z4-p92	12000	0	NA	Potamogeton	Genus	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
 z4-p92	12000	0	NA	Potamogeton pusillus L.	Species	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
-z4-p92	12000	0	NA	Potentilla	Genus	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+z4-p92	12000	0	NA	Potentilla	Genus	unknown	unknown	earliest_occurrence_date	cal yr BP	8567.43		
 z4-p92	12000	0	NA	Ranunculus confervoides (Fr.) Asch. & Graebn.	Species	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
-z4-p92	12000	0	NA	Ranunculales	Order	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
-z4-p92	12000	0	NA	Ranunculaceae	Family	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
-z4-p92	12000	0	NA	Ranunculus	Genus	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+z4-p92	12000	0	NA	Ranunculales	Order	unknown	unknown	earliest_occurrence_date	cal yr BP	8643.68		
+z4-p92	12000	0	NA	Ranunculaceae	Family	unknown	unknown	earliest_occurrence_date	cal yr BP	8643.68		
+z4-p92	12000	0	NA	Ranunculus	Genus	unknown	unknown	earliest_occurrence_date	cal yr BP	8643.68		
 z4-p92	12000	0	NA	Ranunculus hyperboreus Rottb.	Species	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
-z4-p92	12000	0	NA	Caryophyllales	Order	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
-z4-p92	12000	0	NA	Caryophyllaceae	Family	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+z4-p92	12000	0	NA	Caryophyllales	Order	unknown	unknown	earliest_occurrence_date	cal yr BP	8643.68		
+z4-p92	12000	0	NA	Caryophyllaceae	Family	unknown	unknown	earliest_occurrence_date	cal yr BP	8643.68		
 z4-p92	12000	0	NA	Silene	Genus	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
 z4-p92	12000	0	NA	Silene acaulis (L.) Jacq.	Species	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
-z4-p92	12000	0	NA	Ericaceae	Family	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
-z4-p92	12000	0	NA	Vaccinioideae	Subfamily	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
-z4-p92	12000	0	NA	Vaccinium	Genus	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
-z4-p92	12000	0	NA	Vaccinium uliginosum L.	Species	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+z4-p92	12000	0	NA	Ericaceae	Family	unknown	unknown	earliest_occurrence_date	cal yr BP	8360.98		
+z4-p92	12000	0	NA	Vaccinioideae	Subfamily	unknown	unknown	earliest_occurrence_date	cal yr BP	5703.49		
+z4-p92	12000	0	NA	Vaccinium	Genus	unknown	unknown	earliest_occurrence_date	cal yr BP	5703.49		
+z4-p92	12000	0	NA	Vaccinium uliginosum L.	Species	unknown	unknown	earliest_occurrence_date	cal yr BP	5703.49		
 z4-p92	12000	0	NA	Alnus	Genus	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
-z4-p92	12000	0	NA	Asterales	Order	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+z4-p92	12000	0	NA	Asterales	Order	unknown	unknown	earliest_occurrence_date	cal yr BP	5703.49		
 z4-p92	12000	0	NA	Asteraceae	Family	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
 z4-p92	12000	0	NA	Asteroideae	Subfamily	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
 z4-p92	12000	0	NA	Anthemideae	Tribe	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
 z4-p92	12000	0	NA	Artemisia	Genus	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
-z4-p92	12000	0	NA	Polypodiophyta	Phylum	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
-z4-p92	12000	0	NA	Polypodiopsida	Class	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+z4-p92	12000	0	NA	Polypodiophyta	Phylum	unknown	unknown	earliest_occurrence_date	cal yr BP	8567.43		
+z4-p92	12000	0	NA	Polypodiopsida	Class	unknown	unknown	earliest_occurrence_date	cal yr BP	8567.43		
 z4-p92	12000	0	NA	Ophioglossales	Order	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
 z4-p92	12000	0	NA	Ophioglossaceae	Family	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
 z4-p92	12000	0	NA	Botrychioideae	Subfamily	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
 z4-p92	12000	0	NA	Botrychium	Genus	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
-z4-p92	12000	0	NA	Campanulaceae	Family	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
-z4-p92	12000	0	NA	Campanula	Genus	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+z4-p92	12000	0	NA	Campanulaceae	Family	unknown	unknown	earliest_occurrence_date	cal yr BP	5703.49		
+z4-p92	12000	0	NA	Campanula	Genus	unknown	unknown	earliest_occurrence_date	cal yr BP	5703.49		
 z4-p92	12000	0	NA	Stellaria longipes Goldie	Species	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
 z4-p92	12000	0	NA	Cerastium fontanum Baumg.	Species	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
 z4-p92	12000	0	NA	Cerastium alpinum L.	Species	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
-z4-p92	12000	0	NA	Dryas	Genus	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
-z4-p92	12000	0	NA	Polypodiales	Order	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
-z4-p92	12000	0	NA	Polypodiaceae	Family	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+z4-p92	12000	0	NA	Dryas	Genus	unknown	unknown	earliest_occurrence_date	cal yr BP	8643.68		
+z4-p92	12000	0	NA	Polypodiales	Order	unknown	unknown	earliest_occurrence_date	cal yr BP	8567.43		
+z4-p92	12000	0	NA	Polypodiaceae	Family	unknown	unknown	earliest_occurrence_date	cal yr BP	8567.43		
 z4-p92	12000	0	NA	Orobanchaceae	Family	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
 z4-p92	12000	0	NA	Rhinanthus	Genus	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
 z4-p92	12000	0	NA	Euphrasia	Genus	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
@@ -615,20 +707,43 @@ z4-p92	12000	0	NA	Comarum palustre L.	Species	unknown	unknown	earliest_occurrenc
 z4-p92	12000	0	NA	Potentilla hyparctica Malte	Species	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
 z4-p92	12000	0	NA	Potentilla nivea L.	Species	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
 z4-p92	12000	0	NA	Potentilla hookeriana Lehm.	Species	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
-z4-p92	12000	0	NA	Polygonaceae	Family	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+z4-p92	12000	0	NA	Polygonaceae	Family	unknown	unknown	earliest_occurrence_date	cal yr BP	8643.68		
 z4-p92	12000	0	NA	Rumex	Genus	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
 z4-p92	12000	0	NA	Rumex acetosella L.	Species	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
-z4-p92	12000	0	NA	Saxifraga paniculata Mill.	Species	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
-z4-p92	12000	0	NA	Saxifraga aizoides L.	Species	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
-z4-p92	12000	0	NA	Saxifraga tricuspidata Rottb.	Species	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
-z4-p92	12000	0	NA	Saxifragales	Order	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
-z4-p92	12000	0	NA	Saxifragaceae	Family	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
-z4-p92	12000	0	NA	Saxifraga	Genus	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
-z4-p92	12000	0	NA	Saxifraga oppositifolia L.	Species	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
-z4-p92	12000	0	NA	Thalictrum	Genus	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
-z4-p92	12000	0	NA	Thalictrum alpinum L.	Species	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+z4-p92	12000	0	NA	Saxifraga paniculata Mill.	Species	unknown	unknown	earliest_occurrence_date	cal yr BP	8643.68		
+z4-p92	12000	0	NA	Saxifraga aizoides L.	Species	unknown	unknown	earliest_occurrence_date	cal yr BP	8643.68		
+z4-p92	12000	0	NA	Saxifraga tricuspidata Rottb.	Species	unknown	unknown	earliest_occurrence_date	cal yr BP	8643.68		
+z4-p92	12000	0	NA	Saxifragales	Order	unknown	unknown	earliest_occurrence_date	cal yr BP	8643.68		
+z4-p92	12000	0	NA	Saxifragaceae	Family	unknown	unknown	earliest_occurrence_date	cal yr BP	8643.68		
+z4-p92	12000	0	NA	Saxifraga	Genus	unknown	unknown	earliest_occurrence_date	cal yr BP	8643.68		
+z4-p92	12000	0	NA	Saxifraga oppositifolia L.	Species	unknown	unknown	earliest_occurrence_date	cal yr BP	8643.68		
+z4-p92	12000	0	NA	Thalictrum	Genus	unknown	unknown	earliest_occurrence_date	cal yr BP	8567.43		
+z4-p92	12000	0	NA	Thalictrum alpinum L.	Species	unknown	unknown	earliest_occurrence_date	cal yr BP	8567.43		
 z4-p92	12000	0	NA	Tofieldiaceae	Family	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
 z4-p92	12000	0	NA	Tofieldia	Genus	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+z4-p92	12000	0	NA	Arctostaphylos alpina (L.) Spreng.	Species	unknown	unknown	earliest_occurrence_date	cal yr BP	4399.110000000001		
+z4-p92	12000	0	NA	Cassiopoideae	Subfamily	unknown	unknown	earliest_occurrence_date	cal yr BP	8360.98		
+z4-p92	12000	0	NA	Cassiope	Genus	unknown	unknown	earliest_occurrence_date	cal yr BP	8360.98		
+z4-p92	12000	0	NA	Cassiope tetragona (L.) D.Don	Species	unknown	unknown	earliest_occurrence_date	cal yr BP	8360.98		
+z4-p92	12000	0	NA	Myrtales	Order	unknown	unknown	earliest_occurrence_date	cal yr BP	5156.18		
+z4-p92	12000	0	NA	Onagraceae	Family	unknown	unknown	earliest_occurrence_date	cal yr BP	5156.18		
+z4-p92	12000	0	NA	Chamaenerion	Genus	unknown	unknown	earliest_occurrence_date	cal yr BP	5156.18		
+z4-p92	12000	0	NA	Cruciferae	Family	unknown	unknown	earliest_occurrence_date	cal yr BP	8643.68		
+z4-p92	12000	0	NA	Empetrum nigrum (Hagerup) Böch.	Species	unknown	unknown	earliest_occurrence_date	cal yr BP	8643.68		
+z4-p92	12000	0	NA	Gramineae	Genus	unknown	unknown	earliest_occurrence_date	cal yr BP	8643.68		
+z4-p92	12000	0	NA	Huperzia selago (L.) Bernh. ex Schrank. & Mart.	Species	unknown	unknown	earliest_occurrence_date	cal yr BP	8643.68		
+z4-p92	12000	0	NA	Koenigia	Genus	unknown	unknown	earliest_occurrence_date	cal yr BP	8643.68		
+z4-p92	12000	0	NA	Koenigia islandica L.	Species	unknown	unknown	earliest_occurrence_date	cal yr BP	8643.68		
+z4-p92	12000	0	NA	Liguiflorae	Family	unknown	unknown	earliest_occurrence_date	cal yr BP	8643.68		
+z4-p92	12000	0	NA	Problematic (Placeholder)	Kingdom	unknown	unknown	earliest_occurrence_date	cal yr BP	8643.68		
+z4-p92	12000	0	NA	Oxyria	Genus	unknown	unknown	earliest_occurrence_date	cal yr BP	8643.68		
+z4-p92	12000	0	NA	Pedicuralis	Genus	unknown	unknown	earliest_occurrence_date	cal yr BP	6496.19		
+z4-p92	12000	0	NA	Phyllodoce corerulea (L.) Bab.	Species	unknown	unknown	earliest_occurrence_date	cal yr BP	8129.94		
+z4-p92	12000	0	NA	Polygonum viviparum L.	Species	unknown	unknown	earliest_occurrence_date	cal yr BP	8643.68		
+z4-p92	12000	0	NA	Rhododendron lapponicum (L.) Wbg.	Species	unknown	unknown	earliest_occurrence_date	cal yr BP	5266.85		
+z4-p92	12000	0	NA	Saxifraga hieraciifolia W. & K.	Species	unknown	unknown	earliest_occurrence_date	cal yr BP	8567.43		
+z4-p92	12000	0	NA	Saxifraga tenuis (Wbg.) H. Sm.	Species	unknown	unknown	earliest_occurrence_date	cal yr BP	8567.43		
+z4-p92	12000	0	NA	Saxifraga nivalis L.	Species	unknown	unknown	earliest_occurrence_date	cal yr BP	8567.43		
 z4-p84	12000	0	NA	Unknown (not yet coded)	Kingdom	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
 z4-p84	12000	0	NA	Life	Life	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
 z4-p84	12000	0	NA	Plantae	Kingdom	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
@@ -664,7 +779,7 @@ z4-p84	12000	0	NA	Salicaceae	Family	unknown	unknown	earliest_occurrence_date	cal
 z4-p84	12000	0	NA	Salix	Genus	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
 z4-p84	12000	0	NA	Salix herbacea L.	Species	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
 z4-p84	12000	0	NA	Ericales	Order	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
-z4-p84	12000	0	NA	Harrimanella hypnoides (L.) Coville.	Species	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+z4-p84	12000	0	NA	Harrimanella hypnoides (L.) Coville	Species	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
 z4-p84	12000	0	NA	Lamiales	Order	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
 z4-p84	12000	0	NA	Hippuris	Genus	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
 z4-p84	12000	0	NA	Hippuris vulgaris L.	Species	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
@@ -755,3 +870,26 @@ z4-p84	12000	0	NA	Thalictrum	Genus	unknown	unknown	earliest_occurrence_date	cal 
 z4-p84	12000	0	NA	Thalictrum alpinum L.	Species	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
 z4-p84	12000	0	NA	Tofieldiaceae	Family	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
 z4-p84	12000	0	NA	Tofieldia	Genus	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+z4-p84	12000	0	NA	Arctostaphylos alpina (L.) Spreng.	Species	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+z4-p84	12000	0	NA	Cassiopoideae	Subfamily	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+z4-p84	12000	0	NA	Cassiope	Genus	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+z4-p84	12000	0	NA	Cassiope tetragona (L.) D.Don	Species	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+z4-p84	12000	0	NA	Myrtales	Order	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+z4-p84	12000	0	NA	Onagraceae	Family	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+z4-p84	12000	0	NA	Chamaenerion	Genus	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+z4-p84	12000	0	NA	Cruciferae	Family	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+z4-p84	12000	0	NA	Empetrum nigrum (Hagerup) Böch.	Species	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+z4-p84	12000	0	NA	Gramineae	Genus	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+z4-p84	12000	0	NA	Huperzia selago (L.) Bernh. ex Schrank. & Mart.	Species	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+z4-p84	12000	0	NA	Koenigia	Genus	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+z4-p84	12000	0	NA	Koenigia islandica L.	Species	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+z4-p84	12000	0	NA	Liguiflorae	Family	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+z4-p84	12000	0	NA	Problematic (Placeholder)	Kingdom	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+z4-p84	12000	0	NA	Oxyria	Genus	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+z4-p84	12000	0	NA	Pedicuralis	Genus	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+z4-p84	12000	0	NA	Phyllodoce corerulea (L.) Bab.	Species	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+z4-p84	12000	0	NA	Polygonum viviparum L.	Species	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+z4-p84	12000	0	NA	Rhododendron lapponicum (L.) Wbg.	Species	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+z4-p84	12000	0	NA	Saxifraga hieraciifolia W. & K.	Species	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+z4-p84	12000	0	NA	Saxifraga tenuis (Wbg.) H. Sm.	Species	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
+z4-p84	12000	0	NA	Saxifraga nivalis L.	Species	unknown	unknown	earliest_occurrence_date	cal yr BP	NaN		
