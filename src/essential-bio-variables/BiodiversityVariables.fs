@@ -269,6 +269,7 @@ module TaxonomyLookup =
     /// in the dataframe, link this to the morphotypes used
     /// in the biotic proxy nodes. Then, follow to the 'real'
     /// taxa identities and attach to the result.
+    /// TODO Relate to proxy used if multiple proxies (e.g. pollen, pl mf).
     let proxiedTaxaLookup timelineId (graph: Storage.FileBasedGraph<GraphStructure.Node,GraphStructure.Relation>) =
         result {
             let! timeline = Storage.loadAtom graph.Directory (typeof<Exposure.ExposureNode>.Name) timelineId
@@ -555,6 +556,13 @@ with
         | Absent -> "absent"
         | Unknown -> "unknown"
 
+let mergePresence (presences: PresenceClass seq) =
+    if presences |> Seq.contains Present then Present
+    else if presences |> Seq.contains BorderlinePresent then BorderlinePresent
+    else if presences |> Seq.contains Absent then Absent
+    else Unknown
+
+
 let calculateBiodiversityVariables graph =
     result {
 
@@ -766,7 +774,11 @@ let calculateBiodiversityVariables graph =
                 l |> List.map(fun tree ->
                     tree |> List.map TaxonomyLookup.taxonName
             ))
-            |> Option.defaultValue ([["Unverified taxon", "Unknown"]])
+            |> Option.defaultWith(fun _ ->
+                printfn "[Warn] Could not find morphotype in lookup: %A (%A)" t taxonLookup.Keys
+                for k in taxonLookup.Keys do printfn "%A" k
+                ([["Unverified taxon", "Unknown"]])
+            )
 
 
         /// Taxonomic trees for all taxa in the datasets
@@ -853,15 +865,19 @@ let calculateBiodiversityVariables graph =
                                 let parentMatches =
                                     binTaxaByPresenceCategory
                                     |> List.filter(fun (b,c,_) ->
-                                        b |> List.exists(fun t ->
-                                            let t = t |> List.filter(fun (_,r) -> r <> "Life" && r <> "Kingdom")
-                                            not (Set.intersect (Set.ofList t) (Set.ofList thisTree)).IsEmpty))
+                                        // Is the taxonomic tree of the lower-resolution taxa overlapping with
+                                        // the tree for this taxon (higher resolution taxa).
+                                        b |> List.exists(fun bt ->                                        
+                                            let thisTruncate = thisTree |> List.truncate bt.Length
+                                            bt = thisTruncate
+                                        )
+                                    )
 
-                                if fst thisTaxon = "Caryophyllaceae" && tsId.AsString.Contains "f2c05308-7e21-4516-8d8f-a0c1e9295e59" then
-                                    printfn "%s exact: %A" (fst thisTaxon) (exactMorphotypeMatches |> List.map Triple.fst)
-                                    printfn "%s lower: %A" (fst thisTaxon) (childrenMatches |> List.map Triple.fst)
-                                    printfn "%s upper: %A" (fst thisTaxon) (parentMatches |> List.map Triple.fst)
-                                    System.Console.ReadLine() |> ignore
+                                // if fst thisTaxon = "Life" && tsId.AsString.Contains "f2c05308-7e21-4516-8d8f-a0c1e9295e59" then                        
+                                //     printfn "%s exact: %A" (fst thisTaxon) (exactMorphotypeMatches |> List.map Triple.fst)
+                                //     printfn "%s higher-resolution morphotypes: %A" (fst thisTaxon) (childrenMatches |> List.map Triple.fst)
+                                //     printfn "%s lower-resolution morphotypes: %A" (fst thisTaxon) (parentMatches |> List.map Triple.fst)
+                                //     System.Console.ReadLine() |> ignore
                                 
                                 // Earliest occurrences are nan if 
                                 let earliestOccurrence =
@@ -882,21 +898,21 @@ let calculateBiodiversityVariables graph =
                                     match exactMorphotypeMatches |> Seq.map Triple.snd |> Seq.distinct |> Seq.length with
                                     | 1 -> true, Triple.snd exactMorphotypeMatches.Head, "high-confidence"
                                     | _ ->
+                                        // Is this correct? What about if absent?
+                                        // If all possibilities are within i.e. this genus, should be high-confidence?
                                         if exactMorphotypeMatches |> Seq.map Triple.snd |> Seq.contains Present
                                         then true, Present, "medium-confidence"
                                         else true, BorderlinePresent, "medium-confidence"
                                 | 0, 0, 0 -> false, Unknown, "unknown"
                                 | 0, 1, _ -> false, Triple.snd childrenMatches.Head, "high-confidence"
                                 | _, _, 1 -> false, Triple.snd parentMatches.Head, "low-confidence"
-                                | _, _, 0 ->
-                                    // No matches exactly, but matches at lower ranks.
-                                    match childrenMatches |> Seq.distinct |> Seq.length with
-                                    | 1 -> false, Triple.snd exactMorphotypeMatches.Head, "high-confidence"
-                                    | _ -> false, Unknown, "unknown"
+                                | _, children, 0 when children > 0 ->
+                                    let mergedPresence = childrenMatches |> Seq.map(fun (_,p,_) -> p) |> mergePresence
+                                    false, mergedPresence, "high-confidence"
                                 | _, _, _ ->
-                                    // No matches exactly, but matches at upper ranks.
+                                    // Matches occur at lower-resolution than this taxon.
                                     match childrenMatches |> Seq.distinct |> Seq.length with
-                                    | 1 -> false, Triple.snd exactMorphotypeMatches.Head, "low-confidence"
+                                    | 1 -> false, Triple.snd exactMorphotypeMatches.Head, "low-confidence--child-match"
                                     | _ -> false, Unknown, "unknown"
 
                         )
