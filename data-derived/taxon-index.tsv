@@ -2,21 +2,30 @@ taxon	rank	taxonomic_tree
 Lycopodiopsida	Class	Plantae > Lycopodiophyta > Lycopodiopsida
 Pinopsida	Class	Plantae > Pinophyta > Pinopsida
 Polypodiopsida	Class	Plantae > Polypodiophyta > Polypodiopsida
+Sphagnopsida	Class	Plantae > Bryophyta > Sphagnopsida
 Asteraceae	Family	Plantae > Angiosperms > Asterales > Asteraceae
 Betulaceae	Family	Plantae > Angiosperms > Fagales > Betulaceae
 Brassicaceae	Family	Plantae > Angiosperms > Brassicales > Brassicaceae
 Campanulaceae	Family	Plantae > Angiosperms > Asterales > Campanulaceae
 Caryophyllaceae	Family	Plantae > Angiosperms > Caryophyllales > Caryophyllaceae
+Crassulaceae	Family	Plantae > Angiosperms > Saxifragales > Crassulaceae
 Cruciferae	Family	Plantae > Cruciferae
 Cupressaceae	Family	Plantae > Pinophyta > Pinopsida > Cupressales > Cupressaceae
 Cyperaceae	Family	Plantae > Angiosperms > Poales > Cyperaceae
+Cystopteridaceae	Family	Plantae > Polypodiophyta > Polypodiopsida > Polypodiales > Cystopteridaceae
+Equisetaceae	Family	Plantae > Polypodiophyta > Polypodiopsida > Equisetales > Equisetaceae
 Ericaceae	Family	Plantae > Angiosperms > Ericales > Ericaceae
 Juncaceae	Family	Plantae > Angiosperms > Poales > Juncaceae
+Lamiaceae	Family	Plantae > Angiosperms > Lamiales > Lamiaceae
 Liguiflorae	Family	Plantae > Liguiflorae
 Lycopodiaceae	Family	Plantae > Lycopodiophyta > Lycopodiopsida > Lycopodiales > Lycopodiaceae
+Montiaceae	Family	Plantae > Angiosperms > Caryophyllales > Montiaceae
 Onagraceae	Family	Plantae > Angiosperms > Myrtales > Onagraceae
 Ophioglossaceae	Family	Plantae > Polypodiophyta > Polypodiopsida > Ophioglossales > Ophioglossaceae
 Orobanchaceae	Family	Plantae > Angiosperms > Lamiales > Orobanchaceae
+Papaveraceae	Family	Plantae > Angiosperms > Ranunculales > Papaveraceae
+Plantaginaceae	Family	Plantae > Angiosperms > Lamiales > Plantaginaceae
+Plumbaginaceae	Family	Plantae > Angiosperms > Caryophyllales > Plumbaginaceae
 Poaceae	Family	Plantae > Angiosperms > Poales > Poaceae
 Polygonaceae	Family	Plantae > Angiosperms > Caryophyllales > Polygonaceae
 Polypodiaceae	Family	Plantae > Polypodiophyta > Polypodiopsida > Polypodiales > Polypodiaceae
@@ -26,44 +35,69 @@ Rosaceae	Family	Plantae > Angiosperms > Rosales > Rosaceae
 Rubiaceae	Family	Plantae > Angiosperms > Gentianales > Rubiaceae
 Salicaceae	Family	Plantae > Angiosperms > Malpighiales > Salicaceae
 Saxifragaceae	Family	Plantae > Angiosperms > Saxifragales > Saxifragaceae
+Sphagnaceae	Family	Plantae > Bryophyta > Sphagnopsida > Sphagnales > Sphagnaceae
 Tofieldiaceae	Family	Plantae > Angiosperms > Alismatales > Tofieldiaceae
+Woodsiaceae	Family	Plantae > Polypodiophyta > Polypodiopsida > Polypodiales > Woodsiaceae
 Alchemilla	Genus	Plantae > Angiosperms > Rosales > Rosaceae > Alchemilla
 Alnus	Genus	Plantae > Angiosperms > Fagales > Betulaceae > Alnus
+Arctostaphylos	Genus	Plantae > Angiosperms > Ericales > Ericaceae > Arbutoideae > Arctostaphylos
+Armeria	Genus	Plantae > Angiosperms > Caryophyllales > Plumbaginaceae > Limonieae > Armeria
 Artemisia	Genus	Plantae > Angiosperms > Asterales > Asteraceae > Asteroideae > Anthemideae > Artemisia
 Bartsia	Genus	
 Betula	Genus	Plantae > Angiosperms > Fagales > Betulaceae > Betula
+Bortychium	Genus	Plantae > Bortychium
 Botrychium	Genus	Plantae > Polypodiophyta > Polypodiopsida > Ophioglossales > Ophioglossaceae > Botrychioideae > Botrychium
 Campanula	Genus	Plantae > Angiosperms > Asterales > Campanulaceae > Campanula
 Carex	Genus	Plantae > Angiosperms > Poales > Cyperaceae > Carex
 Cassiope	Genus	Plantae > Angiosperms > Ericales > Ericaceae > Cassiopoideae > Cassiope
 Chamaenerion	Genus	Plantae > Angiosperms > Myrtales > Onagraceae > Chamaenerion
+Chenopodiaceae	Genus	Plantae > Chenopodiaceae
 Comarum	Genus	Plantae > Angiosperms > Rosales > Rosaceae > Comarum
+Diphasium	Genus	Plantae > Lycopodiophyta > Lycopodiopsida > Lycopodiales > Lycopodiaceae > Lycopodioideae > Diphasium
 Draba	Genus	Plantae > Angiosperms > Brassicales > Brassicaceae > Brassicoideae > Arabideae > Draba
 Dryas	Genus	Plantae > Angiosperms > Rosales > Rosaceae > Dryas
+Empetrum	Genus	Plantae > Angiosperms > Ericales > Ericaceae > Ericoideae > Empetrum
+Epilobium	Genus	Plantae > Angiosperms > Myrtales > Onagraceae > Epilobium
+Equisetum	Genus	Plantae > Polypodiophyta > Polypodiopsida > Equisetales > Equisetaceae > Equisetum
 Euphrasia	Genus	
 Galium	Genus	Plantae > Angiosperms > Gentianales > Rubiaceae > Galium
 Gramineae	Genus	Plantae > Gramineae
-Hippuris	Genus	Plantae > Angiosperms > Lamiales > Hippuris
+Gymnocarpium	Genus	Plantae > Polypodiophyta > Polypodiopsida > Polypodiales > Cystopteridaceae > Gymnocarpium
+Harrimanella	Genus	Plantae > Angiosperms > Ericales > Ericaceae > Harrimanelloideae > Harrimanella
+Hippuris	Genus	Plantae > Angiosperms > Lamiales > Plantaginaceae > Hippuris
+Huperzia	Genus	Plantae > Lycopodiophyta > Lycopodiopsida > Lycopodiales > Lycopodiaceae > Huperzioideae > Huperzia
 Juncus	Genus	Plantae > Angiosperms > Poales > Juncaceae > Juncus
 Juniperus	Genus	Plantae > Pinophyta > Pinopsida > Cupressales > Cupressaceae > Juniperus
 Koenigia	Genus	Plantae > Angiosperms > Caryophyllales > Polygonaceae > Koenigia
+Ledum	Genus	Plantae > Angiosperms > Ericales > Ericaceae > Ledum
+Liguliflorae	Genus	Plantae > Liguliflorae
 Luzula	Genus	Plantae > Angiosperms > Poales > Juncaceae > Luzula
 Lycopodium	Genus	Plantae > Lycopodiophyta > Lycopodiopsida > Lycopodiales > Lycopodiaceae > Lycopodioideae > Lycopodium
+Minuartia	Genus	Plantae > Angiosperms > Caryophyllales > Caryophyllaceae > Minuartia
+Montia	Genus	Plantae > Angiosperms > Caryophyllales > Montiaceae > Montia
 Oxyria	Genus	Plantae > Angiosperms > Caryophyllales > Polygonaceae > Oxyria
+Papaver	Genus	Plantae > Angiosperms > Ranunculales > Papaveraceae > Papaveroideae > Papavereae > Papaver
+Pedicularis	Genus	Plantae > Angiosperms > Lamiales > Orobanchaceae > Pedicularis
 Pedicuralis	Genus	Plantae > Pedicuralis
-Phyllodoce	Genus	Plantae > Phyllodoce
+Phyllodoce	Genus	Plantae > Angiosperms > Ericales > Ericaceae > Ericoideae > Phyllodoce
 Poa	Genus	Plantae > Angiosperms > Poales > Poaceae > Poa
+Polygonum	Genus	Plantae > Angiosperms > Caryophyllales > Polygonaceae > Polygonum
 Potamogeton	Genus	Plantae > Angiosperms > Alismatales > Potamogetonaceae > Potamogeton
 Potentilla	Genus	Plantae > Angiosperms > Rosales > Rosaceae > Potentilla
 Ranunculus	Genus	Plantae > Angiosperms > Ranunculales > Ranunculaceae > Ranunculus
 Rhinanthus	Genus	Plantae > Angiosperms > Lamiales > Orobanchaceae > Rhinanthus
 Rumex	Genus	Plantae > Angiosperms > Caryophyllales > Polygonaceae > Rumex
+Sagina	Genus	Plantae > Angiosperms > Caryophyllales > Caryophyllaceae > Sagina
 Salix	Genus	Plantae > Angiosperms > Malpighiales > Salicaceae > Salix
 Saxifraga	Genus	Plantae > Angiosperms > Saxifragales > Saxifragaceae > Saxifraga
+Sedum	Genus	Plantae > Angiosperms > Saxifragales > Crassulaceae > Sedum
 Silene	Genus	Plantae > Angiosperms > Caryophyllales > Caryophyllaceae > Silene
+Sphagnum	Genus	Plantae > Bryophyta > Sphagnopsida > Sphagnales > Sphagnaceae > Sphagnum
 Thalictrum	Genus	Plantae > Angiosperms > Ranunculales > Ranunculaceae > Thalictrum
+Thymus	Genus	Plantae > Angiosperms > Lamiales > Lamiaceae > Thymus
 Tofieldia	Genus	Plantae > Angiosperms > Alismatales > Tofieldiaceae > Tofieldia
 Vaccinium	Genus	Plantae > Angiosperms > Ericales > Ericaceae > Vaccinioideae > Vaccinium
+Woodsia	Genus	Plantae > Polypodiophyta > Polypodiopsida > Polypodiales > Woodsiaceae > Woodsia
 Plantae	Kingdom	Plantae
 Problematic (Placeholder)	Kingdom	Problematic (Placeholder)
 Unknown (not yet coded)	Kingdom	
@@ -73,6 +107,7 @@ Asterales	Order	Plantae > Angiosperms > Asterales
 Brassicales	Order	Plantae > Angiosperms > Brassicales
 Caryophyllales	Order	Plantae > Angiosperms > Caryophyllales
 Cupressales	Order	Plantae > Pinophyta > Pinopsida > Cupressales
+Equisetales	Order	Plantae > Polypodiophyta > Polypodiopsida > Equisetales
 Ericales	Order	Plantae > Angiosperms > Ericales
 Fagales	Order	Plantae > Angiosperms > Fagales
 Gentianales	Order	Plantae > Angiosperms > Gentianales
@@ -86,65 +121,109 @@ Polypodiales	Order	Plantae > Polypodiophyta > Polypodiopsida > Polypodiales
 Ranunculales	Order	Plantae > Angiosperms > Ranunculales
 Rosales	Order	Plantae > Angiosperms > Rosales
 Saxifragales	Order	Plantae > Angiosperms > Saxifragales
+Sphagnales	Order	Plantae > Bryophyta > Sphagnopsida > Sphagnales
 Angiosperms	Phylum	Plantae > Angiosperms
+Bryophyta	Phylum	Plantae > Bryophyta
 Lycopodiophyta	Phylum	Plantae > Lycopodiophyta
 Pinophyta	Phylum	Plantae > Pinophyta
 Polypodiophyta	Phylum	Plantae > Polypodiophyta
 Alchemilla alpina L.	Species	Plantae > Angiosperms > Rosales > Rosaceae > Alchemilla > Alchemilla alpina L.
-Arctostaphylos alpina (L.) Spreng.	Species	Plantae > Arctostaphylos alpina (L.) Spreng.
+Alnus crispa (Ait.) Pursh	Species	Plantae > Angiosperms > Fagales > Betulaceae > Alnus > Alnus crispa (Ait.) Pursh
+Alopecurus alpinus L.	Species	Plantae > Alopecurus alpinus L.
+Arctostaphylos alpina (L.) Spreng.	Species	Plantae > Angiosperms > Ericales > Ericaceae > Arbutoideae > Arctostaphylos > Arctostaphylos alpina (L.) Spreng.
 Betula nana L.	Species	Plantae > Angiosperms > Fagales > Betulaceae > Betula > Betula nana L.
+Campanula uniflora L.	Species	Plantae > Angiosperms > Asterales > Campanulaceae > Campanula > Campanula uniflora L.
 Carex bigelowii Torr.	Species	Plantae > Carex bigelowii Torr.
 Carex brunescens (Pers.) Poir.	Species	Plantae > Carex brunescens (Pers.) Poir.
 Carex capillaris L.	Species	Plantae > Angiosperms > Poales > Cyperaceae > Carex > Carex capillaris L.
 Carex gynocrates Wormsk.	Species	Plantae > Angiosperms > Poales > Cyperaceae > Carex > Carex gynocrates Wormsk.
-Carex lachenalii Schkuhr.	Species	Plantae > Carex lachenalii Schkuhr.
+Carex lachenalii Schkuhr.	Species	Plantae > Angiosperms > Poales > Cyperaceae > Carex > Carex lachenalii Schkuhr.
+Carex misandra R.Br.	Species	Plantae > Angiosperms > Poales > Cyperaceae > Carex > Carex misandra R.Br.
+Carex nardina Fr.	Species	Plantae > Angiosperms > Poales > Cyperaceae > Carex > Carex nardina Fr.
 Carex norvegica L.	Species	Plantae > Carex norvegica L.
 Carex rufina Drej.	Species	Plantae > Carex rufina Drej.
-Cassiope tetragona (L.) D.Don	Species	Plantae > Angiosperms > Ericales > Ericaceae > Cassiopoideae > Cassiope > Cassiope tetragona (L.) D.Don
+Cassiope tetragona (L.) D. Don.	Species	Plantae > Angiosperms > Ericales > Ericaceae > Cassiopoideae > Cassiope > Cassiope tetragona (L.) D. Don.
 Cerastium alpinum L.	Species	
+Cerastium arcticum Lge.	Species	Plantae > Cerastium arcticum Lge.
 Cerastium fontanum Baumg.	Species	
 Chamaenerion latifolium (L.) Th. Fries & Lge.	Species	Plantae > Chamaenerion latifolium (L.) Th. Fries & Lge.
 Comarum palustre L.	Species	Plantae > Angiosperms > Rosales > Rosaceae > Comarum > Comarum palustre L.
+Coptis trifolia (L.) Salisb.	Species	Plantae > Coptis trifolia (L.) Salisb.
+Diphasium alpinum (L.) Rothm.	Species	Plantae > Lycopodiophyta > Lycopodiopsida > Lycopodiales > Lycopodiaceae > Lycopodioideae > Diphasium > Diphasium alpinum (L.) Rothm.
+Diphasium complanatum (L.) Rothm.	Species	Plantae > Lycopodiophyta > Lycopodiopsida > Lycopodiales > Lycopodiaceae > Lycopodioideae > Diphasium > Diphasium complanatum (L.) Rothm.
 Dryas integrifolia M. Vahl.	Species	Plantae > Dryas integrifolia M. Vahl.
 Empetrum hermaphroditum (Hagerup) Böch.	Species	Plantae > Empetrum hermaphroditum (Hagerup) Böch.
 Empetrum nigrum (Hagerup) Böch.	Species	Plantae > Empetrum nigrum (Hagerup) Böch.
-Gymnocarpium dryopteris (L.) Newman	Species	
-Harrimanella hypnoides (L.) Coville	Species	Plantae > Harrimanella hypnoides (L.) Coville
-Hippuris vulgaris L.	Species	Plantae > Angiosperms > Lamiales > Hippuris > Hippuris vulgaris L.
-Huperzia selago (L.) Bernh. ex Schrank. & Mart.	Species	Plantae > Huperzia selago (L.) Bernh. ex Schrank. & Mart.
+Gymnocarpium dryopteris (L.) Newman	Species	Plantae > Polypodiophyta > Polypodiopsida > Polypodiales > Cystopteridaceae > Gymnocarpium > Gymnocarpium dryopteris (L.) Newman
+Harrimanella hypnoides (L.) Coville.	Species	Plantae > Angiosperms > Ericales > Ericaceae > Harrimanelloideae > Harrimanella > Harrimanella hypnoides (L.) Coville.
+Hippuris vulgaris L.	Species	Plantae > Angiosperms > Lamiales > Plantaginaceae > Hippuris > Hippuris vulgaris L.
+Huperzia selago (L.) Bernh. ex Schrank. & Mart.	Species	Plantae > Lycopodiophyta > Lycopodiopsida > Lycopodiales > Lycopodiaceae > Huperzioideae > Huperzia > Huperzia selago (L.) Bernh. ex Schrank. & Mart.
 Juniperus communis L.	Species	Plantae > Pinophyta > Pinopsida > Cupressales > Cupressaceae > Juniperus > Juniperus communis L.
 Koenigia islandica L.	Species	Plantae > Angiosperms > Caryophyllales > Polygonaceae > Koenigia > Koenigia islandica L.
+Loiseleuria procumbens (L.) Desv.	Species	Plantae > Loiseleuria procumbens (L.) Desv.
 Lycopodium clavatum L.	Species	Plantae > Lycopodiophyta > Lycopodiopsida > Lycopodiales > Lycopodiaceae > Lycopodioideae > Lycopodium > Lycopodium clavatum L.
+Lycopodium dubium Zoega.	Species	Plantae > Lycopodium dubium Zoega.
+Minuartia groenlandica Retz.	Species	Plantae > Minuartia groenlandica Retz.
+Minuartia rubella (Wbg.) Hiern.	Species	Plantae > Minuartia rubella (Wbg.) Hiern.
+Minuartia stricta (Sw). Hiern.	Species	Plantae > Angiosperms > Caryophyllales > Caryophyllaceae > Minuartia > Minuartia stricta (Sw). Hiern.
 Minuratia rubella (Wbg.) Hiern.	Species	Plantae > Minuratia rubella (Wbg.) Hiern.
+Montia fontana L.	Species	Plantae > Angiosperms > Caryophyllales > Montiaceae > Montia > Montia fontana L.
+Oxyria digyna (L.) Hill	Species	Plantae > Angiosperms > Caryophyllales > Polygonaceae > Oxyria > Oxyria digyna (L.) Hill
+Papaver radicatum Rottb.	Species	Plantae > Angiosperms > Ranunculales > Papaveraceae > Papaveroideae > Papavereae > Papaver > Papaver radicatum Rottb.
 Phippsia algida (Sol.) R. Br.	Species	Plantae > Phippsia algida (Sol.) R. Br.
+Phyllodoce coerulea (L.) Bab.	Species	Plantae > Phyllodoce coerulea (L.) Bab.
 Phyllodoce corerulea (L.) Bab.	Species	Plantae > Phyllodoce corerulea (L.) Bab.
-Polygonum viviparum L.	Species	Plantae > Polygonum viviparum L.
+Polygonum viviparum L.	Species	Plantae > Angiosperms > Caryophyllales > Polygonaceae > Polygonum > Polygonum viviparum L.
 Potamogeton pusillus L.	Species	Plantae > Angiosperms > Alismatales > Potamogetonaceae > Potamogeton > Potamogeton pusillus L.
+Potentilla anserina L.	Species	Plantae > Angiosperms > Rosales > Rosaceae > Potentilla > Potentilla anserina L.
+Potentilla crantzii (Cr.) G. Beck	Species	Plantae > Potentilla crantzii (Cr.) G. Beck
+Potentilla egedii Wormsk.	Species	Plantae > Potentilla egedii Wormsk.
 Potentilla hookeriana Lehm.	Species	
 Potentilla hyparctica Malte	Species	
 Potentilla nivea L.	Species	
+Potentilla pulchella R. Br.	Species	Plantae > Potentilla pulchella R. Br.
+Potentilla tridentata Ait.	Species	Plantae > Potentilla tridentata Ait.
 Ranunculus confervoides (Fr.) Asch. & Graebn.	Species	Plantae > Ranunculus confervoides (Fr.) Asch. & Graebn.
 Ranunculus hyperboreus Rottb.	Species	Plantae > Angiosperms > Ranunculales > Ranunculaceae > Ranunculus > Ranunculus hyperboreus Rottb.
 Rhododendron lapponicum (L.) Wbg.	Species	Plantae > Rhododendron lapponicum (L.) Wbg.
 Rumex acetosella L.	Species	Plantae > Angiosperms > Caryophyllales > Polygonaceae > Rumex > Rumex acetosella L.
+Salix arctica (Pall.)	Species	Plantae > Angiosperms > Malpighiales > Salicaceae > Salix > Salix arctica (Pall.)
 Salix herbacea L.	Species	Plantae > Angiosperms > Malpighiales > Salicaceae > Salix > Salix herbacea L.
 Saxifraga aizoides L.	Species	
+Saxifraga caespitosa L.	Species	Plantae > Saxifraga caespitosa L.
+Saxifraga cernua L.	Species	Plantae > Angiosperms > Saxifragales > Saxifragaceae > Saxifraga > Saxifraga cernua L.
+Saxifraga flagellaris Willd.	Species	Plantae > Saxifraga flagellaris Willd.
 Saxifraga hieraciifolia W. & K.	Species	Plantae > Saxifraga hieraciifolia W. & K.
+Saxifraga hirculus L.	Species	Plantae > Angiosperms > Saxifragales > Saxifragaceae > Saxifraga > Saxifraga hirculus L.
+Saxifraga hyperborea R. Br.	Species	Plantae > Saxifraga hyperborea R. Br.
 Saxifraga nivalis L.	Species	Plantae > Angiosperms > Saxifragales > Saxifragaceae > Saxifraga > Saxifraga nivalis L.
 Saxifraga oppositifolia L.	Species	Plantae > Angiosperms > Saxifragales > Saxifragaceae > Saxifraga > Saxifraga oppositifolia L.
 Saxifraga paniculata Mill.	Species	
+Saxifraga rivularis L.	Species	Plantae > Angiosperms > Saxifragales > Saxifragaceae > Saxifraga > Saxifraga rivularis L.
 Saxifraga tenuis (Wbg.) H. Sm.	Species	Plantae > Saxifraga tenuis (Wbg.) H. Sm.
 Saxifraga tricuspidata Rottb.	Species	
+Selaginella selaginoides (L.) Link.	Species	Plantae > Selaginella selaginoides (L.) Link.
 Sibbaldia procumbens L.	Species	
 Silene acaulis (L.) Jacq.	Species	Plantae > Angiosperms > Caryophyllales > Caryophyllaceae > Silene > Silene acaulis (L.) Jacq.
+Stellaria calycantha (Led.) Bong.	Species	Plantae > Stellaria calycantha (Led.) Bong.
 Stellaria longipes Goldie	Species	
 Thalictrum alpinum L.	Species	Plantae > Angiosperms > Ranunculales > Ranunculaceae > Thalictrum > Thalictrum alpinum L.
+Thymus praecox Opiz	Species	Plantae > Angiosperms > Lamiales > Lamiaceae > Thymus > Thymus praecox Opiz
 Vaccinium uliginosum L.	Species	Plantae > Angiosperms > Ericales > Ericaceae > Vaccinioideae > Vaccinium > Vaccinium uliginosum L.
+Arbutoideae	Subfamily	Plantae > Angiosperms > Ericales > Ericaceae > Arbutoideae
 Asteroideae	Subfamily	Plantae > Angiosperms > Asterales > Asteraceae > Asteroideae
 Botrychioideae	Subfamily	Plantae > Polypodiophyta > Polypodiopsida > Ophioglossales > Ophioglossaceae > Botrychioideae
 Brassicoideae	Subfamily	Plantae > Angiosperms > Brassicales > Brassicaceae > Brassicoideae
 Cassiopoideae	Subfamily	Plantae > Angiosperms > Ericales > Ericaceae > Cassiopoideae
+Ericoideae	Subfamily	Plantae > Angiosperms > Ericales > Ericaceae > Ericoideae
+Harrimanelloideae	Subfamily	Plantae > Angiosperms > Ericales > Ericaceae > Harrimanelloideae
+Huperzioideae	Subfamily	Plantae > Lycopodiophyta > Lycopodiopsida > Lycopodiales > Lycopodiaceae > Huperzioideae
 Lycopodioideae	Subfamily	Plantae > Lycopodiophyta > Lycopodiopsida > Lycopodiales > Lycopodiaceae > Lycopodioideae
+Papaveroideae	Subfamily	Plantae > Angiosperms > Ranunculales > Papaveraceae > Papaveroideae
 Vaccinioideae	Subfamily	Plantae > Angiosperms > Ericales > Ericaceae > Vaccinioideae
+Armeria scabra ssp. sibirica (Turcz.) Hyl.	Subspecies	Plantae > Armeria scabra ssp. sibirica (Turcz.) Hyl.
+Cystopteris fragilis ssp. dickieana (Sim.) Hyl.	Subspecies	Plantae > Cystopteris fragilis ssp. dickieana (Sim.) Hyl.
 Anthemideae	Tribe	Plantae > Angiosperms > Asterales > Asteraceae > Asteroideae > Anthemideae
 Arabideae	Tribe	Plantae > Angiosperms > Brassicales > Brassicaceae > Brassicoideae > Arabideae
+Limonieae	Tribe	Plantae > Angiosperms > Caryophyllales > Plumbaginaceae > Limonieae
+Papavereae	Tribe	Plantae > Angiosperms > Ranunculales > Papaveraceae > Papaveroideae > Papavereae

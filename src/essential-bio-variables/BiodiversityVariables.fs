@@ -425,12 +425,26 @@ module Spatial =
                 if point.Intersects(next.GetGeometryRef())
                 then Some (next.GetFieldAsString("id"))
                 else tryFindIntersectId layer point
-        
+
+        let rec nearest (layer:Layer) (point:Geometry) distances =
+            let next = layer.GetNextFeature()
+            if isNull next then Some (distances |> Seq.minBy snd |> fst)
+            else
+                let nextGeo = next.GetGeometryRef()
+                let dist = point.Distance(next.GetGeometryRef())
+                nearest layer point ((next.GetFieldAsString("id"), dist) :: distances)
+
         fun lat lon ->
             let coord = sprintf "POINT (%f %f)" lon lat
             let testPoint = Ogr.CreateGeometryFromWkt(ref coord, crs)
             layer.ResetReading()
-            tryFindIntersectId layer testPoint
+            match tryFindIntersectId layer testPoint with
+            | Some c -> Some c
+            | None ->
+                printfn "Could not find intersect with polygon layer. Using closest feature."
+                layer.ResetReading()
+                nearest layer testPoint []
+
 
 /// Contains access to the pan-arctic flora for calculating
 /// species richness etc.
@@ -490,14 +504,21 @@ module PanArcticFlora =
         { Taxon: string; Family: string; Genus: string; Species: string; IsLowerRankThanSpecies: bool; Presence: Presence }
 
     // Number of species, genera in local neo-environment.
-    let taxaPresence floristicRegion subzone =
-        flora.Rows
-        |> Seq.map(fun r ->
-            let inRegion = presenceInFloristicRegion r floristicRegion
-            let inSubzone = presenceInSubzone r subzone |> asPresence
-            { Taxon = r.TaxonOriginal; Family = r.Family; Genus = r.Genus; Species = r.Species; IsLowerRankThanSpecies = r.Subunit |> Option.isSome; Presence = limitPresence inRegion inSubzone }
-        )
-        |> Seq.toList
+    let taxaPresence =
+        let mutable cache : Map<string * int, list<TaxonResult>> = Map.empty
+        fun floristicRegion subzone ->
+            if cache.ContainsKey (floristicRegion, subzone) then cache |> Map.find (floristicRegion, subzone)
+            else
+                let result = 
+                    flora.Rows
+                    |> Seq.map(fun r ->
+                        let inRegion = presenceInFloristicRegion r floristicRegion
+                        let inSubzone = presenceInSubzone r subzone |> asPresence
+                        { Taxon = r.TaxonOriginal; Family = r.Family; Genus = r.Genus; Species = r.Species; IsLowerRankThanSpecies = r.Subunit |> Option.isSome; Presence = limitPresence inRegion inSubzone }
+                    )
+                    |> Seq.toList
+                cache <- Map.add (floristicRegion, subzone) result cache
+                result
     
     let familyRichness (familyName:string) (taxa: TaxonResult list) =
         taxa 
@@ -634,7 +655,7 @@ let calculateBiodiversityVariables graph =
                                 taxonomicTree = taxonTree,
                                 taxonAmbiguousWith = (othersInMorphotype |> String.concat ";"),
                                 variable = "pollen",
-                                variableUnit = "percentage",
+                                variableUnit = sprintf "%A" digitisedData.Units,
                                 variableValue = x.Value,
                                 variableCi = None,
                                 variableConfidenceQualitative = None )
@@ -656,7 +677,7 @@ let calculateBiodiversityVariables graph =
         /// For a given metric at a particular time,
         /// determine a qualitative category of possible presence.
         let presenceClass (lookupDimension: string -> float option) (proxyGroup:option<BioticProxyCategoryNode>) (metric:Datasets.Metric) (units:Datasets.MetricUnit) values =
-            
+
             let unspecifiedMode =
                 proxyGroup |> Option.map(fun p ->
                     match p with
@@ -718,7 +739,9 @@ let calculateBiodiversityVariables graph =
             | Datasets.MetricUnit.Count -> if Seq.max values > 0 then Present else unspecifiedMode
             | Datasets.MetricUnit.OtherUnit u ->
                 match u.Value with
-                | "grains per mg of dry sediment" -> Unknown
+                | "grains per mg of dry sediment" ->
+                    printfn "[Warn] Incomplete method for pollen concentration data. Assuming >0 = presence."
+                    if Seq.max values > 0 then Present else unspecifiedMode
                 | _ ->
                     printfn "Unknown unit: %s" u.Value
                     Unknown
@@ -755,129 +778,160 @@ let calculateBiodiversityVariables graph =
 
         // Earliest occurrence date, is exact match, presence
         let presenceInBin =
-            newAges |> List.collect(fun (tsId, ageDepth, taxonLookup, _, digitisedData, proxyGroup) ->
-                
+            newAges 
+            |> List.groupBy(fun (tsId,_,_,_,_,_) -> tsId)
+            |> List.collect(fun (tsId,datasetItems) ->
+
                 timeBins
                 |> List.collect(fun (binLate, binEarly) ->
 
                     let binEarly = float binEarly * 1.<OldDate.calYearBP>
                     let binLate = float binLate * 1.<OldDate.calYearBP>
                     
-                    // Find the presence category for each morphotype
-                    // present within the time window.
-                    let binTaxaByPresenceCategory =
-                        ageDepth
-                        |> Map.filter (fun k _ -> overlapsBin binEarly binLate k)
-                        |> Map.toList
-                        |> Seq.collect (fun (d,m) ->
-                            m |> Seq.toList |> Seq.map(fun kv -> d,kv,m))
-                        |> Seq.groupBy(fun (_,t,_) -> t.Key)
-                        |> Seq.map(fun (taxon,g) ->
+                    let botanicalPresencePerDataset =
+                        datasetItems 
+                        |> List.collect(fun (_, ageDepth, taxonLookup, _, digitisedData, proxyGroup) ->
                             
-                            // For plant macrofossil, if data is for any part (any) the morphotype
-                            // in the database is just named as the taxon name. If a specific part, this
-                            // is specified in brackets e.g. Carex sp. (leaves)
-                            let taxon =
-                                proxyGroup |> Option.map(fun p ->
-                                    if p = (Microfossil PlantMacrofossil) then taxon.Replace(" (any)", "")
-                                    else taxon )
-                                |> Option.defaultValue taxon
+                            // Find the presence category for each morphotype
+                            // present within the time window.
+                            let binTaxaByPresenceCategory =
+                                ageDepth
+                                |> Map.filter (fun k _ -> overlapsBin binEarly binLate k)
+                                |> Map.toList
+                                |> Seq.collect (fun (d,m) ->
+                                    m |> Seq.toList |> Seq.map(fun kv -> d,kv,m))
+                                |> Seq.groupBy(fun (_,t,_) -> t.Key)
+                                |> Seq.map(fun (taxon,g) ->
+                                    
+                                    // For plant macrofossil, if data is for any part (any) the morphotype
+                                    // in the database is just named as the taxon name. If a specific part, this
+                                    // is specified in brackets e.g. Carex sp. (leaves)
+                                    let taxon =
+                                        proxyGroup |> Option.map(fun p ->
+                                            if p = (Microfossil PlantMacrofossil) then taxon.Replace(" (any)", "")
+                                            else taxon )
+                                        |> Option.defaultValue taxon
 
-                            // All data are using same metric and unit, as within single timeline / digitised dataset.
-                            let dataValues = g |> Seq.map Triple.snd |> Seq.map(fun kv -> kv.Value)
+                                    // All data are using same metric and unit, as within single timeline / digitised dataset.
+                                    let dataValues = g |> Seq.map Triple.snd |> Seq.map(fun kv -> kv.Value)
 
-                            // Allow lookup of additional dimensions that may be required
-                            // e.g. pollen sum (for percentage pollen data)
-                            let tryFindDimension dim = g |> Seq.head |> Triple.thd |> Map.tryFind dim
-                            let presences = g |> Seq.filter(fun (_,g,_) -> isPresent tryFindDimension proxyGroup digitisedData.Metric digitisedData.Units g.Value)
-                        
-                            let earliestDatePresent = 
-                                if presences |> Seq.isEmpty
-                                then None
-                                else presences |> Seq.map(fun d -> (Triple.fst d).Date) |> Seq.max |> Some
+                                    // Allow lookup of additional dimensions that may be required
+                                    // e.g. pollen sum (for percentage pollen data)
+                                    let tryFindDimension dim = g |> Seq.head |> Triple.thd |> Map.tryFind dim
+                                    let presences = g |> Seq.filter(fun (_,g,_) -> isPresent tryFindDimension proxyGroup digitisedData.Metric digitisedData.Units g.Value)
+                                
+                                    let earliestDatePresent = 
+                                        if presences |> Seq.isEmpty
+                                        then None
+                                        else presences |> Seq.map(fun d -> (Triple.fst d).Date) |> Seq.max |> Some
 
-                            let realTaxon = taxaOrDefault taxonLookup taxon
-                            let present = presenceClass tryFindDimension proxyGroup digitisedData.Metric digitisedData.Units dataValues
+                                    let realTaxon = taxaOrDefault taxonLookup taxon
+                                    let present = presenceClass tryFindDimension proxyGroup digitisedData.Metric digitisedData.Units dataValues
 
-                            // if taxon.Contains "Carex" then
-                            //     printfn "For %s in %s (%A), %A" taxon tsId.AsString proxyGroup presences
-                            //     printfn "Presences are %A" (presences |> Seq.toList)
-                            //     printfn "Real taxon is %A" realTaxon
-                            //     printfn "Present? %A" present
-                            //     System.Console.ReadLine() |> ignore
+                                    realTaxon, present, earliestDatePresent )
+                                |> Seq.toList
 
-                            realTaxon, present, earliestDatePresent )
-                        |> Seq.toList
+                            masterTaxonList
+                            |> List.map(fun thisTree ->
 
-                    let forBotanicalTaxa =
-                        masterTaxonList
-                        |> List.map(fun thisTree ->
+                                let thisTaxon = thisTree |> Seq.last
 
-                            let thisTaxon = thisTree |> Seq.last
+                                // Exact matches
+                                let exactMorphotypeMatches =
+                                    binTaxaByPresenceCategory
+                                    |> List.filter(fun (taxa,c,_) ->
+                                        taxa |> List.exists(fun t -> t |> Seq.last = thisTaxon))
 
-                            // Exact matches
-                            let exactMorphotypeMatches =
-                                binTaxaByPresenceCategory
-                                |> List.filter(fun (taxa,c,_) ->
-                                    taxa |> List.exists(fun t -> t |> Seq.last = thisTaxon))
+                                // Matches to lower-rank morphotype links (e.g. matched Pinaceae to Pinus sp. pollen)
+                                let childrenMatches =
+                                    binTaxaByPresenceCategory
+                                    |> List.filter(fun (taxa,c,_) ->
+                                        taxa |> List.exists(fun t -> t |> Seq.contains thisTaxon))
 
-                            // Matches to lower-rank morphotype links (e.g. matched Pinaceae to Pinus sp. pollen)
-                            let childrenMatches =
-                                binTaxaByPresenceCategory
-                                |> List.filter(fun (taxa,c,_) ->
-                                    taxa |> List.exists(fun t -> t |> Seq.contains thisTaxon))
+                                // Matches at higher levels (e.g if this is J. communis and there is a pollen type for Juniper).
+                                // NB could state uncertainty as distance between ranks, or ... ?
+                                let parentMatches =
+                                    binTaxaByPresenceCategory
+                                    |> List.filter(fun (b,c,_) ->
+                                        b |> List.exists(fun t ->
+                                            let t = t |> List.filter(fun (_,r) -> r <> "Life" && r <> "Kingdom")
+                                            not (Set.intersect (Set.ofList t) (Set.ofList thisTree)).IsEmpty))
 
-                            // Matches at higher levels (e.g if this is J. communis and there is a pollen type for Juniper).
-                            // NB could state uncertainty as distance between ranks, or ... ?
-                            let parentMatches =
-                                binTaxaByPresenceCategory
-                                |> List.filter(fun (b,c,_) ->
-                                    b |> List.exists(fun t ->
-                                        let t = t |> List.filter(fun (_,r) -> r <> "Life" && r <> "Kingdom")
-                                        not (Set.intersect (Set.ofList t) (Set.ofList thisTree)).IsEmpty))
+                                if fst thisTaxon = "Caryophyllaceae" && tsId.AsString.Contains "f2c05308-7e21-4516-8d8f-a0c1e9295e59" then
+                                    printfn "%s exact: %A" (fst thisTaxon) (exactMorphotypeMatches |> List.map Triple.fst)
+                                    printfn "%s lower: %A" (fst thisTaxon) (childrenMatches |> List.map Triple.fst)
+                                    printfn "%s upper: %A" (fst thisTaxon) (parentMatches |> List.map Triple.fst)
+                                    System.Console.ReadLine() |> ignore
+                                
+                                // Earliest occurrences are nan if 
+                                let earliestOccurrence =
+                                    let occs = 
+                                        Seq.concat [
+                                            exactMorphotypeMatches |> Seq.choose Triple.thd
+                                            childrenMatches |> Seq.choose Triple.thd
+                                            // parentMatches |> Seq.choose Triple.thd
+                                        ]
+                                    if occs |> Seq.isEmpty then None
+                                    else occs |> Seq.max |> Some
 
-                            // printfn "%s exact: %A" (fst thisTaxon) (exactMorphotypeMatches |> List.map Triple.fst)
-                            // printfn "%s lower: %A" (fst thisTaxon) (childrenMatches |> List.map Triple.fst)
-                            // printfn "%s upper: %A" (fst thisTaxon) (parentMatches |> List.map Triple.fst)
+                                thisTaxon,
+                                earliestOccurrence,
+                                match exactMorphotypeMatches.Length, childrenMatches.Length, parentMatches.Length with
+                                | 1, _, _ -> true, Triple.snd exactMorphotypeMatches.Head, "high-confidence"
+                                | i, _, _ when i > 1 ->
+                                    match exactMorphotypeMatches |> Seq.map Triple.snd |> Seq.distinct |> Seq.length with
+                                    | 1 -> true, Triple.snd exactMorphotypeMatches.Head, "high-confidence"
+                                    | _ ->
+                                        if exactMorphotypeMatches |> Seq.map Triple.snd |> Seq.contains Present
+                                        then true, Present, "medium-confidence"
+                                        else true, BorderlinePresent, "medium-confidence"
+                                | 0, 0, 0 -> false, Unknown, "unknown"
+                                | 0, 1, _ -> false, Triple.snd childrenMatches.Head, "high-confidence"
+                                | _, _, 1 -> false, Triple.snd parentMatches.Head, "low-confidence"
+                                | _, _, 0 ->
+                                    // No matches exactly, but matches at lower ranks.
+                                    match childrenMatches |> Seq.distinct |> Seq.length with
+                                    | 1 -> false, Triple.snd exactMorphotypeMatches.Head, "high-confidence"
+                                    | _ -> false, Unknown, "unknown"
+                                | _, _, _ ->
+                                    // No matches exactly, but matches at upper ranks.
+                                    match childrenMatches |> Seq.distinct |> Seq.length with
+                                    | 1 -> false, Triple.snd exactMorphotypeMatches.Head, "low-confidence"
+                                    | _ -> false, Unknown, "unknown"
 
-                            // Earliest occurrences are nan if 
-                            let earliestOccurrence =
-                                let occs = 
-                                    Seq.concat [
-                                        exactMorphotypeMatches |> Seq.choose Triple.thd
-                                        childrenMatches |> Seq.choose Triple.thd
-                                        // parentMatches |> Seq.choose Triple.thd
-                                    ]
-                                if occs |> Seq.isEmpty then None
-                                else occs |> Seq.max |> Some
-
-                            thisTaxon,
-                            earliestOccurrence,
-                            match exactMorphotypeMatches.Length, childrenMatches.Length, parentMatches.Length with
-                            | 1, _, _ -> true, Triple.snd exactMorphotypeMatches.Head, "high-confidence"
-                            | i, _, _ when i > 1 ->
-                                match exactMorphotypeMatches |> Seq.map Triple.snd |> Seq.distinct |> Seq.length with
-                                | 1 -> true, Triple.snd exactMorphotypeMatches.Head, "high-confidence"
-                                | _ ->
-                                    if exactMorphotypeMatches |> Seq.map Triple.snd |> Seq.contains Present
-                                    then true, Present, "medium-confidence"
-                                    else true, BorderlinePresent, "medium-confidence"
-                            | 0, 0, 0 -> false, Unknown, "unknown"
-                            | 0, 1, _ -> false, Triple.snd childrenMatches.Head, "high-confidence"
-                            | _, _, 1 -> false, Triple.snd parentMatches.Head, "low-confidence"
-                            | _, _, 0 ->
-                                // No matches exactly, but matches at lower ranks.
-                                match childrenMatches |> Seq.distinct |> Seq.length with
-                                | 1 -> false, Triple.snd exactMorphotypeMatches.Head, "high-confidence"
-                                | _ -> false, Unknown, "unknown"
-                            | _, _, _ ->
-                                // No matches exactly, but matches at upper ranks.
-                                match childrenMatches |> Seq.distinct |> Seq.length with
-                                | 1 -> false, Triple.snd exactMorphotypeMatches.Head, "low-confidence"
-                                | _ -> false, Unknown, "unknown"
                         )
+                    )
 
-                    forBotanicalTaxa |> List.map(fun b ->
+                    botanicalPresencePerDataset
+                    |> List.groupBy Triple.fst // taxon
+                    |> List.map(fun (taxon, presences) ->
+                        
+                        // Merge taxon occurrences between datasets
+
+                        let earliestAge =
+                            presences
+                            |> List.map Triple.snd
+                            |> List.choose id
+                            |> fun l ->
+                                if l.IsEmpty then None
+                                else Some <| Seq.max l
+
+                        let mergedConfidence confidences =
+                            if confidences |> Seq.contains "high-confidence" then "high-confidence"
+                            else if confidences |> Seq.contains "medium-confidence" then "medium-confidence"
+                            else if confidences |> Seq.contains "low-confidence" then "medium-confidence"
+                            else "unknown"
+
+                        let confidence = presences |> Seq.map(fun (_,_,(x,y,p)) -> p) |> mergedConfidence
+                        let exactMatch = presences |> Seq.map(fun (_,_,(x,y,p)) -> x) |> Seq.contains true
+                        let presence = presences |> Seq.map(fun (_,_,(x,y,p)) -> presenceToValue y) |> Seq.max
+
+                        taxon,
+                        earliestAge,
+                        (exactMatch, presence, confidence)
+
+                        )
+                    |> List.map(fun b ->
                         (b |> Triple.thd |> (fun (isExactMatch,_,_) -> isExactMatch)),
                         Triple.snd b,
                         DataFiles.BiodiversityVariableFile.Row(
@@ -891,11 +945,11 @@ let calculateBiodiversityVariables graph =
                             taxonAmbiguousWith = "unknown",
                             variable = "presence",
                             variableUnit = "present-absent",
-                            variableValue = (b |> Triple.thd |> (fun (_,b,_) -> b) |> presenceToValue),
+                            variableValue = (b |> Triple.thd |> (fun (_,b,_) -> b)),
                             variableCi = None,
                             variableConfidenceQualitative = Some(b |> Triple.thd |> (fun (_,_,c) -> c)) )
                     )
-                )
+                ) // End timebin
             )
 
         let presenceFile = new DataFiles.BiodiversityVariableFile(presenceInBin |> List.map Triple.thd)
@@ -961,7 +1015,11 @@ let calculateBiodiversityVariables graph =
                         |> fun l ->
                             if l.IsEmpty
                             then
-                                printfn "Warning: no trait data for [%s] [%A/%A]" t binEarly binLate
+                                printfn "[Warning] no trait data for [%s] [%A/%A]" t binEarly binLate
+                                nan
+                            else if l.Length < 4
+                            then
+                                printfn "[Warning] less than 4x trait data for [%s] [%A/%A]. Putting nan instead." t binEarly binLate
                                 nan
                             else Traits.weightedMean l
 
@@ -972,7 +1030,10 @@ let calculateBiodiversityVariables graph =
                         // Filter out SD of NaN i.e. sample size of 0 or 1
                         |> List.filter(fun x -> System.Double.IsNaN x.Sd |> not)
                         |> List.map(fun x -> x.Mean, x.Sd, x.N, x.Weight)
-                        |> Traits.pooledStandardDeviation
+                        |> fun l ->
+                            if l.Length < 4
+                            then nan
+                            else Traits.pooledStandardDeviation l
 
                     DataFiles.BiodiversityVariableFile.Row(
                         locationId = timeline,
@@ -1030,7 +1091,7 @@ let calculateBiodiversityVariables graph =
         let richness =
             presenceInBin
             |> List.groupBy(fun (_,_,r) -> r.Bin_early, r.Bin_late, r.Location_id)
-            |> List.collect(fun ((binEarly, binLate, locationId),rows) ->
+            |> List.map(fun ((binEarly, binLate, locationId),rows) ->
 
                 // Full taxonomic trees for all taxa that are (+ borderline) present.
                 let taxonomicTrees =
@@ -1059,9 +1120,9 @@ let calculateBiodiversityVariables graph =
                         |> Seq.filter(fun t -> latinNames |> Seq.contains (t |> Seq.last |> fst) |> not)
                         |> Seq.distinct
                     
-                    let additionalGenera = additionalTaxaFor "Genus" generaOfSpecies
-                    let familiesOfGenera = additionalGenera |> Seq.choose(fun t -> t |> Seq.tryFind(fun t -> snd t = "Family")) |> Seq.map fst |> Seq.distinct
-                    let additionalFamilies = additionalTaxaFor "Family" (Seq.concat [ familiesOfSpecies; familiesOfGenera])
+                    let additionalGenera = additionalTaxaFor "Genus" generaOfSpecies |> Seq.toList
+                    let familiesOfGenera = additionalGenera |> Seq.choose(fun t -> t |> Seq.tryFind(fun t -> snd t = "Family")) |> Seq.map fst |> Seq.distinct |> Seq.toList
+                    let additionalFamilies = additionalTaxaFor "Family" (Seq.concat [ familiesOfSpecies; familiesOfGenera]) |> Seq.toList
                     let minimumSpeciesCount = Seq.length species + Seq.length additionalGenera + Seq.length additionalFamilies
                     
                     // For additional genera and families, find counts in Arctic species lists.
@@ -1072,32 +1133,40 @@ let calculateBiodiversityVariables graph =
                         |> fun r -> r.Phyto_subzone_region_id
                         |> Option.bind(fun locId -> PanArcticFlora.tryFindFloraArea locId)
                         |> Option.map(fun (s,f) -> PanArcticFlora.taxaPresence f s)
+                        |> Option.map(fun t-> t |> List.filter(fun t -> not t.Presence.IsNotPresent))
                     if neoTaxaInArea.IsNone then printfn "[Warn] Cannot find plausable richness for %s. No intersect with either CAVM areas or flora areas." locationId
 
-                    let plausableAdditionalSpecies =
+                    let plausableAdditionalSpeciesCount, plausableTaxaSpeciesCounts =
                         neoTaxaInArea
                         |> Option.map(fun neoTaxa ->
                             
                             let fromFamilies =
-                                additionalFamilies |> Seq.sumBy(fun f ->
-
+                                additionalFamilies |> Seq.map(fun f ->
+                                    f,
                                     PanArcticFlora.familyRichness (f |> Seq.last |> fst) neoTaxa)
                             let fromGenera =
-                                additionalGenera |> Seq.sumBy(fun g ->
+                                additionalGenera |> Seq.map(fun g ->
+                                    g,
                                     PanArcticFlora.genusRichness (g |> Seq.last |> fst) neoTaxa)
                         
-                            fromFamilies + fromGenera)
-                        |> Option.defaultValue 0
+                            Seq.length fromFamilies + Seq.length fromGenera,
+                            Seq.concat [ fromFamilies; fromGenera ]
+                            )
+                        |> Option.defaultValue (0, [])
 
                     [
                         "Species", "minimum_possible_count", minimumSpeciesCount
-                        "Species", "plausable_count", minimumSpeciesCount + plausableAdditionalSpecies
-                    ]
+                        "Species", "plausable_count", minimumSpeciesCount + plausableAdditionalSpeciesCount
+                    ],
+                    // Save out individual taxa and their potential species pool to work with spatially:
+                    Seq.concat [species; additionalGenera; additionalFamilies ] |> Seq.distinct,
+                    plausableTaxaSpeciesCounts
+
 
                 // If species, each upper rank should count as one (if not already included).
                 // e.g. Pinaceae = 0 if Pinus = 1, but Pinaceae = 1 if no children of it present.
 
-                counts |> List.map(fun (rank, variableUnit, count) ->
+                counts |> Triple.fst |> List.map(fun (rank, variableUnit, count) ->
                     DataFiles.BiodiversityVariableFile.Row(
                         locationId = locationId,
                         binEarly = binEarly,
@@ -1111,10 +1180,11 @@ let calculateBiodiversityVariables graph =
                         variableUnit = variableUnit,
                         variableValue = float count,
                         variableCi = None,
-                        variableConfidenceQualitative = None ))
+                        variableConfidenceQualitative = None )
+                    ), Triple.snd counts, Triple.thd counts
             )
 
-        let richnessFile = new DataFiles.BiodiversityVariableFile(richness)
+        let richnessFile = new DataFiles.BiodiversityVariableFile(richness |> List.map Triple.fst |> List.collect id)
         richnessFile.Save("../../data-derived/community-composition/richness.tsv")
 
 
@@ -1177,7 +1247,49 @@ let calculateBiodiversityVariables graph =
         firstOccurrenceSpatialFile.Save("../../data-derived/traits/movement-migration_spatial.tsv")
 
         // Richness:
-        let richnessSpatial = asSpatial richness Seq.max (fun _ -> None) (fun _ -> None)
+        let richnessSpatial =
+            richness
+            |> List.choose(fun (r, knownTaxa, potentialTaxa) ->
+                let r = r.Head                
+                let loc = locationIndex.Rows |> Seq.find(fun l -> l.Timeline_id = r.Location_id)
+                loc.Phyto_subzone_region_id |> Option.map(fun x -> x, r, knownTaxa, potentialTaxa))
+            |> List.groupBy (fun (a,_,_,_) -> a)
+            |> List.collect(fun (regionId,records) ->
+                records
+                |> List.groupBy(fun (_,r,_,_) -> r.Variable, r.Variable_unit, r.Bin_early, r.Bin_late, r.Taxon)
+                |> List.collect(fun (_, rows) ->
+                    
+                    let plausableSpecies =
+                        rows |> List.map (fun (_,_,_,x) -> x) |> Seq.collect id
+                        |> Seq.distinct
+                        |> Seq.sumBy snd
+                    
+                    let newMinimumSpecies =
+                        rows |> List.map (fun (_,_,x,_) -> x) |> Seq.collect id
+                        |> Seq.distinct
+                        |> Seq.length
+
+                    [ "minimum_possible_count", newMinimumSpecies; "plausable_count", newMinimumSpecies + plausableSpecies ]
+                    |> List.map(fun (varUnit, value) ->
+                        let _,row,_,_ = rows |> Seq.head
+                        DataFiles.BiodiversityVariableFile.Row(
+                            locationId = regionId,
+                            binEarly = row.Bin_early,
+                            binLate = row.Bin_late,
+                            morphotype = row.Morphotype,
+                            taxon = row.Taxon,
+                            rank = row.Rank,
+                            taxonomicTree = row.Taxonomic_tree,
+                            taxonAmbiguousWith = row.Taxon_ambiguous_with,
+                            variable = row.Variable,
+                            variableUnit = varUnit,
+                            variableValue = value,
+                            variableCi = None,
+                            variableConfidenceQualitative = None )))
+            )
+
+        
+        //asSpatial richness Seq.max (fun _ -> None) (fun _ -> None)
         let richnesspatialFile = new DataFiles.BiodiversityVariableFile(richnessSpatial)
         richnesspatialFile.Save("../../data-derived/community-composition/richness_spatial.tsv")
 

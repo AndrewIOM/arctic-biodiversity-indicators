@@ -2,7 +2,7 @@ source https://api.nuget.org/v3/index.json
 storage: none
 framework: auto-detect
 
-github AndrewIOM/biodiversity-graph-db:441926f1494c5cf8d29ccb59dec0e96898fb4c68
+github AndrewIOM/biodiversity-graph-db:bdf19505929e5462e807b3255d3506c0a253fe2f
 
 nuget FSharp.Data
 nuget Microsoft.FSharpLu.Json
